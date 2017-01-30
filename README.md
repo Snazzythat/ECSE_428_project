@@ -1,3 +1,2 @@
 # ECSE_428_project
-Yeah, pretty cool
-Let's start that shit..
+Fitness tracker APP 1.0
