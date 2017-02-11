@@ -1,0 +1,38 @@
+**** Client Dev installation ****
+
+1. Install nodeJS --> https://nodejs.org/en/download/
+2. Install Cordova --> (LIN/OSX) sudo npm install -g cordova  / (WIN) C:\>npm install -g cordova
+3. Install IONIC --> sudo npm install -g ionic
+4. Create new project --> cordova create hello com.example.hello HelloWorld (if making a new app )
+	or pull from git already existsing app project.
+5. Cd into app's dir --> cd hello
+6. Add platforms:
+	--> cordova platform add ios --save
+	--> cordova platform add android --save
+
+
+**** To check requirements for cordova ****
+
+-->cordova requirements
+
+**** App Build ****
+By default, cordova create script generates a skeletal web-based application whose start page is the project's www/index.html file. Any initialization should be specified as part of the deviceready event handler defined in www/js/index.js.
+
+--> cordova build (all platforms)
+--> cordova build ios  (only for ios)
+cordova build android (only for android)
+
+*** Emulating ***
+--> cordova emulate android   will open android emulator if you have android studio installed
+--> cordova emulate ios   will open android ios if you have xcode installed
+
+
+*****
+
+OPTIONAL:
+
+sudo npm install -g bower
+
+You can use bower to manage/install/unistall packages for the JS project 
+
+good tutorial: http://gonehybrid.com/build-your-first-mobile-app-with-the-ionic-framework-part-4/
