@@ -8,6 +8,6 @@ from models import User
 def index(request):
     return HttpResponse("Hello, world. You're at the polls index.")
 
-class UserList(generics.ListCreateAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
+#class UserList(generics.ListCreateAPIView):
+#    queryset = User.objects.all()
+#    serializer_class = UserSerializer
