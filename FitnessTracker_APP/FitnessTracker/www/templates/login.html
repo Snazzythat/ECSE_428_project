@@ -1,6 +1,6 @@
 <ion-view title="FitnessTracker" id="login">
   <ion-content padding="true" class="has-header">
-    <div class="login_menu">
+    <div class="login_menu" ng-controller=loginCtrl>
     <div class="spacer" style="width: 300px; height: 180px;"></div>
       <form id="login-form1" class="list">
         <ion-list id="login-list1">
@@ -14,8 +14,8 @@
           </label>
         </ion-list>
         <div class="spacer" style="width: 300px; height: 181px;"></div>
-        <button id="login-button1" class="button button-stable  button-block">Log in</button>
-        <button id="login-button2" class="button button-positive  button-block button-clear">Or Sign Up</button>
+        <button id="login-button" class="button button-stable  button-block">Log in</button>
+        <button id="signup-button" class="button button-positive  button-block button-clear" ng-click=switchTo('signup')>Or Sign Up</button>
       </form>
   </div>
   </ion-content>
