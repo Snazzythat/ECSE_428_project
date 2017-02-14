@@ -4,17 +4,20 @@
     <div class="spacer" style="width: 300px; height: 180px;"></div>
       <form id="login-form1" class="list">
         <ion-list id="login-list1">
+
           <label class="item item-input" id="login-input1">
-            <span class="input-label">Username</span>
-            <input type="text" placeholder="">
+            <span class="input-label">Email</span>
+            <input type="email" placeholder="" ng-model="user.email">
           </label>
+
           <label class="item item-input" id="login-input2">
             <span class="input-label">Password</span>
-            <input type="password" placeholder="">
+            <input type="password" placeholder="" ng-model="user.password">
           </label>
+
         </ion-list>
         <div class="spacer" style="width: 300px; height: 181px;"></div>
-        <button id="login-button" class="button button-stable  button-block">Log in</button>
+        <button id="login-button" class="button button-stable  button-block" ng-click=authentificateUser()>Log in</button>
         <button id="signup-button" class="button button-positive  button-block button-clear" ng-click=switchTo('signup')>Or Sign Up</button>
       </form>
   </div>
