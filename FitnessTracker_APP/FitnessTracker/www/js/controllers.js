@@ -1,4 +1,6 @@
-angular.module('starter.controllers', [])
+// Injecting services to the controllers module which interacts directly with UI
+
+angular.module('starter.controllers', ['starter.services'])
 
 //~~~~~~~~~~~~~~~~~~~~~~~LOGIN CONTROLLER ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -29,18 +31,16 @@ function ($scope, $state, $ionicPopup)
   {
 
   };
-
 }])
 
 //~~~~~~~~~~~~~~~~~~~~~~~SIGNUP CONTROLLER ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.controller('signupCtrl', ['$scope', '$state', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
+.controller('signupCtrl', ['$scope', '$state', 'SignUpService',// The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
 // You can include any angular dependencies as parameters for this function
 // TIP: Access Route Parameters for your page via $stateParams.parameterName
-function ($scope, $state, $ionicPopup) {
+function ($scope, $state, SignUpService) {
 
   //creating a new user object that we will get the new sign up parameters
-  $scope.signupObject = {};
 
   $scope.user = {};
 
@@ -70,19 +70,18 @@ function ($scope, $state, $ionicPopup) {
       {
         navigator.notification.alert('Email has invalid format. Please use @domain.com', function (){},'Error','Retry');
       }
-    }
-    else
-    {
-      valid_parameters = true;
+      else
+      {
+        valid_parameters = true;
+      }
     }
 
     // Proceed building login request only at when all parameters are valid
     if(valid_parameters)
     {
-      // JSON
-      signupObject.user_name = new_users_name;
-      signupObject.user_email = new_users_email;
-      signupObject.users_password = new_users_password;
+      // TODO: make sure to use a valid url with out webserver and see what it accepts.
+      // Make a login php script
+      SignUpService.send_http_signup(new_users_name,new_users_password,new_users_email);
     }
   };
 
