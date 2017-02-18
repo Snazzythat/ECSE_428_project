@@ -21,6 +21,12 @@ angular.module('starter.routes', [])
     controller: 'signupCtrl'
   })
 
+  .state('mainmenu', {
+    url: '/mainmenu',
+    templateUrl: 'templates/mainmenu.html',
+    controller: 'mainMenuCtrl'
+  })
+
 $urlRouterProvider.otherwise('/login')
 
 
