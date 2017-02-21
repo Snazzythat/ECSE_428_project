@@ -1,0 +1,46 @@
+{
+    "prepare_queue": {
+        "installed": [],
+        "uninstalled": []
+    },
+    "config_munge": {
+        "files": {}
+    },
+    "installed_plugins": {
+        "cordova-plugin-console": {
+            "PACKAGE_NAME": "com.ionicframework.fitnesstracker390669"
+        },
+        "cordova-plugin-device": {
+            "PACKAGE_NAME": "com.ionicframework.fitnesstracker390669"
+        },
+        "cordova-plugin-splashscreen": {
+            "PACKAGE_NAME": "com.ionicframework.fitnesstracker390669"
+        },
+        "cordova-plugin-statusbar": {
+            "PACKAGE_NAME": "com.ionicframework.fitnesstracker390669"
+        },
+        "cordova-plugin-whitelist": {
+            "PACKAGE_NAME": "com.ionicframework.fitnesstracker390669"
+        },
+        "ionic-plugin-keyboard": {
+            "PACKAGE_NAME": "com.ionicframework.fitnesstracker390669"
+        },
+        "cordova-plugin-dialogs": {
+            "PACKAGE_NAME": "com.ionicframework.fitnesstracker390669"
+        },
+        "cordova-plugin-http": {
+            "PACKAGE_NAME": "com.ionicframework.fitnesstracker390669"
+        },
+        "cordova-plugin-transport-security": {
+            "PACKAGE_NAME": "com.ionicframework.fitnesstracker390669"
+        }
+    },
+    "dependent_plugins": {
+        "cordova-plugin-compat": {
+            "PACKAGE_NAME": "com.ionicframework.fitnesstracker390669"
+        },
+        "cordova-plugin-file": {
+            "PACKAGE_NAME": "com.ionicframework.fitnesstracker390669"
+        }
+    }
+}
