@@ -10,12 +10,56 @@ from __future__ import unicode_literals
 from django.db import models
 
 
-class User(models.Model):
-    name = models.CharField(max_length=50)
-    lastname = models.CharField(db_column='lastName', max_length=50)  # Field name made lowercase.
-    email = models.CharField(unique=True, max_length=200, blank=True, null=True)
-    joindate = models.DateTimeField(db_column='joinDate')  # Field name made lowercase.
+class Exercise(models.Model):
+    name = models.CharField(primary_key=True, max_length=45)
+    type = models.CharField(max_length=45, blank=True, null=True)
+    description = models.CharField(max_length=45, blank=True, null=True)
+    targeted_muscle = models.CharField(max_length=45, blank=True, null=True)
+    workout_workoutid = models.ForeignKey('Workout', models.DO_NOTHING, db_column='Workout_workoutID', related_name='+')  # Field name made lowercase.
 
     class Meta:
         managed = False
-        db_table = 'user'
+        db_table = 'Exercise'
+
+
+class Trainer(models.Model):
+    profile = models.CharField(db_column='Profile', max_length=1000, blank=True, null=True)  # Field name made lowercase.
+    user_username1 = models.ForeignKey('User', models.DO_NOTHING, db_column='User_username1')  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'Trainer'
+
+
+class User(models.Model):
+    name = models.CharField(max_length=45)
+    email = models.CharField(max_length=45)
+    d_o_b = models.DateField(db_column='d.o.b')  # Field renamed to remove unsuitable characters.
+    username = models.CharField(primary_key=True, max_length=45)
+    password = models.CharField(db_column='Password', max_length=45)  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'User'
+
+
+class Workout(models.Model):
+    workoutid = models.IntegerField(db_column='workoutID', primary_key=True)  # Field name made lowercase.
+    exercise = models.CharField(max_length=45, blank=True, null=True)
+    reps = models.CharField(max_length=45, blank=True, null=True)
+    sets = models.CharField(max_length=45, blank=True, null=True)
+    user_username = models.ForeignKey(User, models.DO_NOTHING, db_column='User_username')  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'Workout'
+
+
+class DjangoMigrations(models.Model):
+    app = models.CharField(max_length=255)
+    name = models.CharField(max_length=255)
+    applied = models.DateTimeField()
+
+    class Meta:
+        managed = False
+        db_table = 'django_migrations'
