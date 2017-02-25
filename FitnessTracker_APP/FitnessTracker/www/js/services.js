@@ -1,6 +1,8 @@
 // Don't forget to change the VM ip and port here!
-var virtual_vm_ip="104.236.220.130:9090/kevinnam.me/public_html/";
-//var virtual_vm_ip="google.com/";
+// var virtual_vm_ip="104.236.220.130:9090/kevinnam.me/public_html/";
+var virtual_vm_ip="104.236.220.130:9091";
+var login_URI="/WebServices/login/"
+var signup_URI="/WebServices/signup/"
 
 angular.module('starter.services', ['starter.controllers'])
 
@@ -17,13 +19,13 @@ angular.module('starter.services', ['starter.controllers'])
   this.http_login_request = function(user_email, user_pswd, callback_to_login)
   {
     //TODO: complete the proper log in url sent towards the server
-    var loginUrl = "http://" + virtual_vm_ip + "";
-    var jsonObj = {uemail : user_email, upswd : user_pswd};
+
+    var loginUrl = "http://" + virtual_vm_ip + login_URI + user_email + '/' + user_pswd;
 
     // ~~~ASYNC CODE
     var request = new XMLHttpRequest();
-    request.open("GET",loginUrl, true, user_email, user_pswd);
-    request.setRequestHeader("Authorization", "Basic " + btoa(user_email + ':' + user_pswd));
+    request.open("GET",loginUrl);
+    request.setRequestHeader("Content-Type", "application/json");
     request.onreadystatechange = function() {
       //When request is answered, call back the login controller with result
       if (request.status == 200)
@@ -32,7 +34,7 @@ angular.module('starter.services', ['starter.controllers'])
       }
       else if (request.status == 404)
       {
-          callback_to_login("server_notfound");
+          callback_to_login("user_notfound");
       }
       else if (request.status == 500 || request.status == 502 || request.status == 503 )
       {

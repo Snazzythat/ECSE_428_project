@@ -33,10 +33,10 @@ function ($scope, $state, LoginService)
       console.log("Switching to main menu after successful login!");
       $state.go('mainmenu');
     }
-    else if(loginResult == "server_notfound")
+    else if(loginResult == "user_notfound")
     {
-      console.error("Server not found!");
-      navigator.notification.alert('Server is offline. Please try again later.', function (){},'Error','Ok');
+      console.error("User does not exist!");
+      navigator.notification.alert('You do not figure in our database. Please sign up!', function (){},'Error','Ok');
     }
     else if(loginResult == "server_error")
     {

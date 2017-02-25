@@ -43,16 +43,16 @@ class User(models.Model):
         db_table = 'User'
 
 
-class Workout(models.Model):
-    workoutid = models.IntegerField(db_column='workoutID', primary_key=True)  # Field name made lowercase.
-    exercise = models.CharField(max_length=45, blank=True, null=True)
-    reps = models.CharField(max_length=45, blank=True, null=True)
-    sets = models.CharField(max_length=45, blank=True, null=True)
-    user_username = models.ForeignKey(User, models.DO_NOTHING, db_column='User_username')  # Field name made lowercase.
+# class Workout(models.Model):
+#     workoutid = models.IntegerField(db_column='workoutID', primary_key=True)  # Field name made lowercase.
+#     exercise = models.CharField(max_length=45, blank=True, null=True)
+#     reps = models.CharField(max_length=45, blank=True, null=True)
+#     sets = models.CharField(max_length=45, blank=True, null=True)
+#     user_username = models.ForeignKey(User, models.DO_NOTHING, db_column='User_username')  # Field name made lowercase.
 
-    class Meta:
-        managed = False
-        db_table = 'Workout'
+#     class Meta:
+#         managed = False
+#         db_table = 'Workout'
 
 
 class DjangoMigrations(models.Model):
