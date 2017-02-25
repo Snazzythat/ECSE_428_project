@@ -2,6 +2,7 @@
 // var virtual_vm_ip="104.236.220.130:9090/kevinnam.me/public_html/";
 var virtual_vm_ip="104.236.220.130:9091";
 var login_URI="/WebServices/login/"
+var signup_URI="/WebServices/signup/"
 
 angular.module('starter.services', ['starter.controllers'])
 
@@ -35,9 +36,13 @@ angular.module('starter.services', ['starter.controllers'])
       {
           callback_to_login("user_notfound");
       }
-      else if (request.status == 500 || request.status == 502 || request.status == 503 )
+      else if (request.status == 500 || request.status == 502 || request.status == 503)
       {
           callback_to_login("server_error");
+      }
+      else if (request.status == 400)
+      {
+          callback_to_signup("bad_request");
       }
     }
     request.send();
@@ -50,21 +55,22 @@ angular.module('starter.services', ['starter.controllers'])
 .service('SignUpService',['$http', function($http)
 {
 
-  this.send_http_signup = function(user_name, user_pswd, user_email, callback_to_signup)
+  this.send_http_signup = function(user_name, user_pswd, user_email, actual_name, user_birthday, callback_to_signup)
   {
     //TODO: complete the proper sign up url sent towards the server
-    var signupURL = "http//" + virtual_vm_ip + ""; // + "/FitnessTracker/user-signup";
-    var jsonObj = {uuid : user_name, upswd : user_pswd, uemail : user_email};
+    var signupURL = "http://" + virtual_vm_ip + signup_URI;
+    var signup_Data = JSON.stringify({username : user_name, d_o_b: user_birthday, password : user_pswd, name: actual_name, email : user_email});
 
       // Issue new http POST request to the Server
       // TODO: dont forget to put the right server registration link.
       var request = new XMLHttpRequest();
-      request.open("GET", "http://www.google.com", true);
+      request.open("POST", signupURL);
+      request.setRequestHeader("Content-Type", "application/json");
       request.onreadystatechange = function() {
           //When request is answered, handle ASYNC here
           if (request.readyState == 4)
           {
-              if (request.status == 200)
+              if (request.status == 201)
               {
                   callback_to_signup("signup_success");
               }
@@ -72,9 +78,17 @@ angular.module('starter.services', ['starter.controllers'])
               {
                   callback_to_signup("server_notfound");
               }
+              else if (request.status == 500 || request.status == 502 || request.status == 503)
+              {
+                    callback_to_login("server_error");
+              } 
+              else if (request.status == 400)
+              {
+                  callback_to_signup("bad_request");
+              }
           }
       }
-      request.send();
+      request.send(signup_Data);
   };
 
 }]);

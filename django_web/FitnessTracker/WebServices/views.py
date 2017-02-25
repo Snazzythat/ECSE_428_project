@@ -17,6 +17,7 @@ class UserList(generics.ListCreateAPIView):
 
 @api_view(['POST'])
 def sign_up(request):
+    print 'Request data: ' + str(request.data)
     serializer = UserSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()

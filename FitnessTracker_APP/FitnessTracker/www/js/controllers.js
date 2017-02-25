@@ -33,16 +33,21 @@ function ($scope, $state, LoginService)
       console.log("Switching to main menu after successful login!");
       $state.go('mainmenu');
     }
-    else if(loginResult == "user_notfound")
+    else if(loginResult == "server_notfound")
     {
-      console.error("User does not exist!");
-      navigator.notification.alert('You do not figure in our database. Please sign up!', function (){},'Error','Ok');
+      console.error("Server not found!");
+      navigator.notification.alert('Server is offline. Please try again later.', function (){},'Error','Ok');
     }
     else if(loginResult == "server_error")
     {
-      console.error("Server not found!");
+      console.error("Server error!");
       navigator.notification.alert('Server error. Please contact the support.', function (){},'Error','Ok');
     }
+    else if(signupResult == "bad_request")
+    {
+      console.error("Bad signup request");
+      navigator.notification.alert('Server encountered a bad login request, make sure all data is valid.', function (){},'Error','Ok');
+    }  
   }
 
   // Autherntification for user
@@ -102,6 +107,7 @@ function ($scope, $state, SignUpService) {
     console.log("Server answered. Login outcome is " + signupResult);
     if (signupResult == "signup_success")
     {
+      navigator.notification.alert('Successful sign up. Welcome!', function (){},'Error','Ok');
       console.log("Switching to main menu after successful signup!");
       $state.go('mainmenu');
     }
@@ -112,22 +118,35 @@ function ($scope, $state, SignUpService) {
     }
     else if(signupResult == "server_error")
     {
-      console.error("Server not found!");
+      console.error("Server error");
       navigator.notification.alert('Server error. Please contact the support.', function (){},'Error','Ok');
     }
+    else if(signupResult == "bad_request")
+    {
+      console.error("Bad signup request");
+      navigator.notification.alert('Server encountered a bad sign up request, make sure all data is valid.', function (){},'Error','Ok');
+    }   
   }
 
   $scope.signUpProcess = function()
   {
-    var new_users_name = String($scope.user.name);
+    varList = [];
+    var new_users_username = String($scope.user.username);
+    varList.push(new_users_username);
     var new_users_email = String($scope.user.email);
+    varList.push(new_users_email);
     var new_users_password = String($scope.user.password);
+    varList.push(new_users_password);
+    var new_users_actualname = String($scope.user.name);
+    varList.push(new_users_actualname);
+    var new_users_birthday = String($scope.user.birthday);
+    varList.push(new_users_birthday);
 
     // Verify first if no fields are empty
     // Name must not be empty
     // Email must not be empty and must consist of a certain format
     // Password cant be empty
-    if (new_users_password === "undefined" || new_users_name === "undefined" || new_users_email === "undefined" || new_users_password === "" || new_users_name === "" || new_users_email === "" )
+    if(varList.indexOf("undefined")>= 0 || varList.indexOf("")>= 0)
     {
       console.error("Input error!");
       //navigator objects WILL NOT work in the ionic testing webserver, native device ONLY
@@ -138,7 +157,7 @@ function ($scope, $state, SignUpService) {
     // Email must not be empty and must consist of a certain format (somestring@domain.com)
     if (new_users_email != "undefined")
     {
-      if (new_users_email.indexOf('@') <= 0 || new_users_email.indexOf('.com') <= 0)
+      if (new_users_email.indexOf('@') <= 0 || new_users_email.indexOf('.com') <= 0 )
       {
         console.error("Wrong email format!");
         navigator.notification.alert('Email has invalid format. Please use @domain.com', function (){},'Error','Retry');
@@ -155,7 +174,7 @@ function ($scope, $state, SignUpService) {
       // TODO: make sure to use a valid url with out webserver and see what it accepts.
       // Make a login php script
       console.log("Sending async signup request...");
-      SignUpService.send_http_signup(new_users_name,new_users_password,new_users_email,postSignupCallback);
+      SignUpService.send_http_signup(new_users_username,new_users_password,new_users_email,new_users_actualname, new_users_birthday, postSignupCallback);
     }
   };
 }])
