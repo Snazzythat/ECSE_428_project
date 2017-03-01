@@ -1,6 +1,6 @@
 // Don't forget to change the VM ip and port here!
 // var virtual_vm_ip="104.236.220.130:9090/kevinnam.me/public_html/";
-var virtual_vm_ip="104.236.220.130:9091";
+var virtual_vm_ip="104.236.220.130:8001";
 var login_URI="/WebServices/login/"
 var signup_URI="/WebServices/signup/"
 
@@ -24,14 +24,27 @@ angular.module('starter.services', ['starter.controllers'])
 
     // ~~~ASYNC CODE
     var request = new XMLHttpRequest();
-    request.open("GET",loginUrl);
+    try
+    {
+        request.open("GET",loginUrl);
+    }
+    catch(err)
+    {
+        callback_to_login("user_notfound");
+    }
     request.setRequestHeader("Content-Type", "application/json");
     request.onreadystatechange = function() {
       //When request is answered, call back the login controller with result
+      // SUCESS USER LOGIN
       if (request.status == 200)
       {
-          callback_to_login("login_success");
+          callback_to_login("login_success_user");
       }
+      // SUCESS TRAINER LOGIN
+      else if (request.status == 202)
+      {
+          callback_to_login("login_success_trainer");
+      }    
       else if (request.status == 404)
       {
           callback_to_login("user_notfound");

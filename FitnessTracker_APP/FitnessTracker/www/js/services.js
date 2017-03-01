@@ -24,14 +24,27 @@ angular.module('starter.services', ['starter.controllers'])
 
     // ~~~ASYNC CODE
     var request = new XMLHttpRequest();
-    request.open("GET",loginUrl);
+    try
+    {
+        request.open("GET",loginUrl);
+    }
+    catch(err)
+    {
+        callback_to_login("user_notfound");
+    }
     request.setRequestHeader("Content-Type", "application/json");
     request.onreadystatechange = function() {
       //When request is answered, call back the login controller with result
+      // SUCESS USER LOGIN
       if (request.status == 200)
       {
-          callback_to_login("login_success");
+          callback_to_login("login_success_user");
       }
+      // SUCESS TRAINER LOGIN
+      else if (request.status == 202)
+      {
+          callback_to_login("login_success_trainer");
+      }    
       else if (request.status == 404)
       {
           callback_to_login("user_notfound");
@@ -55,11 +68,11 @@ angular.module('starter.services', ['starter.controllers'])
 .service('SignUpService',['$http', function($http)
 {
 
-  this.send_http_signup = function(user_name, user_pswd, user_email, actual_name, user_birthday, callback_to_signup)
+  this.send_http_signup = function(user_name, user_pswd, user_email, actual_name, user_birthday, selected_acc_type,callback_to_signup)
   {
     //TODO: complete the proper sign up url sent towards the server
     var signupURL = "http://" + virtual_vm_ip + signup_URI;
-    var signup_Data = JSON.stringify({username : user_name, d_o_b: user_birthday, password : user_pswd, name: actual_name, email : user_email});
+    var signup_Data = JSON.stringify({username : user_name, d_o_b: user_birthday, password : user_pswd, name: actual_name, email : user_email, type: selected_acc_type});
 
       // Issue new http POST request to the Server
       // TODO: dont forget to put the right server registration link.

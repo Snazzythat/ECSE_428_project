@@ -2,18 +2,32 @@
   <ion-content padding="true" class="has-header" ng-controller=signupCtrl>
     <form id="signup-form2" class="list">
       <ion-list id="signup-list2">
-        <label class="item item-input" id="signup-input3">
+
+        <label class="item item-input" id="signup-input2">
           <span class="input-label">Name</span>
-          <input type="text" placeholder="Cash Ouside" ng-model=user.name>
+          <input type="text" placeholder="Rush Bee" ng-model=user.name>
         </label>
+
+        <label class="item item-input" id="signup-input3">
+          <span class="input-label">Username</span>
+          <input type="text" placeholder="rush_bee777" ng-model=user.username>
+        </label>
+
         <label class="item item-input" id="signup-input4">
+          <span class="input-label">Date</span>
+          <input type="text" placeholder="YYYY-MM-DD" ng-model=user.birthday>
+        </label>
+
+        <label class="item item-input" id="signup-input5">
           <span class="input-label">Email</span>
           <input type="text" placeholder="howbout@smth.com" ng-model=user.email>
         </label>
-        <label class="item item-input" id="signup-input5">
+
+        <label class="item item-input" id="signup-input6">
           <span class="input-label">Password</span>
           <input type="password" placeholder="Password" ng-model=user.password>
         </label>
+
       </ion-list>
       <button id="signup-button3" class="button button-stable button-block" ng-click="signUpProcess()">Sign up</button>
     </form>

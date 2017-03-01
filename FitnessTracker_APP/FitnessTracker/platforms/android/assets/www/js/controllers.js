@@ -28,10 +28,16 @@ function ($scope, $state, LoginService)
   var postLoginCallback = function(loginResult)
   {
     console.log("Server answered. Login outcome is " + loginResult);
-    if (loginResult == "login_success")
+    if (loginResult == "login_success_user")
     {
-      console.log("Switching to main menu after successful login!");
-      $state.go('mainmenu');
+      console.log("Switching to main menu after successful USER login!");
+      $state.go('user_menu');
+    }
+    //TODO: be able to login onto trainer menu
+    else if (loginResult == "login_success_user")
+    {
+      console.log("Switching to main menu after successful TRAINER login!");
+      //$state.go('trainer_menu');
     }
     else if(loginResult == "server_notfound")
     {
@@ -157,7 +163,7 @@ function ($scope, $state, SignUpService) {
     // Email must not be empty and must consist of a certain format (somestring@domain.com)
     if (new_users_email != "undefined")
     {
-      if (new_users_email.indexOf('@') <= 0 || new_users_email.indexOf('.com') <= 0)
+      if (new_users_email.indexOf('@') <= 0 || new_users_email.indexOf('.com') <= 0 )
       {
         console.error("Wrong email format!");
         navigator.notification.alert('Email has invalid format. Please use @domain.com', function (){},'Error','Retry');
@@ -179,13 +185,45 @@ function ($scope, $state, SignUpService) {
   };
 }])
 
-//~~~~~~~~~~~~~~~~~~~~~~~MAIN MENU CONTROLLER ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-.controller('mainMenuCtrl', ['$scope', '$state', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
+//DEPRECATED
+// //~~~~~~~~~~~~~~~~~~~~~~~MAIN MENU CONTROLLER ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// .controller('mainMenuCtrl', ['$scope', '$state', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
+// // You can include any angular dependencies as parameters for this function
+// // TIP: Access Route Parameters for your page via $stateParams.parameterName
+// function ($scope, $state)
+// {
+//   console.log("Presently in main menu controller...");
+
+//   $scope.switchTo = function(newPage)
+//   {
+//     console.log("Switching to " + newPage);
+//     $state.go(newPage);
+//   };
+// }]);
+
+//~~~~~~~~~~~~~~~~~~~~~~~USER MENU CONTROLLER ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.controller('userMenuController', ['$scope', '$state', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
 // You can include any angular dependencies as parameters for this function
 // TIP: Access Route Parameters for your page via $stateParams.parameterName
 function ($scope, $state)
 {
-  console.log("Presently in main menu controller...");
+  console.log("Presently in user menu controller...");
+
+  $scope.switchTo = function(newPage)
+  {
+    console.log("Switching to " + newPage);
+    $state.go(newPage);
+  };
+}])
+
+
+//~~~~~~~~~~~~~~~~~~~~~~~TRAINER MENU CONTROLLER ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.controller('trainerMenuController', ['$scope', '$state', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
+// You can include any angular dependencies as parameters for this function
+// TIP: Access Route Parameters for your page via $stateParams.parameterName
+function ($scope, $state)
+{
+  console.log("Presently in trainer menu controller...");
 
   $scope.switchTo = function(newPage)
   {

@@ -27,6 +27,18 @@ angular.module('starter.routes', [])
     controller: 'mainMenuCtrl'
   })
 
+  .state('user_menu', {
+    url: '/user_menu',
+    templateUrl: 'templates/User.html',
+    controller: 'userMenuController'
+  })
+
+  .state('trainer_menu', {
+    url: '/trainer_menu',
+    templateUrl: 'templates/Trainer.html',
+    controller: 'trainerMenuController'
+  })
+
 $urlRouterProvider.otherwise('/login')
 
 
