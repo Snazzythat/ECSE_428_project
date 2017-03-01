@@ -29,8 +29,8 @@ def sign_up(request):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET'])
-def login(request, username, password, type):
-    print 'GET LOGIN request from: ' + username + ' whose password is: ' + password + ' and whose account type is: ' + type
+def login(request, username, password):
+    print 'GET LOGIN request from: ' + username + ' whose password is: ' + password 
 
     #TODO: At get, we need to return 200 or 202 for USER and TRAINER
     # in order to be able to destinguish both. To do so, we need to first get the data from login request

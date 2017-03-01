@@ -8,7 +8,7 @@ from . import views
 urlpatterns = [
     url(r'^$', views.index, name='index'),
     url(r'^api/$', views.UserList.as_view()),
-    url(r'^login/(?P<username>[a-z0-9]+)/(?P<password>[a-z0-9]+)/$', views.login),
+    url(r'^login/(?P<username>[a-z0-9]+)/(?P<password>[a-z0-9]+)/(?P<type>[a-z0-9]+)/$', views.login),
     url(r'^signup/$', views.sign_up)
 ]
 
