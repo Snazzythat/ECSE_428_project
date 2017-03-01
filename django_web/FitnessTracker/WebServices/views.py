@@ -47,7 +47,7 @@ def login(request, username, password, type):
         #Distinguish trainer and user with HTTP 200 and 202. 201 reserved for creation
         if user.type == 'User':
             return Response(serializer.data, status=status.HTTP_200_OK)
-        else if user.type == 'Trainer':
+        elif user.type == 'Trainer':
             return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
 
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
