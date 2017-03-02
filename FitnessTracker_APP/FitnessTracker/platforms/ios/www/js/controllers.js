@@ -31,7 +31,7 @@ function ($scope, $state, LoginService)
     if (loginResult == "login_success_user")
     {
       console.log("Switching to main menu after successful USER login!");
-      $state.go('user_menu');
+      $state.go('tabs.home');
     }
     //TODO: be able to login onto trainer menu
     else if (loginResult == "login_success_trainer")
@@ -152,6 +152,7 @@ function ($scope, $state, SignUpService) {
     varList.push(new_users_actualname);
     var new_users_birthday = String($scope.user.birthday);
     varList.push(new_users_birthday);
+    var selected_acc_type = document.getElementById('acc_type').value;
 
     // Verify first if no fields are empty
     // Name must not be empty
@@ -185,34 +186,18 @@ function ($scope, $state, SignUpService) {
       // TODO: make sure to use a valid url with out webserver and see what it accepts.
       // Make a login php script
       console.log("Sending async signup request...");
-      SignUpService.send_http_signup(new_users_username,new_users_password,new_users_email,new_users_actualname, new_users_birthday, postSignupCallback);
+      SignUpService.send_http_signup(new_users_username,new_users_password,new_users_email,new_users_actualname, new_users_birthday, selected_acc_type,postSignupCallback);
     }
   };
 }])
 
-//DEPRECATED
-// //~~~~~~~~~~~~~~~~~~~~~~~MAIN MENU CONTROLLER ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// .controller('mainMenuCtrl', ['$scope', '$state', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
-// // You can include any angular dependencies as parameters for this function
-// // TIP: Access Route Parameters for your page via $stateParams.parameterName
-// function ($scope, $state)
-// {
-//   console.log("Presently in main menu controller...");
-
-//   $scope.switchTo = function(newPage)
-//   {
-//     console.log("Switching to " + newPage);
-//     $state.go(newPage);
-//   };
-// }]);
-
-//~~~~~~~~~~~~~~~~~~~~~~~USER MENU CONTROLLER ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-.controller('userMenuController', ['$scope', '$state', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
+// //~~~~~~~~~~~~~~~~~~~~~~~TABSCONTROLLERs ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.controller('HomeTabCtrl', ['$scope', '$state', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
 // You can include any angular dependencies as parameters for this function
 // TIP: Access Route Parameters for your page via $stateParams.parameterName
 function ($scope, $state)
 {
-  console.log("Presently in user menu controller...");
+  console.log("Presently in home tab controller...");
 
   $scope.switchTo = function(newPage)
   {
@@ -221,14 +206,26 @@ function ($scope, $state)
   };
 }])
 
-
-//~~~~~~~~~~~~~~~~~~~~~~~TRAINER MENU CONTROLLER ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-.controller('trainerMenuController', ['$scope', '$state', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
+.controller('WourkoutsCtrl', ['$scope', '$state', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
 // You can include any angular dependencies as parameters for this function
 // TIP: Access Route Parameters for your page via $stateParams.parameterName
 function ($scope, $state)
 {
-  console.log("Presently in trainer menu controller...");
+  console.log("Presently in workouts tab controller...");
+
+  $scope.switchTo = function(newPage)
+  {
+    console.log("Switching to " + newPage);
+    $state.go(newPage);
+  };
+}])
+
+.controller('NutritionCtrl', ['$scope', '$state', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
+// You can include any angular dependencies as parameters for this function
+// TIP: Access Route Parameters for your page via $stateParams.parameterName
+function ($scope, $state)
+{
+  console.log("Presently in nutrition tab controller...");
 
   $scope.switchTo = function(newPage)
   {

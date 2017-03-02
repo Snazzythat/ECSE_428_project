@@ -22,7 +22,6 @@ def sign_up(request):
     serializer = UserSerializer(data=request.data)
 
     if serializer.is_valid():
-        print 'New user signed up! New data is: ' + str(serializer.data)
         serializer.save()
         #Distinguish user and trainer after signup to be able to login  
         return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -30,7 +29,7 @@ def sign_up(request):
 
 @api_view(['GET'])
 def login(request, username, password):
-    print 'GET LOGIN request from: ' + username + ' whose password is: ' + password 
+    print 'GET LOGIN request from: ' + str(username) + ' whose password is: ' + str(password)
 
     #TODO: At get, we need to return 200 or 202 for USER and TRAINER
     # in order to be able to destinguish both. To do so, we need to first get the data from login request
