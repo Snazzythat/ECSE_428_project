@@ -37,7 +37,7 @@ class User(models.Model):
     d_o_b = models.DateField(db_column='d.o.b')  # Field renamed to remove unsuitable characters.
     username = models.CharField(primary_key=True, max_length=45)
     password = models.CharField(db_column='Password', max_length=45)  # Field name made lowercase.
-    type = models.CharField(db_column='Type', max_length=45)
+    type = models.CharField(db_column='type', max_length=45)
 
     class Meta:
         managed = False
