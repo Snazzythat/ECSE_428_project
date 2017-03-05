@@ -1,0 +1,41 @@
+﻿<ion-view view-title="My Trainees" id="trainee">
+        <ion-content padding="true" class="has-header" ng-controller=TraineeCtrl>
+            <button id="Logout-button" class="button button-assertive  button-small" ng-click=switchTo('login')>Logout</button>
+
+            <form id="trainee-form1" class="list">
+                <ion-list id="trainee-list1">
+                </ion-list>
+
+                <div class="card">
+                    <div class="item item-divider">
+                        Trainee Group 1
+                    </div>
+                    <div class="item item-text-wrap">
+                        Trainee 1 information
+                    </div>
+                    <div class="item item-text-wrap">
+                        Trainee 2 information
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="item item-divider">
+                        Trainee Group 2
+                    </div>
+                    <div class="item item-text-wrap">
+                        Trainee 1 information
+                    </div>
+                    <div class="item item-text-wrap">
+                        Trainee 2 information
+                    </div>
+                    <div class="item item-text-wrap">
+                        Trainee 3 information
+                    </div>
+                </div>
+
+                <button id="Edit-button" class="button button-stable button-block" ng-click=editTrainee()>Edit Groups</button>
+                <button id="Back-button" class="button button-stable button-block" ng-click=switchTo('mainmenu')>Back</button>
+
+            </form>
+        </ion-content>
+</ion-view>

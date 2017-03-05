@@ -78,5 +78,18 @@ angular.module('starter.routes', [])
     //     }
     //   }
     // })
-$urlRouterProvider.otherwise('/login');
+
+  .state('trainee', {
+      url: '/trainee',
+      templateUrl: 'templates/TraineePage.html',
+      controller: 'TraineeCtrl'
+  })
+
+  .state('trainer', {
+      url: '/trainer',
+      templateUrl: 'templates/TrainerPage.html',
+      controller: 'TrainerCtrl'
+  })
+
+$urlRouterProvider.otherwise('/trainee');
 });
