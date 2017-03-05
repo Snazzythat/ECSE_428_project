@@ -1,27 +1,45 @@
-﻿<ion-view view-title="My Trainer" id="trainer">
-    <ion-content padding="true" class="has-header" ng-controller=TrainerCtrl>
-        <button id="Logout-button" class="button button-assertive  button-small" ng-click=switchTo('login')>Logout</button>
+﻿<ion-view view-title="My Trainees" id="trainee"  hide-nav-bar="true">
 
-        <form id="trainer-form1" class="list">
-            <ion-list id="trainer-list1">
-            </ion-list>
+       <div class="bar bar-header bar-positive">
+                <button id="Logout-button" class="button button-outline button-assertive" ng-click=switchTo('login')>Logout</button>
+                <h1 class="title">My Trainees</h1>
+        </div>
 
-            <div class="spacer" style="width: 300px; height: 100px;"></div>
+        <ion-content padding="true" class="has-header" ng-controller=TrainerCtrl>
+            <form id="trainee-form1" class="list">
+                <ion-list id="trainee-list1">
+                </ion-list>
 
-            <div class="card">
-                <div class="item item-divider">
-                    Trainer
+                <div class="card">
+                    <div class="item item-divider">
+                        Trainee Group 1
+                    </div>
+                    <div class="item item-text-wrap">
+                        Trainee 1 information
+                    </div>
+                    <div class="item item-text-wrap">
+                        Trainee 2 information
+                    </div>
                 </div>
-                <div class="item item-text-wrap">
-                    Trainer information
+
+                <div class="card">
+                    <div class="item item-divider">
+                        Trainee Group 2
+                    </div>
+                    <div class="item item-text-wrap">
+                        Trainee 1 information
+                    </div>
+                    <div class="item item-text-wrap">
+                        Trainee 2 information
+                    </div>
+                    <div class="item item-text-wrap">
+                        Trainee 3 information
+                    </div>
                 </div>
-            </div>
 
-            <div class="spacer" style="width: 300px; height: 150px;"></div>
+                <button id="Edit-button" class="button button-stable button-block" ng-click=editTrainee()>Edit Groups</button>
+                <button id="Back-button" class="button button-stable button-block" ng-click=switchTo('mainmenu')>Back</button>
 
-            <button id="Edit-button" class="button button-stable button-block" ng-click=editTrainer()>Edit Groups</button>
-            <button id="Back-button" class="button button-stable button-block" ng-click=switchTo('mainmenu')>Back</button>
-
-        </form>
-    </ion-content>
+            </form>
+        </ion-content>
 </ion-view>

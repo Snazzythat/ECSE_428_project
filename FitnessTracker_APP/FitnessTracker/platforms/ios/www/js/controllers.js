@@ -31,13 +31,13 @@ function ($scope, $state, LoginService)
     if (loginResult == "login_success_user")
     {
       console.log("Switching to main menu after successful USER login!");
-      $state.go('tabs.home'); //Default tabs for now
+      $state.go('trainee'); //Default tabs for now
     }
     //TODO: be able to login onto trainer menu
     else if (loginResult == "login_success_trainer")
     {
       console.log("Switching to main menu after successful TRAINER login!");
-      $state.go('tabs.home'); //Default tabs for now
+      $state.go('trainer'); //Default tabs for now
     }
     else if(loginResult == "user_notfound")
     {
@@ -104,6 +104,8 @@ function ($scope, $state, SignUpService) {
 
   var valid_parameters=false;
 
+  var userType='';
+
   $scope.switchTo = function(newPage)
   {
     console.log("Switching to " + newPage);
@@ -118,9 +120,18 @@ function ($scope, $state, SignUpService) {
     console.log("Server answered. Login outcome is " + signupResult);
     if (signupResult == "signup_success")
     {
-      navigator.notification.alert('Successful sign up. Welcome!', function (){},'Error','Ok');
+      navigator.notification.alert('Successful sign up. Welcome!', function (){},'Welcome!','Ok');
       console.log("Switching to main menu after successful signup!");
-      $state.go('mainmenu');
+
+      //Now go to main menu depending as who did we sign up
+      if (userType == 'Trainer')
+      {
+        $state.go('trainer');
+      }
+      else if (userType == 'User')
+      {
+        $state.go('trainee');
+      }
     }
     else if(signupResult == "server_notfound")
     {
@@ -153,6 +164,7 @@ function ($scope, $state, SignUpService) {
     var new_users_birthday = String($scope.user.birthday);
     varList.push(new_users_birthday);
     var selected_acc_type = document.getElementById('acc_type').value;
+    userType=selected_acc_type;
 
     // Verify first if no fields are empty
     // Name must not be empty
@@ -226,6 +238,37 @@ function ($scope, $state)
 function ($scope, $state)
 {
   console.log("Presently in nutrition tab controller...");
+
+  $scope.switchTo = function(newPage)
+  {
+    console.log("Switching to " + newPage);
+    $state.go(newPage);
+  };
+}])
+
+
+//~~~~~~~~~~~~~~~~~~~~~~~Trainer Page Controller ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.controller('TrainerCtrl', ['$scope', '$state', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
+// You can include any angular dependencies as parameters for this function
+// TIP: Access Route Parameters for your page via $stateParams.parameterName
+function ($scope, $state)
+{
+  console.log("Presently in Trainer controller...");
+
+  $scope.switchTo = function(newPage)
+  {
+    console.log("Switching to " + newPage);
+    $state.go(newPage);
+  };
+}])
+
+// //~~~~~~~~~~~~~~~~~~~~~~~Trainee Page Controller ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.controller('TraineeCtrl', ['$scope', '$state', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
+// You can include any angular dependencies as parameters for this function
+// TIP: Access Route Parameters for your page via $stateParams.parameterName
+function ($scope, $state)
+{
+  console.log("Presently in Trinee controller...");
 
   $scope.switchTo = function(newPage)
   {
