@@ -31,13 +31,13 @@ function ($scope, $state, LoginService)
     if (loginResult == "login_success_user")
     {
       console.log("Switching to main menu after successful USER login!");
-      $state.go('tabs.home');
+      $state.go('tabs.home'); //Default tabs for now
     }
     //TODO: be able to login onto trainer menu
     else if (loginResult == "login_success_trainer")
     {
       console.log("Switching to main menu after successful TRAINER login!");
-      //$state.go('trainer_menu');
+      $state.go('tabs.home'); //Default tabs for now
     }
     else if(loginResult == "user_notfound")
     {
