@@ -54,31 +54,6 @@ angular.module('starter.routes', [])
         }
       }
     })
-    // .state('tabs.about', {
-    //   url: "/about",
-    //   views: {
-    //     'about-tab': {
-    //       templateUrl: "templates/about.html"
-    //     }
-    //   }
-    // })
-    // .state('tabs.navstack', {
-    //   url: "/navstack",
-    //   views: {
-    //     'about-tab': {
-    //       templateUrl: "templates/nav-stack.html"
-    //     }
-    //   }
-    // })
-    // .state('tabs.contact', {
-    //   url: "/contact",
-    //   views: {
-    //     'contact-tab': {
-    //       templateUrl: "templates/contact.html"
-    //     }
-    //   }
-    // })
-
   .state('trainee', {
       url: '/trainee',
       templateUrl: 'templates/TraineePage.html',
@@ -91,5 +66,5 @@ angular.module('starter.routes', [])
       controller: 'TrainerCtrl'
   })
 
-$urlRouterProvider.otherwise('/trainee');
+$urlRouterProvider.otherwise('/login');
 });
