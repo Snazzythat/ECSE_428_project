@@ -27,21 +27,21 @@ def sign_up(request):
     #3. User exists already in the database (same username) return not allowed username code (405)
 
     # check if the user name specified in sign up request exists already
-    print 'Verifying for user name...'
+    print '****Verifying new user request params***'
     try:
-        user_in_db = User.objects.get(username=request.data.username)
-        print 'username found in db, exists already! Returning 405.'
+        user_in_db = User.objects.get(username=request.data['username'])
+        print '-->username found in db, exists already! Returning 405.'
         return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
     except User.DoesNotExist:
         print 'username does not exist, will check by email'
         pass
     
     try:
-        user_in_db = User.objects.get(email=request.data.email)
-        print 'email found in db, exists already! Returning 306.'
+        user_in_db = User.objects.get(email=request.data['email'])
+        print '-->email found in db, exists already! Returning 306.'
         return Response(status=status.HTTP_306_RESERVED)
     except User.DoesNotExist:
-        print 'email does not exist, good to go with a new user entry'
+        print '-->email does not exist, good to go with a new user entry'
         pass
 
     if serializer.is_valid():
