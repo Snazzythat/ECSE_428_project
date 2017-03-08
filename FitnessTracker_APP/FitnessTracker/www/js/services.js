@@ -4,14 +4,11 @@ var virtual_vm_ip="104.236.220.130:8001";
 var login_URI="/WebServices/login/"
 var signup_URI="/WebServices/signup/"
 
+var currentUser={}
+
 angular.module('starter.services', ['starter.controllers'])
 
-// Factory not needed
-.factory('BlankFactory', [function(){
-
-}])
-
-//~~~~~~~~~~~~~~~~~~~~~~~LOGIN SERVICE ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//~~~~~~~~~~~~~~~~~~~~~~~ LOGIN SERVICE ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // Login servicecalled from controller when user provides all valid login functions and HTTP REST issues
 .service('LoginService', ['$http', function($http)
 {
@@ -30,32 +27,33 @@ angular.module('starter.services', ['starter.controllers'])
     }
     catch(err)
     {
-        callback_to_login("user_notfound");
+        callback_to_login("user_notfound",{});
     }
     request.setRequestHeader("Content-Type", "application/json");
     request.onreadystatechange = function() {
       //When request is answered, call back the login controller with result
       // SUCESS USER LOGIN
       if (request.status == 200)
-      {
-          callback_to_login("login_success_user");
+      { 
+          // At successful login, pass the object data to the callback
+          callback_to_login("login_success_user",request.data);
       }
       // SUCESS TRAINER LOGIN
       else if (request.status == 202)
       {
-          callback_to_login("login_success_trainer");
+          callback_to_login("login_success_trainer",{});
       }    
       else if (request.status == 404)
       {
-          callback_to_login("user_notfound");
+          callback_to_login("user_notfound",{});
       }
       else if (request.status == 500 || request.status == 502 || request.status == 503)
       {
-          callback_to_login("server_error");
+          callback_to_login("server_error",{});
       }
       else if (request.status == 400)
       {
-          callback_to_signup("bad_request");
+          callback_to_login("bad_request",{});
       }
     }
     request.send();
@@ -63,7 +61,7 @@ angular.module('starter.services', ['starter.controllers'])
   };
 }])
 
-//~~~~~~~~~~~~~~~~~~~~~~~SIGNUP SERVICE ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//~~~~~~~~~~~~~~~~~~~~~~~ SIGNUP SERVICE ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // Sign up service called from controller when user provides all valid sign up data
 .service('SignUpService',['$http', function($http)
 {
@@ -112,4 +110,39 @@ angular.module('starter.services', ['starter.controllers'])
       request.send(signup_Data);
   };
 
+}])
+
+//~~~~~~~~~~~~~~~~~~~~~~~ USER FACTORY ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// Represent a user 'object' and all properties associated to user will be recorded here.
+// Will keep a "factory" dict that will define the user. Dict for now will have 'name' and 'email' as keys
+.factory('UserFactory', [function(){
+    var factory = {};
+    var userModel = {};
+
+    userModel.set = function(key, value) {
+       userModel[key] = value;
+    }
+
+    factory.get = function(key) {
+       return userModel[key];
+    };
+
+    return factory;
+}])
+
+//~~~~~~~~~~~~~~~~~~~~~~~ TRAINER FACTORY ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// Represent a user 'object' and all properties associated to user will be recorded here.
+.factory('TrainerFactory', [function(){
+    var factory = {};
+    var trainerModel = {};
+
+    trainerModel.set = function(key, value) {
+       trainerModel[key] = value;
+    }
+
+    factory.get = function(key) {
+       return trainerModel[key];
+    };
+
+    return factory;
 }]);

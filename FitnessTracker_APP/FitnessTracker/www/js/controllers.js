@@ -4,10 +4,10 @@ angular.module('starter.controllers', ['starter.services'])
 
 //~~~~~~~~~~~~~~~~~~~~~~~LOGIN CONTROLLER ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.controller('loginCtrl', ['$scope', '$state', 'LoginService', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
+.controller('loginCtrl', ['$scope', '$state', 'LoginService','UserFactory','TrainerFactory', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
 // You can include any angular dependencies as parameters for this function
 // TIP: Access Route Parameters for your page via $stateParams.parameterName
-function ($scope, $state, LoginService)
+function ($scope, $state, LoginService,UserFactory,TrainerFactory)
 {
   console.log("Presently in login controller...");
   $scope.user = {};  //declares the object user
@@ -25,18 +25,42 @@ function ($scope, $state, LoginService)
   // Take action after login was called
   // If successful, simply switch to main mainMenu
   // Otherwise notify the user about failure
-  var postLoginCallback = function(loginResult)
+  // The call back gets the status code of the request as well as the data that the server returns
+  // at successful login. Any error will result in an empty data dictionnary
+  var postLoginCallback = function(loginResult,loginData)
   {
     console.log("Server answered. Login outcome is " + loginResult);
     if (loginResult == "login_success_user")
-    {
+    { 
+      console.log("Data from successfull user login received from server: " + JSON.stringify(loginData));
+
+      console.log("Creating a User object with all the data received...");
+
+      //Unlike sign up, we have to request data at successful login.
+      UserFactory.set('name', loginData.name);
+      UserFactory.set('username', loginData.username);
+      UserFactory.set('email', loginData.email);
+      UserFactory.set('d_o_b', loginData.d_o_b);
+
       console.log("Switching to main menu after successful USER login!");
+
       $state.go('trainee'); //Default tabs for now
     }
     //TODO: be able to login onto trainer menu
     else if (loginResult == "login_success_trainer")
     {
+      console.log("Data from successfull trainer login received from server: " + JSON.stringify(loginData));
+
+      console.log("Creating a Trainer object with all the data received...");
+
+      //Unlike sign up, we have to request data at successful login.
+      TrainerFactory.set('name', loginData.name);
+      TrainerFactory.set('username', loginData.username);
+      TrainerFactory.set('email', loginData.email);
+      TrainerFactory.set('d_o_b', loginData.d_o_b);
+
       console.log("Switching to main menu after successful TRAINER login!");
+
       $state.go('trainer'); //Default tabs for now
     }
     else if(loginResult == "user_notfound")
@@ -93,10 +117,10 @@ function ($scope, $state, LoginService)
 
 //~~~~~~~~~~~~~~~~~~~~~~~SIGNUP CONTROLLER ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.controller('signupCtrl', ['$scope', '$state', 'SignUpService',// The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
+.controller('signupCtrl', ['$scope', '$state', 'SignUpService','UserFactory','TrainerFactory',// The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
 // You can include any angular dependencies as parameters for this function
 // TIP: Access Route Parameters for your page via $stateParams.parameterName
-function ($scope, $state, SignUpService) {
+function ($scope, $state, SignUpService, UserFactory,TrainerFactory) {
 
   //creating a new user object that we will get the new sign up parameters
   console.log("Presently in signup controller...");
@@ -104,7 +128,10 @@ function ($scope, $state, SignUpService) {
 
   var valid_parameters=false;
   var userType='';
-
+  var userName='';
+  var userActualName='';
+  var userEmail='';
+  var usersBirthday='';
 
   $scope.switchTo = function(newPage)
   {
@@ -114,19 +141,27 @@ function ($scope, $state, SignUpService) {
 
   // Confirmation message button callback necessary for user to confirm
   // If he wants to sign in with his email because account exists already 
-  var confirm_user_exists_by_email = fucntion(buttonIndex)
+  var confirm_user_exists_by_email = function(buttonIndex)
   {
     // User chose to login
     if (buttonIndex == 1)
     {
-      //TODO: get current users email and switch to login with it in the form
+      // TODO: get current users or trainers email and switch to login with it in the form
+      if (userType == 'Trainer')
+      {
+        TrainerFactory.set('email', userEmail);
+      }
+      else if (userType == 'User')
+      {
+        UserFactory.set('email', userEmail);
+      }
     }
-    // User ignores and will potentially chose another email
+      // User ignores and will potentially chose another email
     else
     {
-
+      //Ignore
     }
-  }
+  };
 
   // Take action after signup was called
   // If successful, simply switch to main mainMenu
@@ -142,10 +177,28 @@ function ($scope, $state, SignUpService) {
       //Now go to main menu depending as who did we sign up
       if (userType == 'Trainer')
       {
+        //Creating the actual object for Trainer before switching to trainer menu
+        //Can do it directly without having to access the server since we have all data already. 
+        console.log("Creating a Trainer object with all the data received...");
+
+        TrainerFactory.set('name', userActualName);
+        TrainerFactory.set('username', userName);
+        TrainerFactory.set('email', userEmail);
+        TrainerFactory.set('d_o_b', usersBirthday);
+        
         $state.go('trainer');
       }
       else if (userType == 'User')
       {
+        //Creating the actual object for Trainer before switching to trainer menu
+        //Can do it directly without having to access the server since we have all data already.
+        console.log("Creating a User object with all the data received...");
+
+        UserFactory.set('name', userActualName);
+        UserFactory.set('username', userName);
+        UserFactory.set('email', userEmail);
+        UserFactory.set('d_o_b', usersBirthday);
+
         $state.go('trainee');
       }
     }
@@ -172,21 +225,25 @@ function ($scope, $state, SignUpService) {
     {
       navigator.notification.confirm('This email is already taken! Do you want to login with this email?', confirm_user_exists_by_email, 'Email exists!',['Ok,login','Cancel']);
     }
-  }
+  };
 
   $scope.signUpProcess = function()
   {
     varList = [];
     var new_users_username = String($scope.user.username);
     varList.push(new_users_username);
+    userName = new_users_username;
     var new_users_email = String($scope.user.email);
     varList.push(new_users_email);
+    userEmail = new_users_email;
     var new_users_password = String($scope.user.password);
     varList.push(new_users_password);
     var new_users_actualname = String($scope.user.name);
     varList.push(new_users_actualname);
+    userActualName = new_users_actualname;
     var new_users_birthday = String($scope.user.birthday);
     varList.push(new_users_birthday);
+    usersBirthday = new_users_birthday;
     var selected_acc_type = document.getElementById('acc_type').value;
     userType=selected_acc_type;
 

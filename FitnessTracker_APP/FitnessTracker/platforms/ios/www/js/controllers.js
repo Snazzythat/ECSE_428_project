@@ -103,13 +103,29 @@ function ($scope, $state, SignUpService) {
   $scope.user = {};
 
   var valid_parameters=false;
-
   var userType='';
+
 
   $scope.switchTo = function(newPage)
   {
     console.log("Switching to " + newPage);
     $state.go(newPage);
+  };
+
+  // Confirmation message button callback necessary for user to confirm
+  // If he wants to sign in with his email because account exists already 
+  var confirm_user_exists_by_email = function(buttonIndex)
+  {
+    // User chose to login
+    if (buttonIndex == 1)
+    {
+      //TODO: get current users email and switch to login with it in the form
+    }
+    // User ignores and will potentially chose another email
+    else
+    {
+
+    }
   };
 
   // Take action after signup was called
@@ -146,9 +162,17 @@ function ($scope, $state, SignUpService) {
     else if(signupResult == "bad_request")
     {
       console.error("Bad signup request");
-      navigator.notification.alert('Server encountered a bad sign up request, make sure all data is valid.', function (){},'Error','Ok');
-    }   
-  }
+      navigator.notification.alert('Server encountered a bad sign up request, make sure all data is valid.', function (){},'Server Error!','Ok');
+    }
+    else if(signupResult == "user_exists_byusername")
+    {
+      navigator.notification.alert('This user name is already taken! Try another user name.', function (){},'Use name taken!','Ok');
+    }
+    else if(signupResult == "user_exists_byemail")
+    {
+      navigator.notification.confirm('This email is already taken! Do you want to login with this email?', confirm_user_exists_by_email, 'Email exists!',['Ok,login','Cancel']);
+    }
+  };
 
   $scope.signUpProcess = function()
   {

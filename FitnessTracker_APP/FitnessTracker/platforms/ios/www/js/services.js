@@ -63,7 +63,7 @@ angular.module('starter.services', ['starter.controllers'])
   };
 }])
 
-//~~~~~~~~~~~~~~~~~~~~~~~LOGIN SERVICE ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//~~~~~~~~~~~~~~~~~~~~~~~SIGNUP SERVICE ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // Sign up service called from controller when user provides all valid sign up data
 .service('SignUpService',['$http', function($http)
 {
@@ -98,6 +98,14 @@ angular.module('starter.services', ['starter.controllers'])
               else if (request.status == 400)
               {
                   callback_to_signup("bad_request");
+              }
+              else if (request.status == 405)
+              {
+                  callback_to_signup("user_exists_byusername");
+              }
+              else if (request.status == 306)
+              {
+                  callback_to_signup("user_exists_byemail");
               }
           }
       }
