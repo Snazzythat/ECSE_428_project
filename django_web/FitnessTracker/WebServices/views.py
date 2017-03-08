@@ -29,7 +29,7 @@ def sign_up(request):
     # check if the user name specified in sign up request exists already
     print 'Verifying for user name...'
     try:
-        user_in_db = User.objects.get(username=request.username)
+        user_in_db = User.objects.get(username=request.data.username)
         print 'username found in db, exists already! Returning 405.'
         return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
     except User.DoesNotExist:
@@ -37,7 +37,7 @@ def sign_up(request):
         pass
     
     try:
-        user_in_db = User.objects.get(email=request.email)
+        user_in_db = User.objects.get(email=request.data.email)
         print 'email found in db, exists already! Returning 306.'
         return Response(status=status.HTTP_306_RESERVED)
     except User.DoesNotExist:
