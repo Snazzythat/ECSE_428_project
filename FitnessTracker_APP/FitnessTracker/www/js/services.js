@@ -33,27 +33,31 @@ angular.module('starter.services', ['starter.controllers'])
     request.onreadystatechange = function() {
       //When request is answered, call back the login controller with result
       // SUCESS USER LOGIN
-      if (request.status == 200)
-      { 
-          // At successful login, pass the object data to the callback
-          callback_to_login("login_success_user",request.data);
-      }
-      // SUCESS TRAINER LOGIN
-      else if (request.status == 202)
+
+      if(request.readyState === 4)
       {
-          callback_to_login("login_success_trainer",{});
-      }    
-      else if (request.status == 404)
-      {
-          callback_to_login("user_notfound",{});
-      }
-      else if (request.status == 500 || request.status == 502 || request.status == 503)
-      {
-          callback_to_login("server_error",{});
-      }
-      else if (request.status == 400)
-      {
-          callback_to_login("bad_request",{});
+        if (request.status == 200)
+        { 
+            // At successful login, pass the object data to the callback
+            callback_to_login("login_success_user",request.responseText);
+        }
+        // SUCESS TRAINER LOGIN
+        else if (request.status == 202)
+        {
+            callback_to_login("login_success_trainer",{});
+        }    
+        else if (request.status == 404)
+        {
+            callback_to_login("user_notfound",{});
+        }
+        else if (request.status == 500 || request.status == 502 || request.status == 503)
+        {
+            callback_to_login("server_error",{});
+        }
+        else if (request.status == 400)
+        {
+            callback_to_login("bad_request",{});
+        }
       }
     }
     request.send();
