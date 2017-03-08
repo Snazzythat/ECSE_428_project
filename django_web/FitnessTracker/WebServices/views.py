@@ -21,6 +21,29 @@ def sign_up(request):
     print 'Request data: ' + str(request.data)
     serializer = UserSerializer(data=request.data)
 
+    #Treat cases:
+    #1. User doesnt exist in the DB, all data is new and valid, account is created (201)
+    #2. User exists already in the database (same email) return user redirect code (306)
+    #3. User exists already in the database (same username) return not allowed username code (405)
+
+    # check if the user name specified in sign up request exists already
+    print 'Verifying for user name...'
+    try:
+        user_in_db = User.objects.get(username=request.username)
+        print 'username found in db, exists already! Returning 405.'
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+    except User.DoesNotExist:
+        print 'username does not exist, will check by email'
+        pass
+    
+    try:
+        user_in_db = User.objects.get(email=request.email)
+        print 'email found in db, exists already! Returning 306.'
+        return Response(status=status.HTTP_306_RESERVED)
+    except User.DoesNotExist:
+        print 'email does not exist, good to go with a new user entry'
+        pass
+
     if serializer.is_valid():
         serializer.save()
         #Distinguish user and trainer after signup to be able to login  
