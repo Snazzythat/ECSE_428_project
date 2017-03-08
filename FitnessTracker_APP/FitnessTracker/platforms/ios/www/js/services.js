@@ -118,35 +118,39 @@ angular.module('starter.services', ['starter.controllers'])
 
 //~~~~~~~~~~~~~~~~~~~~~~~ USER FACTORY ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // Represent a user 'object' and all properties associated to user will be recorded here.
-// Will keep a "factory" dict that will define the user. Dict for now will have 'name' and 'email' as keys
+// Will keep a "factory" dict that will define the user
 .factory('UserFactory', [function(){
-    var factory = {};
-    var userModel = {};
 
-    userModel.set = function(key, value) {
-       userModel[key] = value;
+    // Object belonging to user. So far the obejct has keys: name, username, email, d_o_b
+    // Gets filled at login/sign up
+    var userObject = {};
+
+    this.set = function(key, value) {
+       userObject[key] = value;
     }
 
-    factory.get = function(key) {
-       return userModel[key];
+    this.get = function(key) {
+       return userObject[key];
     };
 
-    return factory;
+    return userObject;
 }])
 
 //~~~~~~~~~~~~~~~~~~~~~~~ TRAINER FACTORY ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // Represent a user 'object' and all properties associated to user will be recorded here.
 .factory('TrainerFactory', [function(){
-    var factory = {};
-    var trainerModel = {};
 
-    trainerModel.set = function(key, value) {
-       trainerModel[key] = value;
+    // Object belonging to trainer. So far the obejct has keys: name, username, email, d_o_b
+    // Gets filled at login/sign up
+    var trainerObject = {};
+
+    this.set = function(key, value) {
+       trainerObject[key] = value;
     }
 
-    factory.get = function(key) {
-       return trainerModel[key];
+    this.get = function(key) {
+       return trainerObject[key];
     };
 
-    return factory;
+    return trainerObject;
 }]);
