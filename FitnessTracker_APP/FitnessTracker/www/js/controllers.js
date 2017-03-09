@@ -66,7 +66,7 @@ function ($scope, $state, LoginService,UserFactory,TrainerFactory)
     else if(loginResult == "user_notfound")
     {
       console.error("User not found!");
-      navigator.notification.alert('You have not signed up yet! Please sign up first!', function (){},'Error','Ok');
+      navigator.notification.alert('Incorrect user name or password. Make sure you signed up.', function (){},'Error','Ok');
     }
     else if(loginResult == "server_error")
     {
@@ -112,7 +112,11 @@ function ($scope, $state, LoginService,UserFactory,TrainerFactory)
       console.log("Sending async login request...");
       LoginService.http_login_request(users_email,users_password, postLoginCallback);
     }
-  };
+  }
+  
+  // Password recovery feature.
+  // Contacts web server with email or username.
+  // WS needs to send an email with password recovery.
 }])
 
 //~~~~~~~~~~~~~~~~~~~~~~~SIGNUP CONTROLLER ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -286,7 +290,7 @@ function ($scope, $state, SignUpService, UserFactory,TrainerFactory) {
   };
 }])
 
-// //~~~~~~~~~~~~~~~~~~~~~~~TABSCONTROLLERs ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// //~~~~~~~~~~~~~~~~~~~~~~~ TABSCONTROLLERs ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 .controller('HomeTabCtrl', ['$scope', '$state', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
 // You can include any angular dependencies as parameters for this function
 // TIP: Access Route Parameters for your page via $stateParams.parameterName
@@ -330,7 +334,7 @@ function ($scope, $state)
 }])
 
 
-//~~~~~~~~~~~~~~~~~~~~~~~Trainer Page Controller ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//~~~~~~~~~~~~~~~~~~~~~~~ Trainer Page Controller ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 .controller('TrainerCtrl', ['$scope', '$state', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
 // You can include any angular dependencies as parameters for this function
 // TIP: Access Route Parameters for your page via $stateParams.parameterName
@@ -345,7 +349,7 @@ function ($scope, $state)
   };
 }])
 
-// //~~~~~~~~~~~~~~~~~~~~~~~Trainee Page Controller ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// //~~~~~~~~~~~~~~~~~~~~~~~ Trainee Page Controller ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 .controller('TraineeCtrl', ['$scope', '$state', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
 // You can include any angular dependencies as parameters for this function
 // TIP: Access Route Parameters for your page via $stateParams.parameterName
@@ -358,4 +362,30 @@ function ($scope, $state)
     console.log("Switching to " + newPage);
     $state.go(newPage);
   };
+}])
+
+
+//~~~~~~~~~~~~~~~~~~~~~~~ Password Recovery Page Controller ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.controller('PasswordRecCtrl', ['$scope', '$state', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
+// You can include any angular dependencies as parameters for this function
+// TIP: Access Route Parameters for your page via $stateParams.parameterName
+function ($scope, $state)
+{
+  console.log("Presently in Password Recovery controller...");
+
+  $scope.user = {};
+
+  $scope.switchTo = function(newPage)
+  {
+    console.log("Switching to " + newPage);
+    $state.go(newPage);
+  };
+
+  $scope.getMyPassword() = function()
+  {
+    var recovery_email = String($scope.user.email);
+
+    //TODO: send HTTP reqest to the server and have a call back answering and treat it here.
+  };
+
 }]);
