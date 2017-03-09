@@ -1,8 +1,8 @@
 // Don't forget to change the VM ip and port here!
 // var virtual_vm_ip="104.236.220.130:9090/kevinnam.me/public_html/";
 var virtual_vm_ip="104.236.220.130:8001";
-var login_URI="/WebServices/login/"
-var signup_URI="/WebServices/signup/"
+var login_URI="/WebServices/login/";
+var signup_URI="/WebServices/signup/";
 
 angular.module('starter.services', ['starter.controllers'])
 
@@ -44,7 +44,7 @@ angular.module('starter.services', ['starter.controllers'])
       else if (request.status == 202)
       {
           callback_to_login("login_success_trainer");
-      }    
+      }
       else if (request.status == 404)
       {
           callback_to_login("user_notfound");
@@ -57,7 +57,7 @@ angular.module('starter.services', ['starter.controllers'])
       {
           callback_to_signup("bad_request");
       }
-    }
+  };
     request.send();
     // ~~~ASYNC CODE END
   };
@@ -94,14 +94,23 @@ angular.module('starter.services', ['starter.controllers'])
               else if (request.status == 500 || request.status == 502 || request.status == 503)
               {
                     callback_to_login("server_error");
-              } 
+              }
               else if (request.status == 400)
               {
                   callback_to_signup("bad_request");
               }
           }
-      }
+      };
       request.send(signup_Data);
   };
+
+}])
+
+//~~~~~~~~~~~~~~~~~~~~~~~Exercise SERVICE ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// Exercise service contains all functions related to exercises
+.service('ExerciseService',['$http', function($http)
+{
+
+
 
 }]);

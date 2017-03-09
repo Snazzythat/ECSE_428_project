@@ -58,8 +58,8 @@ function ($scope, $state, LoginService)
     {
       console.error("Bad signup request");
       navigator.notification.alert('Server encountered a bad login request, make sure all data is valid.', function (){},'Error','Ok');
-    }  
-  }
+    }
+};
 
   // Autherntification for user
   // TODO: Async call to the server and DB to authentificate the user (if exists or if noes not exist)
@@ -136,8 +136,8 @@ function ($scope, $state, SignUpService) {
     {
       console.error("Bad signup request");
       navigator.notification.alert('Server encountered a bad sign up request, make sure all data is valid.', function (){},'Error','Ok');
-    }   
-  }
+    }
+};
 
   $scope.signUpProcess = function()
   {
@@ -226,6 +226,21 @@ function ($scope, $state)
 function ($scope, $state)
 {
   console.log("Presently in nutrition tab controller...");
+
+  $scope.switchTo = function(newPage)
+  {
+    console.log("Switching to " + newPage);
+    $state.go(newPage);
+  };
+}])
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~EXERCISECONTROLLER~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+.controller('ExerciseCtrl', ['$scope', '$state', 'ExerciseService', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
+// You can include any angular dependencies as parameters for this function
+// TIP: Access Route Parameters for your page via $stateParams.parameterName
+function ($scope, $state)
+{
+  console.log("Presently in exercise tab controller...");
 
   $scope.switchTo = function(newPage)
   {
