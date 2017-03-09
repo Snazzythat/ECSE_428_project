@@ -381,7 +381,7 @@ function ($scope, $state)
     $state.go(newPage);
   };
 
-  $scope.getMyPassword() = function()
+  $scope.getMyPassword = function()
   {
     var recovery_email = String($scope.user.email);
 
