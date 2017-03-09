@@ -389,3 +389,35 @@ function ($scope, $state)
   };
 
 }]);
+
+/*
+//~~~~~~~~~~~~~~~~~~~~~~~ Nutrition Plan Page Controller ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.controller('NutritionPlanCtrl', ['$scope', '$state', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
+// You can include any angular dependencies as parameters for this function
+// TIP: Access Route Parameters for your page via $stateParams.parameterName
+function ($scope, $state)
+{
+    console.log("Presently in NutritionPlan controller...");
+
+    $scope.switchTo = function(newPage)
+    {
+        console.log("Switching to " + newPage);
+        $state.go(newPage);
+    };
+}])
+
+//~~~~~~~~~~~~~~~~~~~~~~~ Exercise Lookup Page Controller ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.controller('ExerciseLookupCtrl', ['$scope', '$state', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
+// You can include any angular dependencies as parameters for this function
+// TIP: Access Route Parameters for your page via $stateParams.parameterName
+function ($scope, $state)
+{
+    console.log("Presently in ExerciseLookup controller...");
+
+    $scope.switchTo = function(newPage)
+    {
+        console.log("Switching to " + newPage);
+        $state.go(newPage);
+    };
+}])
+*/
