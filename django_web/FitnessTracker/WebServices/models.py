@@ -9,6 +9,16 @@ from __future__ import unicode_literals
 
 from django.db import models
 
+class Nutrition(models.Model):
+    name = models.CharField(primary_key=True, max_length=45)
+    calories = models.FloatField()
+    protein = models.FloatField()
+    fat = models.FloatField()
+    carbohydrate = models.FloatField()
+
+    class Meta:
+        managed = False
+        db_table = 'Nutrition'
 
 class Exercise(models.Model):
     name = models.CharField(primary_key=True, max_length=45)

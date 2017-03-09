@@ -35,7 +35,7 @@ def sign_up(request):
     except User.DoesNotExist:
         print 'username does not exist, will check by email'
         pass
-    
+
     try:
         user_in_db = User.objects.get(email=request.data['email'])
         print '-->email found in db, exists already! Returning 306.'
@@ -46,7 +46,7 @@ def sign_up(request):
 
     if serializer.is_valid():
         serializer.save()
-        #Distinguish user and trainer after signup to be able to login  
+        #Distinguish user and trainer after signup to be able to login
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -62,7 +62,7 @@ def login(request, username, password):
     except User.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
     serializer = UserSerializer(user)
-    #Distinguish user and trainer after login as well to be able to login  
+    #Distinguish user and trainer after login as well to be able to login
     if user.password == password:
         #return Response(serializer.data) //old way just returning data
         #Now need to return @login if we logged in as user or trainer
