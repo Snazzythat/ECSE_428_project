@@ -125,15 +125,25 @@ angular.module('starter.services', ['starter.controllers'])
     // Gets filled at login/sign up
     var userObject = {};
 
-    this.set = function(key, value) {
-       userObject[key] = value;
-    }
+    // this.set = function(key, value) {
+    //    userObject[key] = value;
+    // }
 
-    this.get = function(key) {
-       return userObject[key];
+    // this.get = function(key) {
+    //    return userObject[key];
+    // };
+
+    // return userObject;
+    return{   // --> HAVE THE BRACKET ON THE SAME LINE AS return ELSE MINDFUCK
+        set : function(key, value)
+        {
+            userObject[key] = value;
+        },
+        get : function(key)
+        {
+            return userObject[key];
+        }
     };
-
-    return userObject;
 }])
 
 //~~~~~~~~~~~~~~~~~~~~~~~ TRAINER FACTORY ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -144,13 +154,23 @@ angular.module('starter.services', ['starter.controllers'])
     // Gets filled at login/sign up
     var trainerObject = {};
 
-    this.set = function(key, value) {
-       trainerObject[key] = value;
-    }
+    // this.set = function(key, value) {
+    //    trainerObject[key] = value;
+    // }
 
-    this.get = function(key) {
-       return trainerObject[key];
+    // this.get = function(key) {
+    //    return trainerObject[key];
+    // };
+
+    // return trainerObject;
+    return{
+        set : function(key, value)
+        {
+            trainerObject[key] = value;
+        },
+        get : function(key)
+        {
+            return trainerObject[key];
+        }
     };
-
-    return trainerObject;
 }]);

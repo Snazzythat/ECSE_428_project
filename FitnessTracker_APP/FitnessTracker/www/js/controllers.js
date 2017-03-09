@@ -150,10 +150,12 @@ function ($scope, $state, SignUpService, UserFactory,TrainerFactory) {
       if (userType == 'Trainer')
       {
         TrainerFactory.set('email', userEmail);
+        $state.go('login');
       }
       else if (userType == 'User')
       {
         UserFactory.set('email', userEmail);
+        $state.go('login');
       }
     }
       // User ignores and will potentially chose another email
