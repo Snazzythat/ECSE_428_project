@@ -3,7 +3,7 @@
 var virtual_vm_ip="104.236.220.130:8001";
 var login_URI="/WebServices/login/"
 var signup_URI="/WebServices/signup/"
-
+var password_rec_URI="/WebServices/passwordrecovery/"
 var currentUser={}
 
 angular.module('starter.services', ['starter.controllers'])
@@ -44,7 +44,7 @@ angular.module('starter.services', ['starter.controllers'])
         // SUCESS TRAINER LOGIN
         else if (request.status == 202)
         {
-            callback_to_login("login_success_trainer",{});
+            callback_to_login("login_success_trainer",request.responseText);
         }    
         else if (request.status == 404)
         {
@@ -57,6 +57,10 @@ angular.module('starter.services', ['starter.controllers'])
         else if (request.status == 400)
         {
             callback_to_login("bad_request",{});
+        }
+        else if (request.status == 401)
+        {
+            callback_to_login("bad_password",{});
         }
       }
     }
@@ -116,6 +120,47 @@ angular.module('starter.services', ['starter.controllers'])
 
 }])
 
+//~~~~~~~~~~~~~~~~~~~~~~~ PASSWORD RECOVERY SERVICE ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// Password recovery service issuing request to server
+// so that the server sends an email with password to keys
+.service('PasswordRecoveryService',['$http', function($http)
+{
+  this.recover_pswd = function(user_email,callback_to_recovery)
+  {
+      var signupURL = "http://" + virtual_vm_ip + password_rec_URI;
+
+       var recovery_Data = JSON.stringify({email : user_email});
+      // Issue new http POST request to the Server
+      var request = new XMLHttpRequest();
+      request.open("POST", signupURL);
+      request.setRequestHeader("Content-Type", "application/json");
+      
+      request.onreadystatechange = function() {
+          //When request is answered, handle ASYNC here
+          if (request.readyState == 4)
+          {
+              if (request.status == 200)
+              {
+                  callback_to_recovery("recovery_request_success");
+              }
+              else if (request.status == 404)
+              {
+                  callback_to_recovery("server_notfound");
+              }
+              else if (request.status == 400)
+              {
+                  callback_to_recovery("recovery_request_failure");
+              }
+              else if (request.status == 500 || request.status == 502 || request.status == 503)
+              {
+                   callback_to_recovery("server_error");
+              } 
+          }
+      }
+      request.send(recovery_Data);
+  };
+}])
+
 //~~~~~~~~~~~~~~~~~~~~~~~ USER FACTORY ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // Represent a user 'object' and all properties associated to user will be recorded here.
 // Will keep a "factory" dict that will define the user
@@ -125,13 +170,6 @@ angular.module('starter.services', ['starter.controllers'])
     // Gets filled at login/sign up
     var userObject = {};
 
-    // this.set = function(key, value) {
-    //    userObject[key] = value;
-    // }
-
-    // this.get = function(key) {
-    //    return userObject[key];
-    // };
 
     // return userObject;
     return{   // --> HAVE THE BRACKET ON THE SAME LINE AS return ELSE MINDFUCK
@@ -154,15 +192,6 @@ angular.module('starter.services', ['starter.controllers'])
     // Gets filled at login/sign up
     var trainerObject = {};
 
-    // this.set = function(key, value) {
-    //    trainerObject[key] = value;
-    // }
-
-    // this.get = function(key) {
-    //    return trainerObject[key];
-    // };
-
-    // return trainerObject;
     return{
         set : function(key, value)
         {

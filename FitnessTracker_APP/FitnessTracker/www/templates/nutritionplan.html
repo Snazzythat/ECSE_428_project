@@ -1,0 +1,33 @@
+﻿<ion-view view-title="My Nutrition Plan" id="nutritionplan" hide-nav-bar="true">
+
+    <div class="bar bar-header bar-positive">
+        <button id="Logout-button" class="button button-outline button-energized" ng-click=switchTo('login')>Logout</button>
+        <h1 class="title">My Nutrition Plan</h1>
+    </div>
+
+    <ion-content padding="true" class="has-header" ng-controller=NutritionPlanCtrl>
+        <form id="trainer-form1" class="list">
+            <ion-list id="trainer-list1">
+            </ion-list>
+
+            <div class="card">
+                <div class="item item-text-wrap">
+                    Nutrition information
+                </div>
+                <div class="item item-text-wrap">
+                    Nutrition information
+                </div>
+                <div class="item item-text-wrap">
+                    Nutrition information
+                </div>
+                <div class="item item-text-wrap">
+                    Nutrition information
+                </div>
+            </div>
+
+            <button id="Edit-button" class="button button-stable button-block" ng-click=editNutrition()>Create/Edit Plan</button>
+            <button id="Back-button" class="button button-stable button-block" ng-click=switchTo('mainmenu')>Back</button>
+
+        </form>
+    </ion-content>
+</ion-view>

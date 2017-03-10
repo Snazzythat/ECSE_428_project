@@ -18,6 +18,7 @@ urlpatterns = [
     url(r'^exercise/$', exerciseView.index),
     url(r'^exercise/get$', exerciseView.get_exercise),
     url(r'^exercise/create$', exerciseView.create_exercise)
+    url(r'^passwordrecovery/$', views.password_recovery)
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

@@ -6,6 +6,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from WebServices.serializers import UserSerializer
 from WebServices.models import User
+from django.core.mail import EmailMessage
 
 
 def index(request):
@@ -54,9 +55,6 @@ def sign_up(request):
 def login(request, username, password):
     print 'GET LOGIN request from: ' + str(username) + ' whose password is: ' + str(password)
 
-    #TODO: At get, we need to return 200 or 202 for USER and TRAINER
-    # in order to be able to destinguish both. To do so, we need to first get the data from login request
-    # check the db if we exists as user or trainer and then return the respected answer code.
     try:
         user = User.objects.get(username=username)
     except User.DoesNotExist:
@@ -71,5 +69,32 @@ def login(request, username, password):
             return Response(serializer.data, status=status.HTTP_200_OK)
         elif user.type == 'Trainer':
             return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
+    else:
+        #bad password, return wrong password
+        return Response(serializer.data, status=status.HTTP_401_UNAUTHORIZED)
 
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['POST'])
+def password_recovery(request):
+    print 'POST PASSWORD RECOVERY request'
+    print 'Sending the email to user stage.'
+    print 'Request data: ' + str(request.data)
+
+    email = request.data['email']
+
+    try:
+        print 'Searching for user with the email' + str(email)
+        user = User.objects.get(email=email)
+        print 'User with email ' + str(email) + ' found! Sending the email...'
+    except User.DoesNotExist:
+        print 'User with email ' + str(email) + ' not found! Sending 400.'
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    user_password_to_send = user.password
+    email = EmailMessage('Fitness Tracker Password Recovery', 'Hi there, your password is: ' + str(user_password_to_send), to=[email])
+    email.send()
+    print 'Message sent! Responding with 200.'
+
+    return Response(status=status.HTTP_200_OK)

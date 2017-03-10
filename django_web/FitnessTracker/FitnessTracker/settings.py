@@ -129,3 +129,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
 STATIC_URL = '/static/'
+
+#Google SMTP settings for email sending purposes
+
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'fitness.tracker.428@gmail.com'
+EMAIL_HOST_PASSWORD = 'tracker428'
+EMAIL_PORT = 587
