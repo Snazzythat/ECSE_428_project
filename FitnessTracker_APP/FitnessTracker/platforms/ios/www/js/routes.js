@@ -66,5 +66,11 @@ angular.module('starter.routes', [])
       controller: 'TrainerCtrl'
   })
 
+  .state('passwordrecovery', {
+      url: '/passwordrecovery',
+      templateUrl: 'templates/PasswordRec.html',
+      controller: 'PasswordRecCtrl'
+  })
+
 $urlRouterProvider.otherwise('/login');
 });
