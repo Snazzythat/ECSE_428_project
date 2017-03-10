@@ -44,7 +44,7 @@ angular.module('starter.services', ['starter.controllers'])
         // SUCESS TRAINER LOGIN
         else if (request.status == 202)
         {
-            callback_to_login("login_success_trainer",{});
+            callback_to_login("login_success_trainer",request.responseText);
         }    
         else if (request.status == 404)
         {
@@ -57,6 +57,10 @@ angular.module('starter.services', ['starter.controllers'])
         else if (request.status == 400)
         {
             callback_to_login("bad_request",{});
+        }
+        else if (request.status == 401)
+        {
+            callback_to_login("bad_password",{});
         }
       }
     }

@@ -73,16 +73,21 @@ function ($scope, $state, LoginService,UserFactory,TrainerFactory)
       console.error("Server error!");
       navigator.notification.alert('Server error. Please contact the support.', function (){},'Error','Ok');
     }
-    else if(signupResult == "server_notfound")
+    else if(loginResult == "server_notfound")
     {
       console.error("Server not found!");
       navigator.notification.alert('Server is offline. Please try again later.', function (){},'Error','Ok');
     }
-    else if(signupResult == "bad_request")
+    else if(loginResult == "bad_request")
     {
       console.error("Bad signup request");
       navigator.notification.alert('Server encountered a bad login request, make sure all data is valid.', function (){},'Error','Ok');
-    }  
+    }
+    else if(loginResult == "bad_password")
+    {
+      console.error("Bad password!");
+      navigator.notification.alert('User name exists, but wrong password!', function (){},'Wrong Password','Try again');
+    }
   }
 
   // Autherntification for user
@@ -387,5 +392,35 @@ function ($scope, $state)
 
     //TODO: send HTTP reqest to the server and have a call back answering and treat it here.
   };
+}])
 
+
+//~~~~~~~~~~~~~~~~~~~~~~~ Nutrition Plan Page Controller ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.controller('NutritionPlanCtrl', ['$scope', '$state', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
+// You can include any angular dependencies as parameters for this function
+// TIP: Access Route Parameters for your page via $stateParams.parameterName
+function ($scope, $state)
+{
+    console.log("Presently in NutritionPlan controller...");
+
+    $scope.switchTo = function(newPage)
+    {
+        console.log("Switching to " + newPage);
+        $state.go(newPage);
+    };
+}])
+
+//~~~~~~~~~~~~~~~~~~~~~~~ Exercise Lookup Page Controller ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.controller('ExerciseLookupCtrl', ['$scope', '$state', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
+// You can include any angular dependencies as parameters for this function
+// TIP: Access Route Parameters for your page via $stateParams.parameterName
+function ($scope, $state)
+{
+    console.log("Presently in ExerciseLookup controller...");
+
+    $scope.switchTo = function(newPage)
+    {
+        console.log("Switching to " + newPage);
+        $state.go(newPage);
+    };
 }]);

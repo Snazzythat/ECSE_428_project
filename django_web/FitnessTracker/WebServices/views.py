@@ -71,5 +71,8 @@ def login(request, username, password):
             return Response(serializer.data, status=status.HTTP_200_OK)
         elif user.type == 'Trainer':
             return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
+    else:
+        #bad password, return wrong password
+        return Response(serializer.data, status=status.HTTP_401_UNAUTHORIZED)
 
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

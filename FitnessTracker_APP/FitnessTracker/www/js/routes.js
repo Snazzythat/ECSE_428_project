@@ -74,11 +74,11 @@ angular.module('starter.routes', [])
       controller: 'PasswordRecCtrl'
   })
 
-  .state('exerciseplan', { //Not yet implemented (Should be "Workout")
-      url: '/exerciseplan',
-      templateUrl: 'templates/ExercisePlan.html',
-      controller: 'ExercisePlanCtrl'
-  })
+  // .state('exerciseplan', { //Not yet implemented (Should be "Workout")
+  //     url: '/exerciseplan',
+  //     templateUrl: 'templates/ExercisePlan.html',
+  //     controller: 'ExercisePlanCtrl'
+  // })
 
   .state('nutritionplan', {
       url: '/nutritionplan',
@@ -92,11 +92,11 @@ angular.module('starter.routes', [])
       controller: 'ExerciseLookupCtrl'
   })
 
-  .state('nutritionlookup', { //Not yet implemented
-      url: '/nutritionlookup',
-      templateUrl: 'templates/NutritionLookup.html',
-      controller: 'NutritionLookupCtrl'
-  })
+  // .state('nutritionlookup', { //Not yet implemented
+  //     url: '/nutritionlookup',
+  //     templateUrl: 'templates/NutritionLookup.html',
+  //     controller: 'NutritionLookupCtrl'
+  // })
 
 $urlRouterProvider.otherwise('/login');
 });
