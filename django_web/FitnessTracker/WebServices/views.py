@@ -6,6 +6,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from WebServices.serializers import UserSerializer
 from WebServices.models import User
+from django.core.mail import EmailMessage
 
 
 def index(request):
@@ -81,10 +82,16 @@ def password_recovery(request, email):
     print 'POST PASSWORD RECOVERY request from: ' + str(email)
 
     try:
+        print 'Searching for user with the email' + str(email)
         user = User.objects.get(email=email)
+        print 'User with email ' + str(email) + ' found! Sending the email...'
     except User.DoesNotExist:
+        print 'User with email ' + str(email) + ' not found! Sending 400.'
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
     user_password_to_send = user.password
+    email = EmailMessage('Fitness Tracker Password Recovery', 'Hi there, your password is: ' + str(user_password_to_send), to=[email])
+    email.send()
+    print 'Message sent! Responding with 200.'
     
     return Response(status=status.HTTP_200_OK)
