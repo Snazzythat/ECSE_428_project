@@ -23,9 +23,10 @@ class Nutrition(models.Model):
 class Exercise(models.Model):
     name = models.CharField(primary_key=True, max_length=45)
     type = models.CharField(max_length=45, blank=True, null=True)
-    description = models.CharField(max_length=45, blank=True, null=True)
+    description = models.CharField(max_length=200, blank=True, null=True)
     targeted_muscle = models.CharField(max_length=45, blank=True, null=True)
-    workout_workoutid = models.ForeignKey('Workout', models.DO_NOTHING, db_column='Workout_workoutID', related_name='+')  # Field name made lowercase.
+    #workout_workoutid = models.ForeignKey('Workout', models.DO_NOTHING, db_column='Workout_workoutID', related_name='+')  # Field name made lowercase.
+    #unique_id = models.CharField(max_length=45, blank=True, null=True)
 
     class Meta:
         managed = False
