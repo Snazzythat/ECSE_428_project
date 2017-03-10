@@ -3,6 +3,7 @@
 var virtual_vm_ip="104.236.220.130:8001";
 var login_URI="/WebServices/login/";
 var signup_URI="/WebServices/signup/";
+var exercise_URI="/WebServices/exercise/";
 
 angular.module('starter.services', ['starter.controllers'])
 
@@ -110,7 +111,71 @@ angular.module('starter.services', ['starter.controllers'])
 // Exercise service contains all functions related to exercises
 .service('ExerciseService',['$http', function($http)
 {
+    this.get_Exercise = function(callback_to_exercise)
+    {
+        var exerciseURL = "http://" + virtual_vm_ip + exercise_URI;
 
+          // Issue new http GET request to the Server
+          var request = new XMLHttpRequest();
+          request.open("GET", exerciseURL);
+          request.setRequestHeader("Content-Type", "application/json");
+          request.onreadystatechange = function() {
+              //When request is answered, handle ASYNC here
+              if (request.readyState == 4)
+              {
+                  if (request.status == 200)
+                  {
+                      callback_to_exercise("exercises_retrieved");
+                  }
+                  else if (request.status == 404)
+                  {
+                      callback_to_exercise("server_notfound");
+                  }
+                  else if (request.status == 500 || request.status == 502 || request.status == 503)
+                  {
+                        callback_to_exercise("server_error");
+                  }
+                  else if (request.status == 400)
+                  {
+                      callback_to_exercise("bad_request");
+                  }
+              }
+          };
+          request.send();
+    };
+
+    this.get_Exercise_name = function(exercise_name, callback_to_exercise)
+    {
+        var exerciseURL = "http://" + virtual_vm_ip + exercise_URI;
+
+          // Issue new http GET request to the Server
+          var request = new XMLHttpRequest();
+          request.open("GET", exerciseURL);
+          request.setRequestHeader("Content-Type", "application/json");
+          request.onreadystatechange = function() {
+              //When request is answered, handle ASYNC here
+              if (request.readyState == 4)
+              {
+                  if (request.status == 200)
+                  {
+                      callback_to_exercise("exercises_retrieved");
+                  }
+                  else if (request.status == 404)
+                  {
+                      callback_to_exercise("server_notfound");
+                  }
+                  else if (request.status == 500 || request.status == 502 || request.status == 503)
+                  {
+                        callback_to_exercise("server_error");
+                  }
+                  else if (request.status == 400)
+                  {
+                      callback_to_exercise("bad_request");
+                  }
+              }
+          };
+          request.send();
+    };
 
 
 }]);

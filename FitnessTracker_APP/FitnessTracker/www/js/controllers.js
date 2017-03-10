@@ -247,4 +247,33 @@ function ($scope, $state)
     console.log("Switching to " + newPage);
     $state.go(newPage);
   };
+
+  var exerciseCallback = function(exerciseResult)
+  {
+    console.log("Server answered. Login outcome is " + exerciseResult);
+    if (exerciseResult == "exercises_retrieved")
+    {
+      console.log("Displaying Exercises!");
+      //TODO: Change this line to Display the Exercises
+      $state.go('tabs.home');
+    }
+    else if(exerciseResult == "server_error")
+    {
+      console.error("Server error!");
+      navigator.notification.alert('Server error. Please contact the support.', function (){},'Error','Ok');
+    }
+    else if(exerciseResult == "server_notfound")
+    {
+      console.error("Server not found!");
+      navigator.notification.alert('Server is offline. Please try again later.', function (){},'Error','Ok');
+    }
+    else if(exerciseResult == "bad_request")
+    {
+      console.error("Bad signup request");
+      navigator.notification.alert('Server encountered a bad login request, make sure all data is valid.', function (){},'Error','Ok');
+    }
+};
+
+
+  ExerciseService.get_Exercise(exerciseCallback);
 }]);
