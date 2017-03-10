@@ -78,12 +78,11 @@ def login(request, username, password):
 
 @api_view(['POST'])
 def password_recovery(request):
-
-    print 'POST PASSWORD RECOVERY request from: ' + str(email)
+    print 'POST PASSWORD RECOVERY request'
     print 'Request data: ' + str(request.data)
 
     email = request.data['email']
-    
+
     try:
         print 'Searching for user with the email' + str(email)
         user = User.objects.get(email=email)
