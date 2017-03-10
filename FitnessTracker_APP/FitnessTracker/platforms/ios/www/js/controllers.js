@@ -371,14 +371,37 @@ function ($scope, $state)
 
 
 //~~~~~~~~~~~~~~~~~~~~~~~ Password Recovery Page Controller ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-.controller('PasswordRecCtrl', ['$scope', '$state', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
+.controller('PasswordRecCtrl', ['$scope', '$state','PasswordRecoveryService', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
 // You can include any angular dependencies as parameters for this function
 // TIP: Access Route Parameters for your page via $stateParams.parameterName
-function ($scope, $state)
+function ($scope, $state, PasswordRecoveryService)
 {
   console.log("Presently in Password Recovery controller...");
 
   $scope.user = {};
+
+  var recovery_callback = function(recovery_result)
+  {
+    console.log("Server answered. Server recovery outcome is " + recovery_result);
+
+    if (recovery_result == "recovery_request_success")
+    { 
+      navigator.notification.alert('The email containing your password has been sent', function (){},'Success','Ok');
+    }
+    else if(recovery_result == "recovery_request_failure")
+    {
+      navigator.notification.alert('You were not registered. Please register first.', function (){},'Email not found!','OK');
+    }
+
+    else if(recovery_result == "server_notfound")
+    {
+      navigator.notification.alert('Server is offline, try again later.', function (){},'Server offline.','Ok');
+    }
+    else if(recovery_result == "server_error")
+    {
+      navigator.notification.alert('Error occured on the server. Contact support. ', function (){},'Server error!','Ok');
+    }
+  };
 
   $scope.switchTo = function(newPage)
   {
@@ -389,9 +412,12 @@ function ($scope, $state)
   $scope.getMyPassword = function()
   {
     var recovery_email = String($scope.user.email);
-
-    //TODO: send HTTP reqest to the server and have a call back answering and treat it here.
+    
+    // Call asynchronous HTTP call to WS to make it send an email to us with out password
+    // If we dont exist in the database, error will be returned.
+    PasswordRecoveryService.recover_pswd(recovery_email,recovery_callback);
   };
+
 }])
 
 
