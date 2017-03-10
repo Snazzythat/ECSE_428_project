@@ -9,13 +9,24 @@ from __future__ import unicode_literals
 
 from django.db import models
 
+class Nutrition(models.Model):
+    name = models.CharField(primary_key=True, max_length=45)
+    calories = models.FloatField()
+    protein = models.FloatField()
+    fat = models.FloatField()
+    carbohydrate = models.FloatField()
+
+    class Meta:
+        managed = False
+        db_table = 'Nutrition'
 
 class Exercise(models.Model):
     name = models.CharField(primary_key=True, max_length=45)
     type = models.CharField(max_length=45, blank=True, null=True)
-    description = models.CharField(max_length=45, blank=True, null=True)
+    description = models.CharField(max_length=200, blank=True, null=True)
     targeted_muscle = models.CharField(max_length=45, blank=True, null=True)
-    workout_workoutid = models.ForeignKey('Workout', models.DO_NOTHING, db_column='Workout_workoutID', related_name='+')  # Field name made lowercase.
+    #workout_workoutid = models.ForeignKey('Workout', models.DO_NOTHING, db_column='Workout_workoutID', related_name='+')  # Field name made lowercase.
+    #unique_id = models.CharField(max_length=45, blank=True, null=True)
 
     class Meta:
         managed = False
@@ -37,7 +48,7 @@ class User(models.Model):
     d_o_b = models.DateField(db_column='d.o.b')  # Field renamed to remove unsuitable characters.
     username = models.CharField(primary_key=True, max_length=45)
     password = models.CharField(db_column='Password', max_length=45)  # Field name made lowercase.
-    type = models.CharField(db_column='Type', max_length=45)
+    type = models.CharField(db_column='type', max_length=45)
 
     class Meta:
         managed = False

@@ -13,6 +13,9 @@ var app = angular.module('starter', ['ionic','starter.controllers', 'starter.rou
     // least on iOS. It's a dead giveaway that an app is using a Web View. However, it's sometimes
     // useful especially with forms, though we would prefer giving the user a little more room
     // to interact with the app.
+
+   // $ionicConfigProvider.views.swipeBackEnabled(false);
+
     if (window.cordova && window.cordova.plugins.Keyboard) {
       cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
       cordova.plugins.Keyboard.disableScroll(true);

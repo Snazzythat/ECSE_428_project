@@ -4,10 +4,10 @@ angular.module('starter.controllers', ['starter.services'])
 
 //~~~~~~~~~~~~~~~~~~~~~~~LOGIN CONTROLLER ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.controller('loginCtrl', ['$scope', '$state', 'LoginService', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
+.controller('loginCtrl', ['$scope', '$state', 'LoginService','UserFactory','TrainerFactory', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
 // You can include any angular dependencies as parameters for this function
 // TIP: Access Route Parameters for your page via $stateParams.parameterName
-function ($scope, $state, LoginService)
+function ($scope, $state, LoginService,UserFactory,TrainerFactory)
 {
   console.log("Presently in login controller...");
   $scope.user = {};  //declares the object user
@@ -25,40 +25,69 @@ function ($scope, $state, LoginService)
   // Take action after login was called
   // If successful, simply switch to main mainMenu
   // Otherwise notify the user about failure
-  var postLoginCallback = function(loginResult)
+  // The call back gets the status code of the request as well as the data that the server returns
+  // at successful login. Any error will result in an empty data dictionnary
+  var postLoginCallback = function(loginResult,loginData)
   {
     console.log("Server answered. Login outcome is " + loginResult);
     if (loginResult == "login_success_user")
-    {
+    { 
+      console.log("Data from successfull user login received from server: " + JSON.stringify(loginData));
+
+      console.log("Creating a User object with all the data received...");
+
+      //Unlike sign up, we have to request data at successful login.
+      UserFactory.set('name', loginData.name);
+      UserFactory.set('username', loginData.username);
+      UserFactory.set('email', loginData.email);
+      UserFactory.set('d_o_b', loginData.d_o_b);
+
       console.log("Switching to main menu after successful USER login!");
-      $state.go('user_menu');
+
+      $state.go('trainee'); //Default tabs for now
     }
     //TODO: be able to login onto trainer menu
     else if (loginResult == "login_success_trainer")
     {
+      console.log("Data from successfull trainer login received from server: " + JSON.stringify(loginData));
+
+      console.log("Creating a Trainer object with all the data received...");
+
+      //Unlike sign up, we have to request data at successful login.
+      TrainerFactory.set('name', loginData.name);
+      TrainerFactory.set('username', loginData.username);
+      TrainerFactory.set('email', loginData.email);
+      TrainerFactory.set('d_o_b', loginData.d_o_b);
+
       console.log("Switching to main menu after successful TRAINER login!");
-      //$state.go('trainer_menu');
+
+      $state.go('trainer'); //Default tabs for now
     }
     else if(loginResult == "user_notfound")
     {
       console.error("User not found!");
-      navigator.notification.alert('You have not signed up yet! Please sign up first!', function (){},'Error','Ok');
+      navigator.notification.alert('Incorrect user name or password. Make sure you signed up.', function (){},'Error','Ok');
     }
     else if(loginResult == "server_error")
     {
       console.error("Server error!");
       navigator.notification.alert('Server error. Please contact the support.', function (){},'Error','Ok');
     }
-    else if(signupResult == "server_notfound")
+    else if(loginResult == "server_notfound")
     {
       console.error("Server not found!");
       navigator.notification.alert('Server is offline. Please try again later.', function (){},'Error','Ok');
     }
-    else if(signupResult == "bad_request")
+    else if(loginResult == "bad_request")
     {
       console.error("Bad signup request");
       navigator.notification.alert('Server encountered a bad login request, make sure all data is valid.', function (){},'Error','Ok');
-    }  
+    }
+    else if(loginResult == "bad_password")
+    {
+      console.error("Bad password!");
+      navigator.notification.alert('User name exists, but wrong password!', function (){},'Wrong Password','Try again');
+    }
   }
 
   // Autherntification for user
@@ -88,26 +117,61 @@ function ($scope, $state, LoginService)
       console.log("Sending async login request...");
       LoginService.http_login_request(users_email,users_password, postLoginCallback);
     }
-  };
+  }
+  
+  // Password recovery feature.
+  // Contacts web server with email or username.
+  // WS needs to send an email with password recovery.
 }])
 
 //~~~~~~~~~~~~~~~~~~~~~~~SIGNUP CONTROLLER ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.controller('signupCtrl', ['$scope', '$state', 'SignUpService',// The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
+.controller('signupCtrl', ['$scope', '$state', 'SignUpService','UserFactory','TrainerFactory',// The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
 // You can include any angular dependencies as parameters for this function
 // TIP: Access Route Parameters for your page via $stateParams.parameterName
-function ($scope, $state, SignUpService) {
+function ($scope, $state, SignUpService, UserFactory,TrainerFactory) {
 
   //creating a new user object that we will get the new sign up parameters
   console.log("Presently in signup controller...");
   $scope.user = {};
 
   var valid_parameters=false;
+  var userType='';
+  var userName='';
+  var userActualName='';
+  var userEmail='';
+  var usersBirthday='';
 
   $scope.switchTo = function(newPage)
   {
     console.log("Switching to " + newPage);
     $state.go(newPage);
+  };
+
+  // Confirmation message button callback necessary for user to confirm
+  // If he wants to sign in with his email because account exists already 
+  var confirm_user_exists_by_email = function(buttonIndex)
+  {
+    // User chose to login
+    if (buttonIndex == 1)
+    {
+      // TODO: get current users or trainers email and switch to login with it in the form
+      if (userType == 'Trainer')
+      {
+        TrainerFactory.set('email', userEmail);
+        $state.go('login');
+      }
+      else if (userType == 'User')
+      {
+        UserFactory.set('email', userEmail);
+        $state.go('login');
+      }
+    }
+      // User ignores and will potentially chose another email
+    else
+    {
+      //Ignore
+    }
   };
 
   // Take action after signup was called
@@ -118,9 +182,36 @@ function ($scope, $state, SignUpService) {
     console.log("Server answered. Login outcome is " + signupResult);
     if (signupResult == "signup_success")
     {
-      navigator.notification.alert('Successful sign up. Welcome!', function (){},'Error','Ok');
+      navigator.notification.alert('Successful sign up. Welcome!', function (){},'Welcome!','Ok');
       console.log("Switching to main menu after successful signup!");
-      $state.go('mainmenu');
+
+      //Now go to main menu depending as who did we sign up
+      if (userType == 'Trainer')
+      {
+        //Creating the actual object for Trainer before switching to trainer menu
+        //Can do it directly without having to access the server since we have all data already. 
+        console.log("Creating a Trainer object with all the data received...");
+
+        TrainerFactory.set('name', userActualName);
+        TrainerFactory.set('username', userName);
+        TrainerFactory.set('email', userEmail);
+        TrainerFactory.set('d_o_b', usersBirthday);
+        
+        $state.go('trainer');
+      }
+      else if (userType == 'User')
+      {
+        //Creating the actual object for Trainer before switching to trainer menu
+        //Can do it directly without having to access the server since we have all data already.
+        console.log("Creating a User object with all the data received...");
+
+        UserFactory.set('name', userActualName);
+        UserFactory.set('username', userName);
+        UserFactory.set('email', userEmail);
+        UserFactory.set('d_o_b', usersBirthday);
+
+        $state.go('trainee');
+      }
     }
     else if(signupResult == "server_notfound")
     {
@@ -135,23 +226,37 @@ function ($scope, $state, SignUpService) {
     else if(signupResult == "bad_request")
     {
       console.error("Bad signup request");
-      navigator.notification.alert('Server encountered a bad sign up request, make sure all data is valid.', function (){},'Error','Ok');
-    }   
-  }
+      navigator.notification.alert('Server encountered a bad sign up request, make sure all data is valid.', function (){},'Server Error!','Ok');
+    }
+    else if(signupResult == "user_exists_byusername")
+    {
+      navigator.notification.alert('This user name is already taken! Try another user name.', function (){},'Use name taken!','Ok');
+    }
+    else if(signupResult == "user_exists_byemail")
+    {
+      navigator.notification.confirm('This email is already taken! Do you want to login with this email?', confirm_user_exists_by_email, 'Email exists!',['Ok,login','Cancel']);
+    }
+  };
 
   $scope.signUpProcess = function()
   {
     varList = [];
     var new_users_username = String($scope.user.username);
     varList.push(new_users_username);
+    userName = new_users_username;
     var new_users_email = String($scope.user.email);
     varList.push(new_users_email);
+    userEmail = new_users_email;
     var new_users_password = String($scope.user.password);
     varList.push(new_users_password);
     var new_users_actualname = String($scope.user.name);
     varList.push(new_users_actualname);
+    userActualName = new_users_actualname;
     var new_users_birthday = String($scope.user.birthday);
     varList.push(new_users_birthday);
+    usersBirthday = new_users_birthday;
+    var selected_acc_type = document.getElementById('acc_type').value;
+    userType=selected_acc_type;
 
     // Verify first if no fields are empty
     // Name must not be empty
@@ -185,34 +290,46 @@ function ($scope, $state, SignUpService) {
       // TODO: make sure to use a valid url with out webserver and see what it accepts.
       // Make a login php script
       console.log("Sending async signup request...");
-      SignUpService.send_http_signup(new_users_username,new_users_password,new_users_email,new_users_actualname, new_users_birthday, postSignupCallback);
+      SignUpService.send_http_signup(new_users_username,new_users_password,new_users_email,new_users_actualname, new_users_birthday, selected_acc_type,postSignupCallback);
     }
   };
 }])
 
-//DEPRECATED
-// //~~~~~~~~~~~~~~~~~~~~~~~MAIN MENU CONTROLLER ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// .controller('mainMenuCtrl', ['$scope', '$state', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
-// // You can include any angular dependencies as parameters for this function
-// // TIP: Access Route Parameters for your page via $stateParams.parameterName
-// function ($scope, $state)
-// {
-//   console.log("Presently in main menu controller...");
-
-//   $scope.switchTo = function(newPage)
-//   {
-//     console.log("Switching to " + newPage);
-//     $state.go(newPage);
-//   };
-// }]);
-
-//~~~~~~~~~~~~~~~~~~~~~~~USER MENU CONTROLLER ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-.controller('userMenuController', ['$scope', '$state', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
+// //~~~~~~~~~~~~~~~~~~~~~~~ TABSCONTROLLERs ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.controller('HomeTabCtrl', ['$scope', '$state', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
 // You can include any angular dependencies as parameters for this function
 // TIP: Access Route Parameters for your page via $stateParams.parameterName
 function ($scope, $state)
 {
-  console.log("Presently in user menu controller...");
+  console.log("Presently in home tab controller...");
+
+  $scope.switchTo = function(newPage)
+  {
+    console.log("Switching to " + newPage);
+    $state.go(newPage);
+  };
+}])
+
+.controller('WourkoutsCtrl', ['$scope', '$state', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
+// You can include any angular dependencies as parameters for this function
+// TIP: Access Route Parameters for your page via $stateParams.parameterName
+function ($scope, $state)
+{
+  console.log("Presently in workouts tab controller...");
+
+  $scope.switchTo = function(newPage)
+  {
+    console.log("Switching to " + newPage);
+    $state.go(newPage);
+  };
+}])
+
+.controller('NutritionCtrl', ['$scope', '$state', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
+// You can include any angular dependencies as parameters for this function
+// TIP: Access Route Parameters for your page via $stateParams.parameterName
+function ($scope, $state)
+{
+  console.log("Presently in nutrition tab controller...");
 
   $scope.switchTo = function(newPage)
   {
@@ -222,17 +339,114 @@ function ($scope, $state)
 }])
 
 
-//~~~~~~~~~~~~~~~~~~~~~~~TRAINER MENU CONTROLLER ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-.controller('trainerMenuController', ['$scope', '$state', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
+//~~~~~~~~~~~~~~~~~~~~~~~ Trainer Page Controller ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.controller('TrainerCtrl', ['$scope', '$state', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
 // You can include any angular dependencies as parameters for this function
 // TIP: Access Route Parameters for your page via $stateParams.parameterName
 function ($scope, $state)
 {
-  console.log("Presently in trainer menu controller...");
+  console.log("Presently in Trainer controller...");
 
   $scope.switchTo = function(newPage)
   {
     console.log("Switching to " + newPage);
     $state.go(newPage);
   };
+}])
+
+// //~~~~~~~~~~~~~~~~~~~~~~~ Trainee Page Controller ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.controller('TraineeCtrl', ['$scope', '$state', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
+// You can include any angular dependencies as parameters for this function
+// TIP: Access Route Parameters for your page via $stateParams.parameterName
+function ($scope, $state)
+{
+  console.log("Presently in Trinee controller...");
+
+  $scope.switchTo = function(newPage)
+  {
+    console.log("Switching to " + newPage);
+    $state.go(newPage);
+  };
+}])
+
+
+//~~~~~~~~~~~~~~~~~~~~~~~ Password Recovery Page Controller ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.controller('PasswordRecCtrl', ['$scope', '$state','PasswordRecoveryService', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
+// You can include any angular dependencies as parameters for this function
+// TIP: Access Route Parameters for your page via $stateParams.parameterName
+function ($scope, $state, PasswordRecoveryService)
+{
+  console.log("Presently in Password Recovery controller...");
+
+  $scope.user = {};
+
+  var recovery_callback = function(recovery_result)
+  {
+    console.log("Server answered. Server recovery outcome is " + recovery_result);
+
+    if (recovery_result == "recovery_request_success")
+    { 
+      navigator.notification.alert('The email containing your password has been sent', function (){},'Success','Ok');
+    }
+    else if(recovery_result == "recovery_request_failure")
+    {
+      navigator.notification.alert('You were not registered. Please register first.', function (){},'Email not found!','OK');
+    }
+
+    else if(recovery_result == "server_notfound")
+    {
+      navigator.notification.alert('Server is offline, try again later.', function (){},'Server offline.','Ok');
+    }
+    else if(recovery_result == "server_error")
+    {
+      navigator.notification.alert('Error occured on the server. Contact support. ', function (){},'Server error!','Ok');
+    }
+  };
+
+  $scope.switchTo = function(newPage)
+  {
+    console.log("Switching to " + newPage);
+    $state.go(newPage);
+  };
+
+  $scope.getMyPassword = function()
+  {
+    var recovery_email = String($scope.user.email);
+    
+    // Call asynchronous HTTP call to WS to make it send an email to us with out password
+    // If we dont exist in the database, error will be returned.
+    PasswordRecoveryService.recover_pswd(recovery_email,recovery_callback);
+  };
+
+}])
+
+
+//~~~~~~~~~~~~~~~~~~~~~~~ Nutrition Plan Page Controller ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.controller('NutritionPlanCtrl', ['$scope', '$state', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
+// You can include any angular dependencies as parameters for this function
+// TIP: Access Route Parameters for your page via $stateParams.parameterName
+function ($scope, $state)
+{
+    console.log("Presently in NutritionPlan controller...");
+
+    $scope.switchTo = function(newPage)
+    {
+        console.log("Switching to " + newPage);
+        $state.go(newPage);
+    };
+}])
+
+//~~~~~~~~~~~~~~~~~~~~~~~ Exercise Lookup Page Controller ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.controller('ExerciseLookupCtrl', ['$scope', '$state', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
+// You can include any angular dependencies as parameters for this function
+// TIP: Access Route Parameters for your page via $stateParams.parameterName
+function ($scope, $state)
+{
+    console.log("Presently in ExerciseLookup controller...");
+
+    $scope.switchTo = function(newPage)
+    {
+        console.log("Switching to " + newPage);
+        $state.go(newPage);
+    };
 }]);
