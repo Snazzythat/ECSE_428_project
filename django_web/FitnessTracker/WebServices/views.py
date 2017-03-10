@@ -77,10 +77,13 @@ def login(request, username, password):
 
 
 @api_view(['POST'])
-def password_recovery(request, email):
+def password_recovery(request):
 
     print 'POST PASSWORD RECOVERY request from: ' + str(email)
+    print 'Request data: ' + str(request.data)
 
+    email = request.data['email']
+    
     try:
         print 'Searching for user with the email' + str(email)
         user = User.objects.get(email=email)
@@ -93,5 +96,5 @@ def password_recovery(request, email):
     email = EmailMessage('Fitness Tracker Password Recovery', 'Hi there, your password is: ' + str(user_password_to_send), to=[email])
     email.send()
     print 'Message sent! Responding with 200.'
-    
+
     return Response(status=status.HTTP_200_OK)

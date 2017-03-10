@@ -14,7 +14,7 @@ urlpatterns = [
     url(r'^nutrition/$', nutritionViews.index),
     url(r'^nutrition/get$', nutritionViews.get_nutrition),
     url(r'^nutrition/create$', nutritionViews.create_nutrition),
-    url(r'^passwordrecovery/(?P<email>[a-z0-9]+)/$', views.password_recovery)
+    url(r'^passwordrecovery/$', views.password_recovery)
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

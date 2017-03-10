@@ -127,8 +127,9 @@ angular.module('starter.services', ['starter.controllers'])
 {
   this.recover_pswd = function(user_email,callback_to_recovery)
   {
-      var signupURL = "http://" + virtual_vm_ip + password_rec_URI + user_email;
+      var signupURL = "http://" + virtual_vm_ip + password_rec_URI;
 
+       var recovery_Data = JSON.stringify({email : user_email});
       // Issue new http POST request to the Server
       var request = new XMLHttpRequest();
       request.open("POST", signupURL);
@@ -156,7 +157,7 @@ angular.module('starter.services', ['starter.controllers'])
               } 
           }
       }
-      request.send();
+      request.send(recovery_Data);
   };
 }])
 
