@@ -79,6 +79,7 @@ def login(request, username, password):
 @api_view(['POST'])
 def password_recovery(request):
     print 'POST PASSWORD RECOVERY request'
+    print 'Sending the email to user stage.'
     print 'Request data: ' + str(request.data)
 
     email = request.data['email']
