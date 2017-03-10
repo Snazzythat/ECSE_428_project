@@ -174,11 +174,15 @@ angular.module('starter.services', ['starter.controllers'])
     // return userObject;
     return{   // --> HAVE THE BRACKET ON THE SAME LINE AS return ELSE MINDFUCK
         set : function(key, value)
-        {
+        {   
+            console.log("User factory setter called with key: " + key);
+            console.log("User factory set an entry: " + key + ',' + value);
             userObject[key] = value;
         },
         get : function(key)
-        {
+        {  
+            console.log("User factory getter called with key: " + key);
+            console.log("User factory returns: "+ userObject[key]);
             return userObject[key];
         }
     };

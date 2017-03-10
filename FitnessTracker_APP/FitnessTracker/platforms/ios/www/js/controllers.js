@@ -30,17 +30,20 @@ function ($scope, $state, LoginService,UserFactory,TrainerFactory)
   var postLoginCallback = function(loginResult,loginData)
   {
     console.log("Server answered. Login outcome is " + loginResult);
+
+    var parsed_data = JSON.parse(loginData);
+
     if (loginResult == "login_success_user")
     { 
-      console.log("Data from successfull user login received from server: " + JSON.stringify(loginData));
+      console.log("Data from successfull user login received from server: " + loginData);
 
       console.log("Creating a User object with all the data received...");
 
       //Unlike sign up, we have to request data at successful login.
-      UserFactory.set('name', loginData.name);
-      UserFactory.set('username', loginData.username);
-      UserFactory.set('email', loginData.email);
-      UserFactory.set('d_o_b', loginData.d_o_b);
+      UserFactory.set('name', parsed_data.name);
+      UserFactory.set('username', parsed_data.username);
+      UserFactory.set('email', parsed_data.email);
+      UserFactory.set('d_o_b', parsed_data.d_o_b);
 
       console.log("Switching to main menu after successful USER login!");
 
@@ -49,15 +52,15 @@ function ($scope, $state, LoginService,UserFactory,TrainerFactory)
     //TODO: be able to login onto trainer menu
     else if (loginResult == "login_success_trainer")
     {
-      console.log("Data from successfull trainer login received from server: " + JSON.stringify(loginData));
+      console.log("Data from successfull trainer login received from server: " + loginData);
 
       console.log("Creating a Trainer object with all the data received...");
 
       //Unlike sign up, we have to request data at successful login.
-      TrainerFactory.set('name', loginData.name);
-      TrainerFactory.set('username', loginData.username);
-      TrainerFactory.set('email', loginData.email);
-      TrainerFactory.set('d_o_b', loginData.d_o_b);
+      TrainerFactory.set('name', parsed_data.name);
+      TrainerFactory.set('username', parsed_data.username);
+      TrainerFactory.set('email', parsed_data.email);
+      TrainerFactory.set('d_o_b', parsed_data.d_o_b);
 
       console.log("Switching to main menu after successful TRAINER login!");
 
@@ -355,12 +358,14 @@ function ($scope, $state)
 }])
 
 // //~~~~~~~~~~~~~~~~~~~~~~~ Trainee Page Controller ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-.controller('TraineeCtrl', ['$scope', '$state', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
+.controller('TraineeCtrl', ['$scope', '$state','UserFactory', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
 // You can include any angular dependencies as parameters for this function
 // TIP: Access Route Parameters for your page via $stateParams.parameterName
-function ($scope, $state)
+function ($scope, $state,UserFactory)
 {
-  console.log("Presently in Trinee controller...");
+  console.log("Presently in Trainee controller...");
+
+  $scope.visible_user_name = UserFactory.get('name');
 
   $scope.switchTo = function(newPage)
   {
