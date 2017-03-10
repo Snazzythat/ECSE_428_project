@@ -17,7 +17,7 @@ urlpatterns = [
     url(r'^nutrition/create$', nutritionViews.create_nutrition),
     url(r'^exercise/$', exerciseView.index),
     url(r'^exercise/get$', exerciseView.get_exercise),
-    url(r'^exercise/create$', exerciseView.create_exercise)
+    url(r'^exercise/create$', exerciseView.create_exercise),
     url(r'^passwordrecovery/$', views.password_recovery)
 ]
 
