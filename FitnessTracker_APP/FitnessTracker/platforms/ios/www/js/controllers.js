@@ -31,13 +31,14 @@ function ($scope, $state, LoginService,UserFactory,TrainerFactory)
   {
     console.log("Server answered. Login outcome is " + loginResult);
 
-    var parsed_data = JSON.parse(loginData);
 
     if (loginResult == "login_success_user")
     { 
       console.log("Data from successfull user login received from server: " + loginData);
 
       console.log("Creating a User object with all the data received...");
+
+      var parsed_data = JSON.parse(loginData);
 
       //Unlike sign up, we have to request data at successful login.
       UserFactory.set('name', parsed_data.name);
@@ -55,6 +56,8 @@ function ($scope, $state, LoginService,UserFactory,TrainerFactory)
       console.log("Data from successfull trainer login received from server: " + loginData);
 
       console.log("Creating a Trainer object with all the data received...");
+
+      var parsed_data = JSON.parse(loginData);
 
       //Unlike sign up, we have to request data at successful login.
       TrainerFactory.set('name', parsed_data.name);
@@ -343,12 +346,14 @@ function ($scope, $state)
 
 
 //~~~~~~~~~~~~~~~~~~~~~~~ Trainer Page Controller ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-.controller('TrainerCtrl', ['$scope', '$state', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
+.controller('TrainerCtrl', ['$scope', '$state','TrainerFactory', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
 // You can include any angular dependencies as parameters for this function
 // TIP: Access Route Parameters for your page via $stateParams.parameterName
-function ($scope, $state)
+function ($scope, $state,TrainerFactory)
 {
   console.log("Presently in Trainer controller...");
+
+  $scope.visible_user_name = TrainerFactory.get('name');
 
   $scope.switchTo = function(newPage)
   {
