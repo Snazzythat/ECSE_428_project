@@ -11,7 +11,11 @@
         
         <form id="trainer-form1" class="list">
 
-            <ion-list id="trainer-list1">
+            <ion-list id="exercise-list">
+                <ion-item ng-repeat = "exercise in exercise_list"
+                    <h2> {{exercise.name}}</h2>
+                    <p>{{exercise.description}}</p>
+                </ion-item>
             </ion-list>
 
             <!--<div class="card">
@@ -34,7 +38,7 @@
 
         </form>
        
-       <div class="exercise"> {{exercise_list}}!</div>
+       <!--<div class="exercise"> {{exercise_list}}!</div>-->
         
         
         <button id="Back-button" class="button button-stable button-block" ng-click=switchTo('mainmenu')>Back</button>
