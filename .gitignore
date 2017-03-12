@@ -17,4 +17,4 @@ tests/coverage_html/
 tests/.coverage
 build/
 tests/report/
-FitnessTracker_APP/FitnessTracker/platforms/
+platforms/
