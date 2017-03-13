@@ -33,7 +33,8 @@ function ($scope, $state, LoginService,UserFactory,TrainerFactory)
 
 
     if (loginResult == "login_success_user")
-    { 
+
+    {
       console.log("Data from successfull user login received from server: " + loginData);
 
       console.log("Creating a User object with all the data received...");
@@ -94,7 +95,7 @@ function ($scope, $state, LoginService,UserFactory,TrainerFactory)
       console.error("Bad password!");
       navigator.notification.alert('User name exists, but wrong password!', function (){},'Wrong Password','Try again');
     }
-  }
+  };
 
   // Autherntification for user
   // TODO: Async call to the server and DB to authentificate the user (if exists or if noes not exist)
@@ -123,8 +124,8 @@ function ($scope, $state, LoginService,UserFactory,TrainerFactory)
       console.log("Sending async login request...");
       LoginService.http_login_request(users_email,users_password, postLoginCallback);
     }
-  }
-  
+};
+
   // Password recovery feature.
   // Contacts web server with email or username.
   // WS needs to send an email with password recovery.
@@ -155,7 +156,7 @@ function ($scope, $state, SignUpService, UserFactory,TrainerFactory) {
   };
 
   // Confirmation message button callback necessary for user to confirm
-  // If he wants to sign in with his email because account exists already 
+  // If he wants to sign in with his email because account exists already
   var confirm_user_exists_by_email = function(buttonIndex)
   {
     // User chose to login
@@ -195,14 +196,14 @@ function ($scope, $state, SignUpService, UserFactory,TrainerFactory) {
       if (userType == 'Trainer')
       {
         //Creating the actual object for Trainer before switching to trainer menu
-        //Can do it directly without having to access the server since we have all data already. 
+        //Can do it directly without having to access the server since we have all data already.
         console.log("Creating a Trainer object with all the data received...");
 
         TrainerFactory.set('name', userActualName);
         TrainerFactory.set('username', userName);
         TrainerFactory.set('email', userEmail);
         TrainerFactory.set('d_o_b', usersBirthday);
-        
+
         $state.go('trainer');
       }
       else if (userType == 'User')
@@ -301,56 +302,13 @@ function ($scope, $state, SignUpService, UserFactory,TrainerFactory) {
   };
 }])
 
-// //~~~~~~~~~~~~~~~~~~~~~~~ TABSCONTROLLERs ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-.controller('HomeTabCtrl', ['$scope', '$state', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
-// You can include any angular dependencies as parameters for this function
-// TIP: Access Route Parameters for your page via $stateParams.parameterName
-function ($scope, $state)
-{
-  console.log("Presently in home tab controller...");
-
-  $scope.switchTo = function(newPage)
-  {
-    console.log("Switching to " + newPage);
-    $state.go(newPage);
-  };
-}])
-
-.controller('WourkoutsCtrl', ['$scope', '$state', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
-// You can include any angular dependencies as parameters for this function
-// TIP: Access Route Parameters for your page via $stateParams.parameterName
-function ($scope, $state)
-{
-  console.log("Presently in workouts tab controller...");
-
-  $scope.switchTo = function(newPage)
-  {
-    console.log("Switching to " + newPage);
-    $state.go(newPage);
-  };
-}])
-
-.controller('NutritionCtrl', ['$scope', '$state', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
-// You can include any angular dependencies as parameters for this function
-// TIP: Access Route Parameters for your page via $stateParams.parameterName
-function ($scope, $state)
-{
-  console.log("Presently in nutrition tab controller...");
-
-  $scope.switchTo = function(newPage)
-  {
-    console.log("Switching to " + newPage);
-    $state.go(newPage);
-  };
-}])
-
-
 //~~~~~~~~~~~~~~~~~~~~~~~ Trainer Page Controller ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 .controller('TrainerCtrl', ['$scope', '$state','TrainerFactory', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
 // You can include any angular dependencies as parameters for this function
 // TIP: Access Route Parameters for your page via $stateParams.parameterName
 function ($scope, $state,TrainerFactory)
 {
+
   console.log("Presently in Trainer controller...");
 
   $scope.visible_user_name = TrainerFactory.get('name');
@@ -363,6 +321,7 @@ function ($scope, $state,TrainerFactory)
 }])
 
 // //~~~~~~~~~~~~~~~~~~~~~~~ Trainee Page Controller ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 .controller('TraineeCtrl', ['$scope', '$state','UserFactory', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
 // You can include any angular dependencies as parameters for this function
 // TIP: Access Route Parameters for your page via $stateParams.parameterName
@@ -395,7 +354,7 @@ function ($scope, $state, PasswordRecoveryService)
     console.log("Server answered. Server recovery outcome is " + recovery_result);
 
     if (recovery_result == "recovery_request_success")
-    { 
+    {
       navigator.notification.alert('The email containing your password has been sent', function (){},'Success','Ok');
     }
     else if(recovery_result == "recovery_request_failure")
@@ -422,7 +381,7 @@ function ($scope, $state, PasswordRecoveryService)
   $scope.getMyPassword = function()
   {
     var recovery_email = String($scope.user.email);
-    
+
     // Call asynchronous HTTP call to WS to make it send an email to us with out password
     // If we dont exist in the database, error will be returned.
     PasswordRecoveryService.recover_pswd(recovery_email,recovery_callback);
@@ -432,27 +391,185 @@ function ($scope, $state, PasswordRecoveryService)
 
 
 //~~~~~~~~~~~~~~~~~~~~~~~ Nutrition Plan Page Controller ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-.controller('NutritionPlanCtrl', ['$scope', '$state', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
+.controller('NutritionPlanCtrl', ['$scope', '$state', 'NutritionService',// The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
 // You can include any angular dependencies as parameters for this function
 // TIP: Access Route Parameters for your page via $stateParams.parameterName
-function ($scope, $state)
+function ($scope, $state, NutritionService)
 {
     console.log("Presently in NutritionPlan controller...");
 
     $scope.switchTo = function(newPage)
     {
-        console.log("Switching to " + newPage);
-        $state.go(newPage);
+      console.log("Switching to " + newPage);
+      $state.go(newPage);
     };
+
+    $scope.onHold = function(n) {
+      $scope.nutrition_list.splice($scope.nutrition_list.indexOf(n), 1);
+    }
+
+    var nutritionCallback = function(result, data) {
+      var nutrition_data = JSON.parse(data);
+      $scope.nutrition_list = nutrition_data
+      console.log(nutrition_data);
+    }
+
+     $scope.editNutrition = function() {
+      console.log("click");
+    }
+
+    NutritionService.get_nutrition(nutritionCallback);
+
+    $scope.addNutritionProcess = function()
+    {
+      var valid_parameters = true;
+
+      var varList = [];
+      var name = String($scope.nutrition.name);
+      var protein = String($scope.nutrition.protein);
+      var fat = String($scope.nutrition.fat);
+      var calories = String($scope.nutrition.calories);
+      var carbohydrate = String($scope.nutrition.carbohydrate);
+      varList.push(name);
+      varList.push(protein);
+      varList.push(fat);
+      varList.push(calories);
+      varList.push(carbohydrate);
+
+      var nutrition = {name : name, protein : protein, fat : fat, calories : calories, carbohydrate : carbohydrate};
+
+      // Verify first if no fields are empty
+      // Name must not be empty
+      // Email must not be empty and must consist of a certain format
+      // Password cant be empty
+      if(varList.indexOf("undefined")>= 0 || varList.indexOf("")>= 0)
+      {
+        console.error("Input error!");
+        //navigator objects WILL NOT work in the ionic testing webserver, native device ONLY
+        navigator.notification.alert('One of the fields is empty!', function (){},'Error','Retry');
+        navigator.notification.vibrate(1000);
+        valid_parameters = false;
+      }
+
+      if (isNaN(protein)) {
+        console.error("Input error!");
+        //navigator objects WILL NOT work in the ionic testing webserver, native device ONLY
+        navigator.notification.alert('Protein must be a number', function (){},'Error','Retry');
+        navigator.notification.vibrate(1000);
+        valid_parameters = false;
+      }
+
+      if (isNaN(carbohydrate)) {
+        console.error("Input error!");
+        //navigator objects WILL NOT work in the ionic testing webserver, native device ONLY
+        navigator.notification.alert('Carbohydrate must be a number', function (){},'Error','Retry');
+        navigator.notification.vibrate(1000);
+        valid_parameters = false;
+      }
+
+      if (isNaN(fat)) {
+        console.error("Input error!");
+        //navigator objects WILL NOT work in the ionic testing webserver, native device ONLY
+        navigator.notification.alert('Fat must be a number', function (){},'Error','Retry');
+        navigator.notification.vibrate(1000);
+        valid_parameters = false;
+      }
+
+      if (isNaN(calories)) {
+        console.error("Input error!");
+        //navigator objects WILL NOT work in the ionic testing webserver, native device ONLY
+        navigator.notification.alert('Calories must be a number', function (){},'Error','Retry');
+        navigator.notification.vibrate(1000);
+        valid_parameters = false;
+      }
+
+
+      // Proceed building login request only at when all parameters are valid
+      if(valid_parameters)
+      {
+        console.log("Sending async signup request...");
+        NutritionService.add_nutrition(nutrition, function() {
+          $state.go('nutritionplan');
+        });
+      }
+    }
 }])
 
 //~~~~~~~~~~~~~~~~~~~~~~~ Exercise Lookup Page Controller ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-.controller('ExerciseLookupCtrl', ['$scope', '$state', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
+.controller('ExerciseLookupCtrl', ['$scope', '$state', '$ionicHistory', 'ExerciseFactory', 'ExerciseService', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
+// You can include any angular dependencies as parameters for this function
+// TIP: Access Route Parameters for your page via $stateParams.parameterName
+function ($scope, $state, $ionicViewService, ExerciseFactory, ExerciseService)
+{
+    $scope.filterExerciseList = function()
+    {
+      var exercises = angular.copy(ExerciseFactory.get('exerciselist'));
+      var toDelete = [];
+      if($scope.typeFilter && $scope.typeFilter != ""){
+        for(var i = exercises.length-1; i >= 0; i--){
+          if(exercises[i].type != $scope.typeFilter){
+            exercises.splice(i,1);
+          }
+        }
+      }
+      if($scope.muscleFilter && $scope.muscleFilter != ""){
+        for(var i = exercises.length-1; i >= 0; i--){
+          if(exercises[i].targeted_muscle != $scope.muscleFilter){
+            exercises.splice(i,1);
+          }
+        }
+      }
+      $scope.exercise_list = angular.copy(exercises);
+    }
+    console.log("Presently in ExerciseLookup controller...");
+
+    var exerciseCallback = function(exerciseResult, exerciseData)
+    {
+      console.log("Server answered. ExerciseLookup outcome is: " + exerciseResult);
+      if (exerciseResult == "exercises_retrieved")
+      {
+        var exercise_data = JSON.parse(exerciseData);
+
+        console.log("Displaying Exercises! Data received is: " + exercise_data);
+
+        ExerciseFactory.set('exerciselist', exercise_data);
+
+        $scope.exercise_list = ExerciseFactory.get('exerciselist');
+
+        //console.log("Switching to exercise lookup page.");
+
+
+        //$state.go('exerciselookup');
+      }
+      else if(exerciseResult == "server_error")
+
+      {
+        console.error("Server error!");
+        navigator.notification.alert('Server error. Please contact the support.', function (){},'Error','Ok');
+      }
+      else if(exerciseResult == "server_notfound")
+      {
+        console.error("Server not found!");
+        navigator.notification.alert('Server is offline. Please try again later.', function (){},'Error','Ok');
+      }
+      else if(exerciseResult == "bad_request")
+      {
+        console.error("Bad exercise lookup request");
+        navigator.notification.alert('Server encountered a bad exercise lookup request, make sure all data is valid.', function (){},'Error','Ok');
+      }
+
+  };
+    ExerciseService.get_Exercise(exerciseCallback);
+}])
+
+
+//~~~~~~~~~~~~~~~~~~~~~~~ Workouts Page Controller ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.controller('WorkoutsController', ['$scope', '$state', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
 // You can include any angular dependencies as parameters for this function
 // TIP: Access Route Parameters for your page via $stateParams.parameterName
 function ($scope, $state)
 {
-    console.log("Presently in ExerciseLookup controller...");
+    console.log("Presently in Workouts controller...");
 
     $scope.switchTo = function(newPage)
     {

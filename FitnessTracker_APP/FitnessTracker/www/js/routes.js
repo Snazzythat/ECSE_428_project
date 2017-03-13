@@ -21,40 +21,6 @@ angular.module('starter.routes', [])
     controller: 'signupCtrl'
   })
 
-// User Tabs Routes
-  .state('tabs', {
-      url: "/tab",
-      abstract: true,
-      templateUrl: "templates/tabs.html"
-    })
-    .state('tabs.home', {
-      url: "/home",
-      views: {
-        'home-tab': {
-          templateUrl: "templates/Home-Tab.html",
-          controller: 'HomeTabCtrl'
-        }
-      }
-    })
-    .state('tabs.workouts', {
-      url: "/workouts",
-      views: {
-        'workouts-tab': {
-          templateUrl: "templates/Workouts-Tab.html",
-          controller: 'WourkoutsCtrl'
-        }
-      }
-    })
-    .state('tabs.nutrition', {
-      url: "/nutrition",
-      views: {
-        'nutrition-tab': {
-          templateUrl: "templates/Nutrition-Tab.html",
-          controller: 'NutritionCtrl'
-        }
-      }
-    })
-
 // Additional Pages
   .state('trainee', {
       url: '/trainee',
@@ -86,10 +52,22 @@ angular.module('starter.routes', [])
       controller: 'NutritionPlanCtrl'
   })
 
+  .state('nutritionplan-create', {
+      url: '/nutritionplan/add',
+      templateUrl: 'templates/NutritionPlan-create.html',
+      controller: 'NutritionPlanCtrl'
+  })
+
   .state('exerciselookup', {
       url: '/exerciselookup',
       templateUrl: 'templates/ExerciseLookup.html',
       controller: 'ExerciseLookupCtrl'
+  })
+
+ .state('workouts', {
+      url: '/workouts',
+      templateUrl: 'templates/Workouts.html',
+      controller: 'WorkoutsController'
   })
 
   // .state('nutritionlookup', { //Not yet implemented
