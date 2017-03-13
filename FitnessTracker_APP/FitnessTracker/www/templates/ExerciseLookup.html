@@ -1,16 +1,24 @@
 ﻿<ion-view view-title="Exercise Lookup" id="exerciselookup" hide-nav-bar="true">
 
     <div class="bar bar-header bar-positive">
-        <button id="Logout-button" class="button button-outline button-energized" ng-click=switchTo('login')>Logout</button>
+        <button id="Back-Button" class="button button-outline button-energized" ng-click=goBack())>Back</button>
         <h1 class="title">Exercise Lookup</h1>
     </div>
 
+    
+
     <ion-content padding="true" class="has-header" ng-controller=ExerciseLookupCtrl>
+        
         <form id="trainer-form1" class="list">
-            <ion-list id="trainer-list1">
+
+            <ion-list id="exercise-list">
+                <ion-item ng-repeat = "exercise in exercise_list"
+                    <h2> {{exercise.name}}</h2>
+                    <p>{{exercise.description}}</p>
+                </ion-item>
             </ion-list>
 
-            <div class="card">
+            <!--<div class="card">
                 <div class="item item-text-wrap">
                     Exercise information
                 </div>
@@ -23,10 +31,16 @@
                 <div class="item item-text-wrap">
                     Exercise information
                 </div>
-            </div>
+            </div>-->
 
-            <button id="Back-button" class="button button-stable button-block" ng-click=switchTo('mainmenu')>Back</button>
+
+            
 
         </form>
+       
+       <!--<div class="exercise"> {{exercise_list}}!</div>-->
+        
+        
+        <button id="Back-button" class="button button-stable button-block" ng-click=switchTo('mainmenu')>Back</button>
     </ion-content>
 </ion-view>

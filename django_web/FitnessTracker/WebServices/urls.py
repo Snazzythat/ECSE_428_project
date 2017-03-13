@@ -7,6 +7,7 @@ from . import views
 from . import nutritionViews
 from . import exerciseView
 
+#This is just a test, ignore it
 urlpatterns = [
     url(r'^$', views.index, name='index'),
     url(r'^api/$', views.UserList.as_view()),
