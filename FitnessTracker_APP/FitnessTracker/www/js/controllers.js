@@ -361,7 +361,6 @@ function ($scope, $state, PasswordRecoveryService)
     {
       navigator.notification.alert('You were not registered. Please register first.', function (){},'Email not found!','OK');
     }
-
     else if(recovery_result == "server_notfound")
     {
       navigator.notification.alert('Server is offline, try again later.', function (){},'Server offline.','Ok');
@@ -494,6 +493,20 @@ function ($scope, $state, NutritionService)
       }
     }
 }])
+//~~~~~~~~~~~~~~~~~~~~~~~ Workout Page Controller ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.controller('WorkoutCtrl', ['$scope', '$state', '$ionicHistory', 'WorkoutFactory', 'WorkoutsService',
+function ($scope, $state, WorkoutFactory)
+{
+  console.log("Presently in Workout controller...");
+
+  // $scope.visible_workout = WorkoutFacotry.get('name');
+
+  $scope.switchTo = function(newPage)
+  {
+    console.log("Switching to " + newPage);
+    $state.go(newPage);
+  };
+}])
 
 //~~~~~~~~~~~~~~~~~~~~~~~ Exercise Lookup Page Controller ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 .controller('ExerciseLookupCtrl', ['$scope', '$state', '$ionicHistory', 'ExerciseFactory', 'ExerciseService', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
@@ -564,11 +577,12 @@ function ($scope, $state, $ionicViewService, ExerciseFactory, ExerciseService)
 
 
 //~~~~~~~~~~~~~~~~~~~~~~~ Workouts Page Controller ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-.controller('WorkoutsController', ['$scope', '$state', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
+.controller('WorkoutController', ['$scope', '$state','WorkoutFactory', 'WorkoutsService', 'UserFactory', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
 // You can include any angular dependencies as parameters for this function
 // TIP: Access Route Parameters for your page via $stateParams.parameterName
-function ($scope, $state)
+function($scope, $state, WorkoutsService, WorkoutFactory, UserFactory)
 {
+    var userName = UserFactory.get('name');
     console.log("Presently in Workouts controller...");
 
     $scope.switchTo = function(newPage)
@@ -576,4 +590,35 @@ function ($scope, $state)
         console.log("Switching to " + newPage);
         $state.go(newPage);
     };
+
+    
+    var workout_callback = function(workout_result, workout_data)
+    {
+      console.log("Server answered. Server workout request outcome is " + workout_result);
+      
+      if(workout_result == "workout_get_success")
+      {
+        var parsed_data = JSON.parse(workout_data);
+        console.log("Server answered. Server workout object received: " + workout_data);
+        WorkoutFactory.set('workout_list', parsed_data);
+        function format_array(parsed_data)
+        {
+
+        }
+        $scope.visible_workout = parsed_data;
+      }
+      else if(workout_result == "workout_not_found")
+      {
+        console.log("Could not find workout with username: " + user_name);
+        navigator.notification.alert('No workouts found.', function (){},'Error','Ok');
+      }
+      else if(workout_result == "server_error")
+      {
+        console.log("Could not connect to server.");
+        navigator.notification.alert("Could not conect to server.", function(){}, 'Error','Ok');
+      }
+    };
+
+    WorkoutsService.get_workout(userName, workout_callback);
+
 }]);
