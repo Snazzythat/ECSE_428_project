@@ -1,0 +1,17 @@
+<ion-view view-title="Trainer-Info-For-Trainee" id="trainer-info-submenu" hide-nav-bar="true">
+
+       <div class="bar bar-header bar-positive">
+                <button id="Back-button" class="button button-outline button-energized" ng-click="$ionicGoBack()">Back</button>
+                <h1 class="title">My Trainer Info</h1>
+        </div>
+
+    <ion-content padding="true" class="has-header" ng-controller=TraineeCtrl>
+        <form id="trainer-form1" class="list">
+ 
+            <div class="spacer" style="width: 300px; height: 150px;"></div>
+            
+           <button id="Workouts-button" class="button button-stable button-block" ng-click=switchTo('workouts')>Workous From Trainer</button>
+           <button id="Nutrition-button" class="button button-stable button-block" ng-click=switchTo('nutritionplan')>Nutrition From Trainer</button>
+        </form>
+    </ion-content>
+</ion-view>

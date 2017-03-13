@@ -5,6 +5,8 @@ var virtual_vm_ip="104.236.220.130:8001";
 var login_URI="/WebServices/login/";
 var signup_URI="/WebServices/signup/";
 var exercise_URI="/WebServices/exercise/";
+var nutrition_URI="/WebServices/nutrition/";
+var nutrition_create_URI="/WebServices/nutrition/create";
 var password_rec_URI="/WebServices/passwordrecovery/";
 var currentUser={};
 
@@ -192,6 +194,54 @@ angular.module('starter.services', ['starter.controllers'])
     };
 }])
 
+//~~~~~~~~~~~~~~~~~~~~~~~Nutrition SERVICE ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// Nutrition service contains all functions related to nutrition
+.service('NutritionService',['$http', function($http)
+{
+    this.add_nutrition = function(nutrition, callback) {
+      var nutritionURL = "http://" + virtual_vm_ip + nutrition_create_URI;
+      var request = new XMLHttpRequest();
+      console.log(nutrition);
+      request.open("POST", nutritionURL);
+      request.setRequestHeader("Content-Type", "application/json");
+      request.send(JSON.stringify(nutrition));
+      callback();
+    };
+
+    this.get_nutrition = function(callback)
+    {
+        var nutritionURL = "http://" + virtual_vm_ip + nutrition_URI;
+
+          // Issue new http GET request to the Server
+          var request = new XMLHttpRequest();
+          request.open("GET", nutritionURL);
+          request.setRequestHeader("Content-Type", "application/");
+          request.onreadystatechange = function() {
+              //When request is answered, handle ASYNC here
+              if (request.readyState == 4)
+              {
+                  if (request.status == 200)
+                  {
+                      callback("retrieved", request.responseText);
+                  }
+                  else if (request.status == 404)
+                  {
+                      callback("server_notfound", {});
+                  }
+                  else if (request.status == 500 || request.status == 502 || request.status == 503)
+                  {
+                        callback("server_error", {});
+                  }
+                  else if (request.status == 400)
+                  {
+                      callback("bad_request", {});
+                  }
+              }
+          };
+          request.send();
+    };
+}])
+
 
 //~~~~~~~~~~~~~~~~~~~~~~~ PASSWORD RECOVERY SERVICE ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // Password recovery service issuing request to server
@@ -231,6 +281,78 @@ angular.module('starter.services', ['starter.controllers'])
           }
       };
       request.send(recovery_Data);
+  };
+}])
+
+
+//~~~~~~~~~~~~~~~~~~~~~~~ Workouts SERVICE ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.service('WorkoutsService',['$http', function($http)
+{
+  //Getter service for workouts
+  this.get_workout = function(username,callback_to_workouts)
+  {
+      var workout_get_url = "http://" + virtual_vm_ip + workout_get_URI + '/' + username;
+      // Issue new http POST request to the Server
+      var request = new XMLHttpRequest();
+      request.open("GET", workout_get_url);
+      request.setRequestHeader("Content-Type", "application/json");
+
+      request.onreadystatechange = function() {
+          //When request is answered, handle ASYNC here
+          if (request.readyState == 4)
+          {
+              if (request.status == 200)
+              {
+                  callback_to_workouts("workout_get_success", request.responseText);
+              }
+              else if (request.status == 404)
+              {
+                  callback_to_workouts("workout_not_found",{});
+              }
+              else if (request.status == 500 || request.status == 502 || request.status == 503)
+              {
+                   callback_to_workouts("server_error",{});
+              }
+          }
+      };
+      request.send();
+  };
+
+  //Setter service for workouts
+  this.create_workout = function(username,workout_object,callback_to_workouts)
+  {
+      var workout_create_url = "http://" + virtual_vm_ip + workout_create_URI + '/' + username;
+      // Issue new http POST request to the Server
+      var request = new XMLHttpRequest();
+      request.open("GET", workout_create_url);
+      request.setRequestHeader("Content-Type", "application/json");
+
+      var workout_object_to_send = JSON.stringify(workout_object);
+
+      request.onreadystatechange = function() {
+          //When request is answered, handle ASYNC here
+          if (request.readyState == 4)
+          {
+              if (request.status == 200)
+              {
+                  callback_to_workouts("workout_set_success",{});
+              }
+              else if (request.status == 405)
+              {
+                  callback_to_workouts("workout_already_exists",{});
+              }
+              else if (request.status == 404)
+              {
+                  callback_to_workouts("server_not_found",{});
+              }
+              else if (request.status == 500 || request.status == 502 || request.status == 503)
+              {
+                   callback_to_workouts("server_error",{});
+              }
+          }
+      };
+      request.send(workout_object_to_send);
   };
 }])
 

@@ -28,6 +28,12 @@ angular.module('starter.routes', [])
       controller: 'TraineeCtrl'
   })
 
+ .state('trainer-info', {
+      url: '/trainer-info',
+      templateUrl: 'templates/trainer-info.html',
+      controller: 'TraineeCtrl'
+  })
+
   .state('trainer', {
       url: '/trainer',
       templateUrl: 'templates/TrainerPage.html',
@@ -48,7 +54,13 @@ angular.module('starter.routes', [])
 
   .state('nutritionplan', {
       url: '/nutritionplan',
-      templateUrl: 'templates/NutritionPlan.html',
+      templateUrl: 'templates/nutritionplan.html',
+      controller: 'NutritionPlanCtrl'
+  })
+
+  .state('nutritionplan-create', {
+      url: '/nutritionplan/add',
+      templateUrl: 'templates/nutritionplan-create.html',
       controller: 'NutritionPlanCtrl'
   })
 
