@@ -138,21 +138,25 @@ angular.module('starter.services', ['starter.controllers'])
               {
                   if (request.status == 200)
                   {
+<<<<<<< HEAD
                       callback_to_exercise(request.response);
                       console.log(request.response);
 
+=======
+                      callback_to_exercise("exercises_retrieved", request.responseText);
+>>>>>>> 60206e9a456b19f1b587dd35afa2416a3517a48c
                   }
                   else if (request.status == 404)
                   {
-                      callback_to_exercise("server_notfound");
+                      callback_to_exercise("server_notfound", {});
                   }
                   else if (request.status == 500 || request.status == 502 || request.status == 503)
                   {
-                        callback_to_exercise("server_error");
+                        callback_to_exercise("server_error", {});
                   }
                   else if (request.status == 400)
                   {
-                      callback_to_exercise("bad_request");
+                      callback_to_exercise("bad_request", {});
                   }
               }
           };
@@ -173,19 +177,19 @@ angular.module('starter.services', ['starter.controllers'])
               {
                   if (request.status == 200)
                   {
-                      callback_to_exercise("exercises_retrieved");
+                      callback_to_exercise("exercises_retrieved", request.responseText);
                   }
                   else if (request.status == 404)
                   {
-                      callback_to_exercise("server_notfound");
+                      callback_to_exercise("server_notfound", {});
                   }
                   else if (request.status == 500 || request.status == 502 || request.status == 503)
                   {
-                        callback_to_exercise("server_error");
+                        callback_to_exercise("server_error", {});
                   }
                   else if (request.status == 400)
                   {
-                      callback_to_exercise("bad_request");
+                      callback_to_exercise("bad_request", {});
                   }
               }
           };
@@ -254,6 +258,21 @@ angular.module('starter.services', ['starter.controllers'])
         get : function(key)
         {
             return userObject[key];
+        }
+    };
+}])
+
+.factory('ExerciseFactory', [function(){
+    var exerciseObject = {};
+
+    return{
+        set : function(key, value)
+        {
+            exerciseObject[key] = value;
+        },
+        get : function(key)
+        {
+            return exerciseObject[key];
         }
     };
 }])

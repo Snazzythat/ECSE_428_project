@@ -355,10 +355,10 @@ function ($scope, $state)
 }])
 
 // //~~~~~~~~~~~~~~~~~~~~~~~ Trainee Page Controller ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-.controller('TraineeCtrl', ['$scope', '$state', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
+.controller('TraineeCtrl', ['$scope', '$state', '$ionicHistory',// The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
 // You can include any angular dependencies as parameters for this function
 // TIP: Access Route Parameters for your page via $stateParams.parameterName
-function ($scope, $state)
+function ($scope, $state, $ionicHistory)
 {
   console.log("Presently in Trinee controller...");
 
@@ -437,23 +437,40 @@ function ($scope, $state)
 }])
 
 //~~~~~~~~~~~~~~~~~~~~~~~ Exercise Lookup Page Controller ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-.controller('ExerciseLookupCtrl', ['$scope', '$state','ExerciseService', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
+.controller('ExerciseLookupCtrl', ['$scope', '$state', '$ionicHistory', 'ExerciseFactory', 'ExerciseService', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
 // You can include any angular dependencies as parameters for this function
 // TIP: Access Route Parameters for your page via $stateParams.parameterName
-function ($scope, $state, ExerciseService)
+function ($scope, $state, $ionicHistory, ExerciseFactory, ExerciseService)
 {
     console.log("Presently in ExerciseLookup controller...");
 
-    $scope.switchTo = function(newPage)
+    $scope.goBack = function()
     {
-        console.log("Switching to " + newPage);
-        $state.go(newPage);
-    };
+        console.log("Going back. Bitch.");
+        $backView = $ionicHistory.backView();
+	      $backView.go();
 
-    var exerciseCallback = function(exerciseResult)
+    };
+    var exerciseCallback = function(exerciseResult, exerciseData)
     {
-      console.log("Server answered. The exercises are " + exerciseResult);
-      if(exerciseResult == "server_error")
+      console.log("Server answered. ExerciseLookup outcome is: " + exerciseResult);
+      if (exerciseResult == "exercises_retrieved")
+      {
+        var exercise_data = JSON.parse(exerciseData);
+
+        console.log("Displaying Exercises! Data received is: " + exercise_data);
+
+        ExerciseFactory.set('exerciselist', exercise_data);
+
+        $scope.exercise_list = ExerciseFactory.get('exerciselist');
+
+        //console.log("Switching to exercise lookup page.");
+
+
+        //$state.go('exerciselookup');
+      }
+      else if(exerciseResult == "server_error")
+
       {
         console.error("Server error!");
         navigator.notification.alert('Server error. Please contact the support.', function (){},'Error','Ok');
@@ -465,12 +482,8 @@ function ($scope, $state, ExerciseService)
       }
       else if(exerciseResult == "bad_request")
       {
-        console.error("Bad exercise request");
-        navigator.notification.alert('Server encountered a bad exercise request, make sure all data is valid.', function (){},'Error','Ok');
-      }
-      else
-      {
-        console.log("Displaying Exercises!");
+        console.error("Bad exercise lookup request");
+        navigator.notification.alert('Server encountered a bad exercise lookup request, make sure all data is valid.', function (){},'Error','Ok');
       }
 
   };
