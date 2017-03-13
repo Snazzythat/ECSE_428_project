@@ -1,25 +1,25 @@
 <ion-view view-title="Workouts" id="workouts" hide-nav-bar="true">
-    
+
       <div class="bar bar-header bar-positive">
         <button id="Back-Button" class="button button-outline button-energized" ng-click="$ionicGoBack()">Back</button>
         <h1 class="title">Workouts</h1>
     </div>
-    
+
     <ion-content padding="true" class="has-header" ng-controller=WorkoutsController>
         <form id="workout-form1" class="list">
             <ion-list id="workout-list">
-                 <ion-item ng-repeat = "workout in visible_workout"
+                 <ion-item ng-repeat = "workout in visible_workout">
                     <h2> {{workout.name}}</h2>
-                    <ion-item ng-repeat = "exercise in workout.exercises"
+                    <ion-item ng-repeat = "exercise in workout.exercises">
                         <p> {{exercise.name}} </p>
                     </ion-item>
                 </ion-item>
             </ion-list>
-            
-          
-            
+
+
+
             <div class="spacer" style="width: 300px; height: 50px;"></div>
-            
+
             <button id="Edit-button" class="button button-stable button-block" ng-click=editWorkout()>Edit Workout</button>
         </form>
     </ion-content>

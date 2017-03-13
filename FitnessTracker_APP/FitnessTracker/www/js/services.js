@@ -8,6 +8,8 @@ var exercise_URI="/WebServices/exercise/";
 var nutrition_URI="/WebServices/nutrition/";
 var nutrition_create_URI="/WebServices/nutrition/create";
 var password_rec_URI="/WebServices/passwordrecovery/";
+var workout_get_URI ="WebServices/workout/getAll";
+var workout_create_URI = "";
 var currentUser={};
 
 angular.module('starter.services', ['starter.controllers'])
@@ -297,7 +299,7 @@ angular.module('starter.services', ['starter.controllers'])
       var request = new XMLHttpRequest();
       request.open("GET", workout_get_url);
       request.setRequestHeader("Content-Type", "application/json");
-
+      console.log('Issuing get workout to server...');
       request.onreadystatechange = function() {
           //When request is answered, handle ASYNC here
           if (request.readyState == 4)
@@ -394,6 +396,24 @@ angular.module('starter.services', ['starter.controllers'])
         get : function(key)
         {
             return exerciseObject[key];
+        }
+    };
+}])
+
+.factory('WorkoutsFactory', [function(){
+
+    // Object belonging to trainer. So far the obejct has keys: name, username, email, d_o_b
+    // Gets filled at login/sign up
+    var workoutsObject = {};
+
+    return{
+        set : function(key, value)
+        {
+            workoutsObject[key] = value;
+        },
+        get : function(key)
+        {
+            return workoutsObject[key];
         }
     };
 }])

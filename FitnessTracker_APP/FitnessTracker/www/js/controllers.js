@@ -577,13 +577,16 @@ function ($scope, $state, $ionicViewService, ExerciseFactory, ExerciseService)
 
 
 //~~~~~~~~~~~~~~~~~~~~~~~ Workouts Page Controller ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-.controller('WorkoutsController', ['$scope', '$state','WorkoutFactory', 'WorkoutsService', 'UserFactory', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
+.controller('WorkoutsController', ['$scope', '$state','WorkoutsService','WorkoutsFactory', 'UserFactory', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
 // You can include any angular dependencies as parameters for this function
 // TIP: Access Route Parameters for your page via $stateParams.parameterName
-function($scope, $state, WorkoutsService, WorkoutFactory, UserFactory)
+function($scope, $state, WorkoutsService, WorkoutsFactory, UserFactory)
 {
-    var userName = UserFactory.get('name');
     console.log("Presently in Workouts controller...");
+
+    var userName = UserFactory.get('name');
+
+    console.log("Got user" + userName);
 
     $scope.switchTo = function(newPage)
     {
@@ -591,7 +594,7 @@ function($scope, $state, WorkoutsService, WorkoutFactory, UserFactory)
         $state.go(newPage);
     };
 
-    function addTo(item, array){
+    var addTo = function(item, array){
       for(var i in array){
         if(array[i].workoutId == item.workoutId){
           array[i].exercises.push({
@@ -604,7 +607,7 @@ function($scope, $state, WorkoutsService, WorkoutFactory, UserFactory)
           exercises: [{name: item.exerciseName}]
         })
       }
-    }
+    };
 
 
     var workout_callback = function(workout_result, workout_data)
@@ -620,7 +623,7 @@ function($scope, $state, WorkoutsService, WorkoutFactory, UserFactory)
         for(var i in workouts){
           addTo(workouts[i], parsed_data)
         }
-        WorkoutFactory.set('workout_list', parsed_data);
+        WorkoutsFactory.set('workout_list', parsed_data);
         $scope.visible_workout = parsed_data;
       }
       else if(workout_result == "workout_not_found")
