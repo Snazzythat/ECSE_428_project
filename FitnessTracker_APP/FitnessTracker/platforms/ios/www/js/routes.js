@@ -28,6 +28,12 @@ angular.module('starter.routes', [])
       controller: 'TraineeCtrl'
   })
 
+ .state('trainer-info', {
+      url: '/trainer-info',
+      templateUrl: 'templates/trainer-info.html',
+      controller: 'TraineeCtrl'
+  })
+
   .state('trainer', {
       url: '/trainer',
       templateUrl: 'templates/TrainerPage.html',
