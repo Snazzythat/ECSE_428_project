@@ -138,13 +138,7 @@ angular.module('starter.services', ['starter.controllers'])
               {
                   if (request.status == 200)
                   {
-<<<<<<< HEAD
-                      callback_to_exercise(request.response);
-                      console.log(request.response);
-
-=======
                       callback_to_exercise("exercises_retrieved", request.responseText);
->>>>>>> 60206e9a456b19f1b587dd35afa2416a3517a48c
                   }
                   else if (request.status == 404)
                   {
