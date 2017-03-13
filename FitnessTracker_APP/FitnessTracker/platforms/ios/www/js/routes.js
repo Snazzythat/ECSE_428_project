@@ -58,6 +58,12 @@ angular.module('starter.routes', [])
       controller: 'ExerciseLookupCtrl'
   })
 
+ .state('workouts', {
+      url: '/workouts',
+      templateUrl: 'templates/Workouts.html',
+      controller: 'WorkoutsController'
+  })
+
   // .state('nutritionlookup', { //Not yet implemented
   //     url: '/nutritionlookup',
   //     templateUrl: 'templates/NutritionLookup.html',
