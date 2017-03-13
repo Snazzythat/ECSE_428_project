@@ -138,7 +138,9 @@ angular.module('starter.services', ['starter.controllers'])
               {
                   if (request.status == 200)
                   {
-                      callback_to_exercise("exercises_retrieved");
+                      callback_to_exercise(request.response);
+                      console.log(request.response);
+
                   }
                   else if (request.status == 404)
                   {

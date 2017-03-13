@@ -437,10 +437,10 @@ function ($scope, $state)
 }])
 
 //~~~~~~~~~~~~~~~~~~~~~~~ Exercise Lookup Page Controller ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-.controller('ExerciseLookupCtrl', ['$scope', '$state', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
+.controller('ExerciseLookupCtrl', ['$scope', '$state','ExerciseService', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
 // You can include any angular dependencies as parameters for this function
 // TIP: Access Route Parameters for your page via $stateParams.parameterName
-function ($scope, $state)
+function ($scope, $state, ExerciseService)
 {
     console.log("Presently in ExerciseLookup controller...");
 
@@ -449,17 +449,11 @@ function ($scope, $state)
         console.log("Switching to " + newPage);
         $state.go(newPage);
     };
-    
+
     var exerciseCallback = function(exerciseResult)
     {
-      console.log("Server answered. Login outcome is " + exerciseResult);
-      if (exerciseResult == "exercises_retrieved")
-      {
-        console.log("Displaying Exercises!");
-        //TODO: Change this line to Display the Exercises
-        $state.go('tabs.home');
-      }
-      else if(exerciseResult == "server_error")
+      console.log("Server answered. The exercises are " + exerciseResult);
+      if(exerciseResult == "server_error")
       {
         console.error("Server error!");
         navigator.notification.alert('Server error. Please contact the support.', function (){},'Error','Ok');
@@ -471,11 +465,14 @@ function ($scope, $state)
       }
       else if(exerciseResult == "bad_request")
       {
-        console.error("Bad signup request");
-        navigator.notification.alert('Server encountered a bad login request, make sure all data is valid.', function (){},'Error','Ok');
+        console.error("Bad exercise request");
+        navigator.notification.alert('Server encountered a bad exercise request, make sure all data is valid.', function (){},'Error','Ok');
       }
-   };
+      else
+      {
+        console.log("Displaying Exercises!");
+      }
 
-
+  };
     ExerciseService.get_Exercise(exerciseCallback);
 }]);
