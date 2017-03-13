@@ -1,7 +1,7 @@
 ﻿<ion-view view-title="My Nutrition Plan" id="nutritionplan" hide-nav-bar="true">
 
     <div class="bar bar-header bar-positive">
-        <button id="Logout-button" class="button button-outline button-energized" ng-click=switchTo('login')>Logout</button>
+        <button id="Back-button" class="button button-outline button-energized" ng-click="$ionicGoBack()">Back</button>
         <h1 class="title">My Nutrition Plan</h1>
     </div>
 
@@ -26,8 +26,7 @@
             </div>
 
             <button id="Edit-button" class="button button-stable button-block" ng-click=editNutrition()>Create/Edit Plan</button>
-            <button id="Back-button" class="button button-stable button-block" ng-click=switchTo('mainmenu')>Back</button>
-
+        
         </form>
     </ion-content>
 </ion-view>

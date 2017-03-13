@@ -302,49 +302,6 @@ function ($scope, $state, SignUpService, UserFactory,TrainerFactory) {
   };
 }])
 
-// //~~~~~~~~~~~~~~~~~~~~~~~ TABSCONTROLLERs ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-.controller('HomeTabCtrl', ['$scope', '$state', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
-// You can include any angular dependencies as parameters for this function
-// TIP: Access Route Parameters for your page via $stateParams.parameterName
-function ($scope, $state)
-{
-  console.log("Presently in home tab controller...");
-
-  $scope.switchTo = function(newPage)
-  {
-    console.log("Switching to " + newPage);
-    $state.go(newPage);
-  };
-}])
-
-.controller('WourkoutsCtrl', ['$scope', '$state', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
-// You can include any angular dependencies as parameters for this function
-// TIP: Access Route Parameters for your page via $stateParams.parameterName
-function ($scope, $state)
-{
-  console.log("Presently in workouts tab controller...");
-
-  $scope.switchTo = function(newPage)
-  {
-    console.log("Switching to " + newPage);
-    $state.go(newPage);
-  };
-}])
-
-.controller('NutritionCtrl', ['$scope', '$state', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
-// You can include any angular dependencies as parameters for this function
-// TIP: Access Route Parameters for your page via $stateParams.parameterName
-function ($scope, $state)
-{
-  console.log("Presently in nutrition tab controller...");
-
-  $scope.switchTo = function(newPage)
-  {
-    console.log("Switching to " + newPage);
-    $state.go(newPage);
-  };
-}])
-
 //~~~~~~~~~~~~~~~~~~~~~~~ Trainer Page Controller ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 .controller('TrainerCtrl', ['$scope', '$state','TrainerFactory', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
 // You can include any angular dependencies as parameters for this function
@@ -456,11 +413,6 @@ function ($scope, $state, $ionicViewService, ExerciseFactory, ExerciseService)
 {
     console.log("Presently in ExerciseLookup controller...");
 
-    $scope.goBack = function()
-    {
-        console.log("Going back. Bitch.");
-        $ionicViewService.getBackView().go();
-    };
     var exerciseCallback = function(exerciseResult, exerciseData)
     {
       console.log("Server answered. ExerciseLookup outcome is: " + exerciseResult);

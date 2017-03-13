@@ -1,5 +1,6 @@
 // Don't forget to change the VM ip and port here!
 // var virtual_vm_ip="104.236.220.130:9090/kevinnam.me/public_html/";
+//var virtual_vm_ip="localhost:8001";
 var virtual_vm_ip="104.236.220.130:8001";
 var login_URI="/WebServices/login/";
 var signup_URI="/WebServices/signup/";
@@ -246,13 +247,13 @@ angular.module('starter.services', ['starter.controllers'])
     // return userObject;
     return{   // --> HAVE THE BRACKET ON THE SAME LINE AS return ELSE MINDFUCK
         set : function(key, value)
-        {   
+        {
             console.log("User factory setter called with key: " + key);
             console.log("User factory set an entry: " + key + ',' + value);
             userObject[key] = value;
         },
         get : function(key)
-        {  
+        {
             console.log("User factory getter called with key: " + key);
             console.log("User factory returns: "+ userObject[key]);
             return userObject[key];
