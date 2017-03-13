@@ -7,60 +7,16 @@
     
     <ion-content padding="true" class="has-header" ng-controller=WorkoutsController>
         <form id="workout-form1" class="list">
-            <ion-list id="workout-list1">
+            <ion-list id="workout-list">
+                 <ion-item ng-repeat = "workout in visible_workout"
+                    <h2> {{workout.workoutId}}</h2>
+                    <ion-item ng-repeat = "exercise in workout.exercises"
+                        <p> {{exercise.name}} </p>
+                    </ion-item>
+                </ion-item>
             </ion-list>
             
-            <div class="spacer" style="width: 300px; height: 50px;"></div>
-            
-            <div class="card">
-                <div class="item item-divider">
-                    Workout Set 1
-                </div>
-                <div class="item item-text-wrap">
-                    Exercise 1 information
-                </div>
-                <div class="item item-text-wrap">
-                    Exercise 2 information
-                </div>
-                <div class="item item-text-wrap">
-                    Exercise 3 information
-                </div>
-                <div class="item item-text-wrap">
-                    Exercise 4 information
-                </div>
-                
-                <div class="item item-divider">
-                    Workout Set 2
-                </div>
-                <div class="item item-text-wrap">
-                    Exercise 1 information
-                </div>
-                <div class="item item-text-wrap">
-                    Exercise 2 information
-                </div>
-                <div class="item item-text-wrap">
-                    Exercise 3 information
-                </div>
-                <div class="item item-text-wrap">
-                    Exercise 4 information
-                </div>
-                
-                <div class="item item-divider">
-                    Workout Set 3
-                </div>
-                <div class="item item-text-wrap">
-                    Exercise 1 information
-                </div>
-                <div class="item item-text-wrap">
-                    Exercise 2 information
-                </div>
-                <div class="item item-text-wrap">
-                    Exercise 3 information
-                </div>
-                <div class="item item-text-wrap">
-                    Exercise 4 information
-                </div>
-            </div>
+          
             
             <div class="spacer" style="width: 300px; height: 50px;"></div>
             
