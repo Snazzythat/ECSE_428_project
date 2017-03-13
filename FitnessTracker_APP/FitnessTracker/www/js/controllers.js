@@ -34,7 +34,7 @@ function ($scope, $state, LoginService,UserFactory,TrainerFactory)
 
     if (loginResult == "login_success_user")
 
-    { 
+    {
       console.log("Data from successfull user login received from server: " + loginData);
 
       console.log("Creating a User object with all the data received...");
@@ -411,6 +411,26 @@ function ($scope, $state)
 // TIP: Access Route Parameters for your page via $stateParams.parameterName
 function ($scope, $state, $ionicViewService, ExerciseFactory, ExerciseService)
 {
+    $scope.filterExerciseList = function()
+    {
+      var exercises = angular.copy(ExerciseFactory.get('exerciselist'));
+      var toDelete = [];
+      if($scope.typeFilter && $scope.typeFilter != ""){
+        for(var i = exercises.length-1; i >= 0; i--){
+          if(exercises[i].type != $scope.typeFilter){
+            exercises.splice(i,1);
+          }
+        }
+      }
+      if($scope.muscleFilter && $scope.muscleFilter != ""){
+        for(var i = exercises.length-1; i >= 0; i--){
+          if(exercises[i].targeted_muscle != $scope.muscleFilter){
+            exercises.splice(i,1);
+          }
+        }
+      }
+      $scope.exercise_list = angular.copy(exercises);
+    }
     console.log("Presently in ExerciseLookup controller...");
 
     var exerciseCallback = function(exerciseResult, exerciseData)
