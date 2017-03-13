@@ -577,7 +577,7 @@ function ($scope, $state, $ionicViewService, ExerciseFactory, ExerciseService)
 
 
 //~~~~~~~~~~~~~~~~~~~~~~~ Workouts Page Controller ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-.controller('WorkoutController', ['$scope', '$state','WorkoutFactory', 'WorkoutsService', 'UserFactory', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
+.controller('WorkoutsController', ['$scope', '$state','WorkoutFactory', 'WorkoutsService', 'UserFactory', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
 // You can include any angular dependencies as parameters for this function
 // TIP: Access Route Parameters for your page via $stateParams.parameterName
 function($scope, $state, WorkoutsService, WorkoutFactory, UserFactory)
@@ -591,20 +591,36 @@ function($scope, $state, WorkoutsService, WorkoutFactory, UserFactory)
         $state.go(newPage);
     };
 
-    
+    function addTo(item, array){
+      for(var i in array){
+        if(array[i].workoutId == item.workoutId){
+          array[i].exercises.push({
+            name: item.exerciseName
+          })
+          continue;
+        }
+        array.push({
+          workoutId: item.workoutId,
+          exercises: [{name: item.exerciseName}]
+        })
+      }
+    }
+
+
     var workout_callback = function(workout_result, workout_data)
     {
       console.log("Server answered. Server workout request outcome is " + workout_result);
-      
+
       if(workout_result == "workout_get_success")
       {
-        var parsed_data = JSON.parse(workout_data);
+        var workouts = JSON.parse(workout_data);
         console.log("Server answered. Server workout object received: " + workout_data);
-        WorkoutFactory.set('workout_list', parsed_data);
-        function format_array(parsed_data)
-        {
-
+        var parsed_data = []
+        var indexes = []
+        for(var i in workouts){
+          addTo(workouts[i], parsed_data)
         }
+        WorkoutFactory.set('workout_list', parsed_data);
         $scope.visible_workout = parsed_data;
       }
       else if(workout_result == "workout_not_found")
