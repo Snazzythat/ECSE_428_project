@@ -1,4 +1,11 @@
-<ion-view title="Signup" id="signup">
+<ion-view title="Signup" id="signup" hide-nav-bar="true">
+
+   <div class="bar bar-header bar-royal">
+                <button id="Back-from-signup" class="button button button-energized" ng-click=switchTo('login')>Back</button>
+                <h1 class="title">Sign Up</h1>
+        </div>
+
+
   <ion-content padding="true" class="has-header" ng-controller=signupCtrl>
     <form id="signup-form2" class="list">
       <ion-list id="signup-list2">
@@ -29,7 +36,16 @@
         </label>
 
       </ion-list>
-      <button id="signup-button3" class="button button-stable button-block" ng-click="signUpProcess()">Sign up</button>
+
+      <label class="item item-input item-select">
+        <div class="input-label">Type of Account</div>
+        <select id='acc_type'>
+            <option selected>User</option>
+            <option>Trainer</option>
+        </select>
+      </label>
+
+      <button id="signup-button3" class="button button-positive button-block" ng-click="signUpProcess()">Sign up</button>
     </form>
   </ion-content>
 </ion-view>

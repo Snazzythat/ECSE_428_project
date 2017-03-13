@@ -21,26 +21,82 @@ angular.module('starter.routes', [])
     controller: 'signupCtrl'
   })
 
-  .state('mainmenu', {
-    url: '/mainmenu',
-    templateUrl: 'templates/mainmenu.html',
-    controller: 'mainMenuCtrl'
+// User Tabs Routes
+  .state('tabs', {
+      url: "/tab",
+      abstract: true,
+      templateUrl: "templates/tabs.html"
+    })
+    .state('tabs.home', {
+      url: "/home",
+      views: {
+        'home-tab': {
+          templateUrl: "templates/Home-Tab.html",
+          controller: 'HomeTabCtrl'
+        }
+      }
+    })
+    .state('tabs.workouts', {
+      url: "/workouts",
+      views: {
+        'workouts-tab': {
+          templateUrl: "templates/Workouts-Tab.html",
+          controller: 'WourkoutsCtrl'
+        }
+      }
+    })
+    .state('tabs.nutrition', {
+      url: "/nutrition",
+      views: {
+        'nutrition-tab': {
+          templateUrl: "templates/Nutrition-Tab.html",
+          controller: 'NutritionCtrl'
+        }
+      }
+    })
+
+// Additional Pages
+  .state('trainee', {
+      url: '/trainee',
+      templateUrl: 'templates/TraineePage.html',
+      controller: 'TraineeCtrl'
   })
 
-  .state('user_menu', {
-    url: '/user_menu',
-    templateUrl: 'templates/User.html',
-    controller: 'userMenuController'
+  .state('trainer', {
+      url: '/trainer',
+      templateUrl: 'templates/TrainerPage.html',
+      controller: 'TrainerCtrl'
   })
 
-  .state('trainer_menu', {
-    url: '/trainer_menu',
-    templateUrl: 'templates/Trainer.html',
-    controller: 'trainerMenuController'
+  .state('passwordrecovery', {
+      url: '/passwordrecovery',
+      templateUrl: 'templates/PasswordRec.html',
+      controller: 'PasswordRecCtrl'
   })
 
-$urlRouterProvider.otherwise('/login')
+  // .state('exerciseplan', { //Not yet implemented (Should be "Workout")
+  //     url: '/exerciseplan',
+  //     templateUrl: 'templates/ExercisePlan.html',
+  //     controller: 'ExercisePlanCtrl'
+  // })
 
+  .state('nutritionplan', {
+      url: '/nutritionplan',
+      templateUrl: 'templates/NutritionPlan.html',
+      controller: 'NutritionPlanCtrl'
+  })
 
+  .state('exerciselookup', {
+      url: '/exerciselookup',
+      templateUrl: 'templates/ExerciseLookup.html',
+      controller: 'ExerciseLookupCtrl'
+  })
 
+  // .state('nutritionlookup', { //Not yet implemented
+  //     url: '/nutritionlookup',
+  //     templateUrl: 'templates/NutritionLookup.html',
+  //     controller: 'NutritionLookupCtrl'
+  // })
+
+$urlRouterProvider.otherwise('/login');
 });
