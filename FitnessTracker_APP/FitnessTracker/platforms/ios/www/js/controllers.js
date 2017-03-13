@@ -322,10 +322,10 @@ function ($scope, $state,TrainerFactory)
 
 // //~~~~~~~~~~~~~~~~~~~~~~~ Trainee Page Controller ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.controller('TraineeCtrl', ['$scope', '$state','UserFactory', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
+.controller('TraineeCtrl', ['$scope', '$state','$ionicSideMenuDelegate','UserFactory', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
 // You can include any angular dependencies as parameters for this function
 // TIP: Access Route Parameters for your page via $stateParams.parameterName
-function ($scope, $state,UserFactory)
+function ($scope, $state,$ionicSideMenuDelegate,UserFactory)
 {
   console.log("Presently in Trainee controller...");
 
@@ -335,6 +335,12 @@ function ($scope, $state,UserFactory)
   {
     console.log("Switching to " + newPage);
     $state.go(newPage);
+  };
+
+  $scope.toggleSideMenu = function()
+  {
+    console.log("Toggling");
+    $ionicSideMenuDelegate.toggleLeft();
   };
 }])
 
