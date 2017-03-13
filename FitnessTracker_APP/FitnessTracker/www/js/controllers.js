@@ -590,7 +590,7 @@ function($scope, $state, WorkoutsService, WorkoutsFactory, UserFactory)
 {
     console.log("Presently in Workouts controller...");
 
-    var userName = UserFactory.get('name');
+    var userName = UserFactory.get('username');
 
     console.log("Got user" + userName);
 
@@ -601,18 +601,22 @@ function($scope, $state, WorkoutsService, WorkoutsFactory, UserFactory)
     };
 
     var addTo = function(item, array){
+      var found = false;
       for(var i in array){
         if(array[i].workoutId == item.workoutId){
           array[i].exercises.push({
             name: item.exerciseName
           })
-          continue;
+          found = true;
+          break;
         }
-        array.push({
+      }
+      if(!found){
+      array.push({
           workoutId: item.workoutId,
           exercises: [{name: item.exerciseName}]
         })
-      }
+       }
     };
 
 

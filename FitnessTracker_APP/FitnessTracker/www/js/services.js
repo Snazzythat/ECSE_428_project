@@ -1,14 +1,14 @@
 // Don't forget to change the VM ip and port here!
 // var virtual_vm_ip="104.236.220.130:9090/kevinnam.me/public_html/";
-//var virtual_vm_ip="localhost:8001";
-var virtual_vm_ip="104.236.220.130:8001";
+var virtual_vm_ip="localhost:8001";
+//var virtual_vm_ip="104.236.220.130:8001";
 var login_URI="/WebServices/login/";
 var signup_URI="/WebServices/signup/";
 var exercise_URI="/WebServices/exercise/";
 var nutrition_URI="/WebServices/nutrition/";
 var nutrition_create_URI="/WebServices/nutrition/create";
 var password_rec_URI="/WebServices/passwordrecovery/";
-var workout_get_URI ="WebServices/workout/getAll";
+var workout_get_URI ="/WebServices/workout/getAll";
 var workout_create_URI = "";
 var currentUser={};
 

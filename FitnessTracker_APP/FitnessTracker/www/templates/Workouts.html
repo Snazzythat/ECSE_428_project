@@ -9,7 +9,7 @@
         <form id="workout-form1" class="list">
             <ion-list id="workout-list">
                  <ion-item ng-repeat = "workout in visible_workout">
-                    <h2> {{workout.name}}</h2>
+                    <h2> {{workout.workoutId}}: </h2>
                     <ion-item ng-repeat = "exercise in workout.exercises">
                         <p> {{exercise.name}} </p>
                     </ion-item>
