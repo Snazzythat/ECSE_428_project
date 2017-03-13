@@ -52,6 +52,12 @@ angular.module('starter.routes', [])
       controller: 'NutritionPlanCtrl'
   })
 
+  .state('nutritionplan-create', {
+      url: '/nutritionplan/add',
+      templateUrl: 'templates/NutritionPlan-create.html',
+      controller: 'NutritionPlanCtrl'
+  })
+
   .state('exerciselookup', {
       url: '/exerciselookup',
       templateUrl: 'templates/ExerciseLookup.html',

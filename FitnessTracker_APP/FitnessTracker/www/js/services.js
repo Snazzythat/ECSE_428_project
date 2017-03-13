@@ -5,6 +5,8 @@ var virtual_vm_ip="104.236.220.130:8001";
 var login_URI="/WebServices/login/";
 var signup_URI="/WebServices/signup/";
 var exercise_URI="/WebServices/exercise/";
+var nutrition_URI="/WebServices/nutrition/";
+var nutrition_create_URI="/WebServices/nutrition/create";
 var password_rec_URI="/WebServices/passwordrecovery/";
 var currentUser={};
 
@@ -185,6 +187,54 @@ angular.module('starter.services', ['starter.controllers'])
                   else if (request.status == 400)
                   {
                       callback_to_exercise("bad_request", {});
+                  }
+              }
+          };
+          request.send();
+    };
+}])
+
+//~~~~~~~~~~~~~~~~~~~~~~~Nutrition SERVICE ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// Nutrition service contains all functions related to nutrition
+.service('NutritionService',['$http', function($http)
+{
+    this.add_nutrition = function(nutrition, callback) {
+      var nutritionURL = "http://" + virtual_vm_ip + nutrition_create_URI;
+      var request = new XMLHttpRequest();
+      console.log(nutrition);
+      request.open("POST", nutritionURL);
+      request.setRequestHeader("Content-Type", "application/json");
+      request.send(JSON.stringify(nutrition));
+      callback();
+    };
+
+    this.get_nutrition = function(callback)
+    {
+        var nutritionURL = "http://" + virtual_vm_ip + nutrition_URI;
+
+          // Issue new http GET request to the Server
+          var request = new XMLHttpRequest();
+          request.open("GET", nutritionURL);
+          request.setRequestHeader("Content-Type", "application/");
+          request.onreadystatechange = function() {
+              //When request is answered, handle ASYNC here
+              if (request.readyState == 4)
+              {
+                  if (request.status == 200)
+                  {
+                      callback("retrieved", request.responseText);
+                  }
+                  else if (request.status == 404)
+                  {
+                      callback("server_notfound", {});
+                  }
+                  else if (request.status == 500 || request.status == 502 || request.status == 503)
+                  {
+                        callback("server_error", {});
+                  }
+                  else if (request.status == 400)
+                  {
+                      callback("bad_request", {});
                   }
               }
           };

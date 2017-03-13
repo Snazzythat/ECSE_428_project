@@ -6,27 +6,22 @@
     </div>
 
     <ion-content padding="true" class="has-header" ng-controller=NutritionPlanCtrl>
-        <form id="trainer-form1" class="list">
-            <ion-list id="trainer-list1">
+        <form id="nutrition-form1" class="list">
+
+            <ion-list id="nutrition-list">
+                <ion-item item="n" ng-repeat = "n in nutrition_list" on-hold="onHold(n)">
+                    <div id="{{n.name}}">
+                      <h2> {{n.name}}</h2>
+                      <p>Protein: {{n.protein}}g</p>
+                      <p>Carbohydrates: {{n.carbohydrate}}g</p>
+                      <p>Calories: {{n.calories}}</p>
+                      <p>Fat: {{n.fat}}g</p>
+                    </div>
+                </ion-item>
             </ion-list>
 
-            <div class="card">
-                <div class="item item-text-wrap">
-                    Nutrition information
-                </div>
-                <div class="item item-text-wrap">
-                    Nutrition information
-                </div>
-                <div class="item item-text-wrap">
-                    Nutrition information
-                </div>
-                <div class="item item-text-wrap">
-                    Nutrition information
-                </div>
-            </div>
+            <button id="Edit-button" class="button button-stable button-block" ng-click="switchTo('nutritionplan-create')">Create/Edit Plan</button>
 
-            <button id="Edit-button" class="button button-stable button-block" ng-click=editNutrition()>Create/Edit Plan</button>
-        
         </form>
     </ion-content>
 </ion-view>

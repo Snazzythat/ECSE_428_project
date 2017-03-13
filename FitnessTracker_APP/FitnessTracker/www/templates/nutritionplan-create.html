@@ -1,0 +1,46 @@
+﻿<ion-view view-title="Add a new nutrition" id="nutrition-create" hide-nav-bar="true">
+
+    <div class="bar bar-header bar-positive">
+        <button id="Back-button" class="button button-outline button-energized" ng-click="$ionicGoBack()">Back</button>
+        <h1 class="title">Add a new nutrition</h1>
+    </div>
+
+    <ion-content padding="true" class="has-header" ng-controller=NutritionPlanCtrl>
+        <form id="nutrition-form" class="list">
+          <ion-list id="nutrition-form">
+              <label class="item item-input" id="name">
+                <span class="input-label">Name</span>
+                <input type="text" placeholder="e.g. Carrot" ng-model=nutrition.name>
+              </label>
+
+              <label class="item item-input" id="protein">
+                <span class="input-label">Protein (g)</span>
+                <input type="text" placeholder="10" ng-model=nutrition.protein>
+              </label>
+
+              <label class="item item-input" id="carbohydrate">
+                <span class="input-label">Carbohydrates (g)</span>
+                <input type="text" placeholder="13" ng-model=nutrition.carbohydrate>
+              </label>
+
+              <label class="item item-input" id="fat">
+                <span class="input-label">Total fat (g)</span>
+                <input type="text" placeholder="4" ng-model=nutrition.fat>
+              </label>
+
+              <label class="item item-input" id="fat">
+                <span class="input-label">Calories </span>
+                <input type="text" placeholder="120" ng-model=nutrition.calories>
+              </label>
+
+            </ion-list>
+            </label>
+
+            <button id="addButton" class="button button-positive button-block" ng-click="addNutritionProcess()">Add<button>
+          </form>
+
+
+
+        </form>
+    </ion-content>
+</ion-view>
