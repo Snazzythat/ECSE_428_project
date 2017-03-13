@@ -33,6 +33,7 @@ function ($scope, $state, LoginService,UserFactory,TrainerFactory)
 
 
     if (loginResult == "login_success_user")
+
     { 
       console.log("Data from successfull user login received from server: " + loginData);
 
@@ -94,7 +95,7 @@ function ($scope, $state, LoginService,UserFactory,TrainerFactory)
       console.error("Bad password!");
       navigator.notification.alert('User name exists, but wrong password!', function (){},'Wrong Password','Try again');
     }
-  }
+  };
 
   // Autherntification for user
   // TODO: Async call to the server and DB to authentificate the user (if exists or if noes not exist)
@@ -123,8 +124,8 @@ function ($scope, $state, LoginService,UserFactory,TrainerFactory)
       console.log("Sending async login request...");
       LoginService.http_login_request(users_email,users_password, postLoginCallback);
     }
-  }
-  
+};
+
   // Password recovery feature.
   // Contacts web server with email or username.
   // WS needs to send an email with password recovery.
@@ -155,7 +156,7 @@ function ($scope, $state, SignUpService, UserFactory,TrainerFactory) {
   };
 
   // Confirmation message button callback necessary for user to confirm
-  // If he wants to sign in with his email because account exists already 
+  // If he wants to sign in with his email because account exists already
   var confirm_user_exists_by_email = function(buttonIndex)
   {
     // User chose to login
@@ -195,14 +196,14 @@ function ($scope, $state, SignUpService, UserFactory,TrainerFactory) {
       if (userType == 'Trainer')
       {
         //Creating the actual object for Trainer before switching to trainer menu
-        //Can do it directly without having to access the server since we have all data already. 
+        //Can do it directly without having to access the server since we have all data already.
         console.log("Creating a Trainer object with all the data received...");
 
         TrainerFactory.set('name', userActualName);
         TrainerFactory.set('username', userName);
         TrainerFactory.set('email', userEmail);
         TrainerFactory.set('d_o_b', usersBirthday);
-        
+
         $state.go('trainer');
       }
       else if (userType == 'User')
@@ -344,13 +345,13 @@ function ($scope, $state)
   };
 }])
 
-
 //~~~~~~~~~~~~~~~~~~~~~~~ Trainer Page Controller ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 .controller('TrainerCtrl', ['$scope', '$state','TrainerFactory', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
 // You can include any angular dependencies as parameters for this function
 // TIP: Access Route Parameters for your page via $stateParams.parameterName
 function ($scope, $state,TrainerFactory)
 {
+
   console.log("Presently in Trainer controller...");
 
   $scope.visible_user_name = TrainerFactory.get('name');
@@ -363,6 +364,7 @@ function ($scope, $state,TrainerFactory)
 }])
 
 // //~~~~~~~~~~~~~~~~~~~~~~~ Trainee Page Controller ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 .controller('TraineeCtrl', ['$scope', '$state','UserFactory', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
 // You can include any angular dependencies as parameters for this function
 // TIP: Access Route Parameters for your page via $stateParams.parameterName
@@ -395,7 +397,7 @@ function ($scope, $state, PasswordRecoveryService)
     console.log("Server answered. Server recovery outcome is " + recovery_result);
 
     if (recovery_result == "recovery_request_success")
-    { 
+    {
       navigator.notification.alert('The email containing your password has been sent', function (){},'Success','Ok');
     }
     else if(recovery_result == "recovery_request_failure")
@@ -422,7 +424,7 @@ function ($scope, $state, PasswordRecoveryService)
   $scope.getMyPassword = function()
   {
     var recovery_email = String($scope.user.email);
-    
+
     // Call asynchronous HTTP call to WS to make it send an email to us with out password
     // If we dont exist in the database, error will be returned.
     PasswordRecoveryService.recover_pswd(recovery_email,recovery_callback);
@@ -447,16 +449,53 @@ function ($scope, $state)
 }])
 
 //~~~~~~~~~~~~~~~~~~~~~~~ Exercise Lookup Page Controller ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-.controller('ExerciseLookupCtrl', ['$scope', '$state', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
+.controller('ExerciseLookupCtrl', ['$scope', '$state', '$ionicHistory', 'ExerciseFactory', 'ExerciseService', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
 // You can include any angular dependencies as parameters for this function
 // TIP: Access Route Parameters for your page via $stateParams.parameterName
-function ($scope, $state)
+function ($scope, $state, $ionicViewService, ExerciseFactory, ExerciseService)
 {
     console.log("Presently in ExerciseLookup controller...");
 
-    $scope.switchTo = function(newPage)
+    $scope.goBack = function()
     {
-        console.log("Switching to " + newPage);
-        $state.go(newPage);
+        console.log("Going back. Bitch.");
+        $ionicViewService.getBackView().go();
     };
+    var exerciseCallback = function(exerciseResult, exerciseData)
+    {
+      console.log("Server answered. ExerciseLookup outcome is: " + exerciseResult);
+      if (exerciseResult == "exercises_retrieved")
+      {
+        var exercise_data = JSON.parse(exerciseData);
+
+        console.log("Displaying Exercises! Data received is: " + exercise_data);
+
+        ExerciseFactory.set('exerciselist', exercise_data);
+
+        $scope.exercise_list = ExerciseFactory.get('exerciselist');
+
+        //console.log("Switching to exercise lookup page.");
+
+
+        //$state.go('exerciselookup');
+      }
+      else if(exerciseResult == "server_error")
+
+      {
+        console.error("Server error!");
+        navigator.notification.alert('Server error. Please contact the support.', function (){},'Error','Ok');
+      }
+      else if(exerciseResult == "server_notfound")
+      {
+        console.error("Server not found!");
+        navigator.notification.alert('Server is offline. Please try again later.', function (){},'Error','Ok');
+      }
+      else if(exerciseResult == "bad_request")
+      {
+        console.error("Bad exercise lookup request");
+        navigator.notification.alert('Server encountered a bad exercise lookup request, make sure all data is valid.', function (){},'Error','Ok');
+      }
+
+  };
+    ExerciseService.get_Exercise(exerciseCallback);
 }]);

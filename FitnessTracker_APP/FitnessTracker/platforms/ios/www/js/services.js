@@ -1,10 +1,11 @@
 // Don't forget to change the VM ip and port here!
 // var virtual_vm_ip="104.236.220.130:9090/kevinnam.me/public_html/";
 var virtual_vm_ip="104.236.220.130:8001";
-var login_URI="/WebServices/login/"
-var signup_URI="/WebServices/signup/"
-var password_rec_URI="/WebServices/passwordrecovery/"
-var currentUser={}
+var login_URI="/WebServices/login/";
+var signup_URI="/WebServices/signup/";
+var exercise_URI="/WebServices/exercise/";
+var password_rec_URI="/WebServices/passwordrecovery/";
+var currentUser={};
 
 angular.module('starter.services', ['starter.controllers'])
 
@@ -33,11 +34,10 @@ angular.module('starter.services', ['starter.controllers'])
     request.onreadystatechange = function() {
       //When request is answered, call back the login controller with result
       // SUCESS USER LOGIN
-
       if(request.readyState === 4)
       {
         if (request.status == 200)
-        { 
+        {
             // At successful login, pass the object data to the callback
             callback_to_login("login_success_user",request.responseText);
         }
@@ -45,7 +45,7 @@ angular.module('starter.services', ['starter.controllers'])
         else if (request.status == 202)
         {
             callback_to_login("login_success_trainer",request.responseText);
-        }    
+        }
         else if (request.status == 404)
         {
             callback_to_login("user_notfound",{});
@@ -63,7 +63,7 @@ angular.module('starter.services', ['starter.controllers'])
             callback_to_login("bad_password",{});
         }
       }
-    }
+  };
     request.send();
     // ~~~ASYNC CODE END
   };
@@ -100,7 +100,7 @@ angular.module('starter.services', ['starter.controllers'])
               else if (request.status == 500 || request.status == 502 || request.status == 503)
               {
                     callback_to_login("server_error");
-              } 
+              }
               else if (request.status == 400)
               {
                   callback_to_signup("bad_request");
@@ -114,11 +114,83 @@ angular.module('starter.services', ['starter.controllers'])
                   callback_to_signup("user_exists_byemail");
               }
           }
-      }
+      };
       request.send(signup_Data);
   };
 
 }])
+
+//~~~~~~~~~~~~~~~~~~~~~~~Exercise SERVICE ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// Exercise service contains all functions related to exercises
+.service('ExerciseService',['$http', function($http)
+{
+    this.get_Exercise = function(callback_to_exercise)
+    {
+        var exerciseURL = "http://" + virtual_vm_ip + exercise_URI;
+
+          // Issue new http GET request to the Server
+          var request = new XMLHttpRequest();
+          request.open("GET", exerciseURL);
+          request.setRequestHeader("Content-Type", "application/json");
+          request.onreadystatechange = function() {
+              //When request is answered, handle ASYNC here
+              if (request.readyState == 4)
+              {
+                  if (request.status == 200)
+                  {
+                      callback_to_exercise("exercises_retrieved", request.responseText);
+                  }
+                  else if (request.status == 404)
+                  {
+                      callback_to_exercise("server_notfound", {});
+                  }
+                  else if (request.status == 500 || request.status == 502 || request.status == 503)
+                  {
+                        callback_to_exercise("server_error", {});
+                  }
+                  else if (request.status == 400)
+                  {
+                      callback_to_exercise("bad_request", {});
+                  }
+              }
+          };
+          request.send();
+    };
+
+    this.get_Exercise_name = function(exercise_name, callback_to_exercise)
+    {
+        var exerciseURL = "http://" + virtual_vm_ip + exercise_URI;
+
+          // Issue new http GET request to the Server
+          var request = new XMLHttpRequest();
+          request.open("GET", exerciseURL);
+          request.setRequestHeader("Content-Type", "application/json");
+          request.onreadystatechange = function() {
+              //When request is answered, handle ASYNC here
+              if (request.readyState == 4)
+              {
+                  if (request.status == 200)
+                  {
+                      callback_to_exercise("exercises_retrieved", request.responseText);
+                  }
+                  else if (request.status == 404)
+                  {
+                      callback_to_exercise("server_notfound", {});
+                  }
+                  else if (request.status == 500 || request.status == 502 || request.status == 503)
+                  {
+                        callback_to_exercise("server_error", {});
+                  }
+                  else if (request.status == 400)
+                  {
+                      callback_to_exercise("bad_request", {});
+                  }
+              }
+          };
+          request.send();
+    };
+}])
+
 
 //~~~~~~~~~~~~~~~~~~~~~~~ PASSWORD RECOVERY SERVICE ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // Password recovery service issuing request to server
@@ -134,7 +206,7 @@ angular.module('starter.services', ['starter.controllers'])
       var request = new XMLHttpRequest();
       request.open("POST", signupURL);
       request.setRequestHeader("Content-Type", "application/json");
-      
+
       request.onreadystatechange = function() {
           //When request is answered, handle ASYNC here
           if (request.readyState == 4)
@@ -154,9 +226,9 @@ angular.module('starter.services', ['starter.controllers'])
               else if (request.status == 500 || request.status == 502 || request.status == 503)
               {
                    callback_to_recovery("server_error");
-              } 
+              }
           }
-      }
+      };
       request.send(recovery_Data);
   };
 }])
@@ -188,6 +260,21 @@ angular.module('starter.services', ['starter.controllers'])
     };
 }])
 
+.factory('ExerciseFactory', [function(){
+    var exerciseObject = {};
+
+    return{
+        set : function(key, value)
+        {
+            exerciseObject[key] = value;
+        },
+        get : function(key)
+        {
+            return exerciseObject[key];
+        }
+    };
+}])
+
 //~~~~~~~~~~~~~~~~~~~~~~~ TRAINER FACTORY ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // Represent a user 'object' and all properties associated to user will be recorded here.
 .factory('TrainerFactory', [function(){
@@ -206,4 +293,5 @@ angular.module('starter.services', ['starter.controllers'])
             return trainerObject[key];
         }
     };
+
 }]);

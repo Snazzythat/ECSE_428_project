@@ -452,17 +452,10 @@ function ($scope, $state)
 .controller('ExerciseLookupCtrl', ['$scope', '$state', '$ionicHistory', 'ExerciseFactory', 'ExerciseService', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
 // You can include any angular dependencies as parameters for this function
 // TIP: Access Route Parameters for your page via $stateParams.parameterName
-function ($scope, $state, $ionicHistory, ExerciseFactory, ExerciseService)
+function ($scope, $state, $ionicViewService, ExerciseFactory, ExerciseService)
 {
     console.log("Presently in ExerciseLookup controller...");
 
-    $scope.goBack = function()
-    {
-        console.log("Going back. Bitch.");
-        $backView = $ionicHistory.backView();
-	      $backView.go();
-
-    };
     var exerciseCallback = function(exerciseResult, exerciseData)
     {
       console.log("Server answered. ExerciseLookup outcome is: " + exerciseResult);
