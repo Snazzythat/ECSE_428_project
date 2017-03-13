@@ -284,6 +284,78 @@ angular.module('starter.services', ['starter.controllers'])
   };
 }])
 
+
+//~~~~~~~~~~~~~~~~~~~~~~~ Workouts SERVICE ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.service('WorkoutsService',['$http', function($http)
+{
+  //Getter service for workouts
+  this.get_workout = function(username,callback_to_workouts)
+  {
+      var workout_get_url = "http://" + virtual_vm_ip + workout_get_URI + '/' + username;
+      // Issue new http POST request to the Server
+      var request = new XMLHttpRequest();
+      request.open("GET", workout_get_url);
+      request.setRequestHeader("Content-Type", "application/json");
+
+      request.onreadystatechange = function() {
+          //When request is answered, handle ASYNC here
+          if (request.readyState == 4)
+          {
+              if (request.status == 200)
+              {
+                  callback_to_workouts("workout_get_success", request.responseText);
+              }
+              else if (request.status == 404)
+              {
+                  callback_to_workouts("workout_not_found",{});
+              }
+              else if (request.status == 500 || request.status == 502 || request.status == 503)
+              {
+                   callback_to_workouts("server_error",{});
+              }
+          }
+      };
+      request.send();
+  };
+
+  //Setter service for workouts
+  this.create_workout = function(username,workout_object,callback_to_workouts)
+  {
+      var workout_create_url = "http://" + virtual_vm_ip + workout_create_URI + '/' + username;
+      // Issue new http POST request to the Server
+      var request = new XMLHttpRequest();
+      request.open("GET", workout_create_url);
+      request.setRequestHeader("Content-Type", "application/json");
+
+      var workout_object_to_send = JSON.stringify(workout_object);
+
+      request.onreadystatechange = function() {
+          //When request is answered, handle ASYNC here
+          if (request.readyState == 4)
+          {
+              if (request.status == 200)
+              {
+                  callback_to_workouts("workout_set_success",{});
+              }
+              else if (request.status == 405)
+              {
+                  callback_to_workouts("workout_already_exists",{});
+              }
+              else if (request.status == 404)
+              {
+                  callback_to_workouts("server_not_found",{});
+              }
+              else if (request.status == 500 || request.status == 502 || request.status == 503)
+              {
+                   callback_to_workouts("server_error",{});
+              }
+          }
+      };
+      request.send(workout_object_to_send);
+  };
+}])
+
 //~~~~~~~~~~~~~~~~~~~~~~~ USER FACTORY ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // Represent a user 'object' and all properties associated to user will be recorded here.
 // Will keep a "factory" dict that will define the user
