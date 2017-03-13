@@ -34,7 +34,7 @@ function ($scope, $state, LoginService,UserFactory,TrainerFactory)
 
     if (loginResult == "login_success_user")
 
-    { 
+    {
       console.log("Data from successfull user login received from server: " + loginData);
 
       console.log("Creating a User object with all the data received...");
@@ -391,18 +391,108 @@ function ($scope, $state, PasswordRecoveryService)
 
 
 //~~~~~~~~~~~~~~~~~~~~~~~ Nutrition Plan Page Controller ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-.controller('NutritionPlanCtrl', ['$scope', '$state', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
+.controller('NutritionPlanCtrl', ['$scope', '$state', 'NutritionService',// The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
 // You can include any angular dependencies as parameters for this function
 // TIP: Access Route Parameters for your page via $stateParams.parameterName
-function ($scope, $state)
+function ($scope, $state, NutritionService)
 {
     console.log("Presently in NutritionPlan controller...");
 
     $scope.switchTo = function(newPage)
     {
-        console.log("Switching to " + newPage);
-        $state.go(newPage);
+      console.log("Switching to " + newPage);
+      $state.go(newPage);
     };
+
+    $scope.onHold = function(n) {
+      $scope.nutrition_list.splice($scope.nutrition_list.indexOf(n), 1);
+    }
+
+    var nutritionCallback = function(result, data) {
+      var nutrition_data = JSON.parse(data);
+      $scope.nutrition_list = nutrition_data
+      console.log(nutrition_data);
+    }
+
+     $scope.editNutrition = function() {
+      console.log("click");
+    }
+
+    NutritionService.get_nutrition(nutritionCallback);
+
+    $scope.addNutritionProcess = function()
+    {
+      var valid_parameters = true;
+
+      var varList = [];
+      var name = String($scope.nutrition.name);
+      var protein = String($scope.nutrition.protein);
+      var fat = String($scope.nutrition.fat);
+      var calories = String($scope.nutrition.calories);
+      var carbohydrate = String($scope.nutrition.carbohydrate);
+      varList.push(name);
+      varList.push(protein);
+      varList.push(fat);
+      varList.push(calories);
+      varList.push(carbohydrate);
+
+      var nutrition = {name : name, protein : protein, fat : fat, calories : calories, carbohydrate : carbohydrate};
+
+      // Verify first if no fields are empty
+      // Name must not be empty
+      // Email must not be empty and must consist of a certain format
+      // Password cant be empty
+      if(varList.indexOf("undefined")>= 0 || varList.indexOf("")>= 0)
+      {
+        console.error("Input error!");
+        //navigator objects WILL NOT work in the ionic testing webserver, native device ONLY
+        navigator.notification.alert('One of the fields is empty!', function (){},'Error','Retry');
+        navigator.notification.vibrate(1000);
+        valid_parameters = false;
+      }
+
+      if (isNaN(protein)) {
+        console.error("Input error!");
+        //navigator objects WILL NOT work in the ionic testing webserver, native device ONLY
+        navigator.notification.alert('Protein must be a number', function (){},'Error','Retry');
+        navigator.notification.vibrate(1000);
+        valid_parameters = false;
+      }
+
+      if (isNaN(carbohydrate)) {
+        console.error("Input error!");
+        //navigator objects WILL NOT work in the ionic testing webserver, native device ONLY
+        navigator.notification.alert('Carbohydrate must be a number', function (){},'Error','Retry');
+        navigator.notification.vibrate(1000);
+        valid_parameters = false;
+      }
+
+      if (isNaN(fat)) {
+        console.error("Input error!");
+        //navigator objects WILL NOT work in the ionic testing webserver, native device ONLY
+        navigator.notification.alert('Fat must be a number', function (){},'Error','Retry');
+        navigator.notification.vibrate(1000);
+        valid_parameters = false;
+      }
+
+      if (isNaN(calories)) {
+        console.error("Input error!");
+        //navigator objects WILL NOT work in the ionic testing webserver, native device ONLY
+        navigator.notification.alert('Calories must be a number', function (){},'Error','Retry');
+        navigator.notification.vibrate(1000);
+        valid_parameters = false;
+      }
+
+
+      // Proceed building login request only at when all parameters are valid
+      if(valid_parameters)
+      {
+        console.log("Sending async signup request...");
+        NutritionService.add_nutrition(nutrition, function() {
+          $state.go('nutritionplan');
+        });
+      }
+    }
 }])
 
 //~~~~~~~~~~~~~~~~~~~~~~~ Exercise Lookup Page Controller ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -411,6 +501,26 @@ function ($scope, $state)
 // TIP: Access Route Parameters for your page via $stateParams.parameterName
 function ($scope, $state, $ionicViewService, ExerciseFactory, ExerciseService)
 {
+    $scope.filterExerciseList = function()
+    {
+      var exercises = angular.copy(ExerciseFactory.get('exerciselist'));
+      var toDelete = [];
+      if($scope.typeFilter && $scope.typeFilter != ""){
+        for(var i = exercises.length-1; i >= 0; i--){
+          if(exercises[i].type != $scope.typeFilter){
+            exercises.splice(i,1);
+          }
+        }
+      }
+      if($scope.muscleFilter && $scope.muscleFilter != ""){
+        for(var i = exercises.length-1; i >= 0; i--){
+          if(exercises[i].targeted_muscle != $scope.muscleFilter){
+            exercises.splice(i,1);
+          }
+        }
+      }
+      $scope.exercise_list = angular.copy(exercises);
+    }
     console.log("Presently in ExerciseLookup controller...");
 
     var exerciseCallback = function(exerciseResult, exerciseData)
