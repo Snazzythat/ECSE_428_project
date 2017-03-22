@@ -330,7 +330,7 @@ function ($scope, $state,$ionicSideMenuDelegate,UserFactory)
   console.log("Presently in Trainee controller...");
 
   $scope.visible_user_name = UserFactory.get('name');
-
+  $scope.shouldShowDelete = true;
   $scope.switchTo = function(newPage)
   {
     console.log("Switching to " + newPage);
@@ -342,6 +342,23 @@ function ($scope, $state,$ionicSideMenuDelegate,UserFactory)
     console.log("Toggling");
     $ionicSideMenuDelegate.toggleLeft();
   };
+
+  $scope.onItemDelete = function (item) {
+      $scope.items.splice($scope.items.indexOf(item), 1);
+  };
+
+  $scope.onItemAccept = function (item) {
+      $scope.items.splice($scope.items.indexOf(item), 1);
+  };
+
+  $scope.items = [
+  { id: 0 },
+  { id: 1 },
+  { id: 2 },
+  { id: 3 },
+  { id: 4 },
+  { id: 5 }
+  ];
 }])
 
 
