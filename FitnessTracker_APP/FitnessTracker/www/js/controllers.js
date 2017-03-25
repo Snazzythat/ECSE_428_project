@@ -65,6 +65,7 @@ function ($scope, $state, LoginService,UserFactory,TrainerFactory)
       TrainerFactory.set('username', parsed_data.username);
       TrainerFactory.set('email', parsed_data.email);
       TrainerFactory.set('d_o_b', parsed_data.d_o_b);
+      TrainerFactory.set('trainee_list', null); //For the purposes of reaccess
 
       console.log("Switching to main menu after successful TRAINER login!");
 
@@ -303,16 +304,63 @@ function ($scope, $state, SignUpService, UserFactory,TrainerFactory) {
 }])
 
 //~~~~~~~~~~~~~~~~~~~~~~~ Trainer Page Controller ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-.controller('TrainerCtrl', ['$scope', '$state','TrainerFactory', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
+.controller('TrainerCtrl', ['$scope', '$state','TrainerFactory','getMyTraineesService', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
 // You can include any angular dependencies as parameters for this function
 // TIP: Access Route Parameters for your page via $stateParams.parameterName
-function ($scope, $state,TrainerFactory)
+function ($scope, $state,TrainerFactory,getMyTraineesService)
 {
 
   console.log("Presently in Trainer controller...");
 
-  $scope.visible_user_name = TrainerFactory.get('name');
 
+  // Getting trainee list dynamically here.
+  // TODO: Service allowing to return the list of traineees belonging to trainer.
+  var traineeGetterCallback = function(traineesObj)
+  {
+    var parsedList=[]
+
+    if (traineesObj != {})
+    {
+      var traineeList=traineesObj['trainees'];
+
+      if (traineeList.length != 0)
+      {
+        for(var i=0; i < traineeList.length; i++)
+        { 
+          parsedList.push(traineeList[i].trainee_username); //Pushes all 
+        }
+      }
+      else
+      {
+        parsedList.push('You did not assign any trainees yet!'); //Pushes all 
+      }
+    }
+    else
+    {
+      console.info('Looks like this trainer does not have any trainees in database..')
+      parsedList.push('You did not assign any trainees yet!'); //Pushes all 
+    }
+
+      TrainerFactory.set('trainee_list', parsedList);
+
+      $scope.visible_trainee_list = parsedList;
+  }
+   
+
+  //This happens only once at login. Once we get the list once after the login and set it in the factory, the list will be accessable directly
+  if (TrainerFactory.get('trainee_list') == null)
+  {
+    console.info("Trainees list is null! Getting trainee list now!");
+    getMyTraineesService.getTrainees(TrainerFactory.get('username'), traineeGetterCallback);
+  }
+  else
+  {
+    // After above has been run once, this list must be always accessable till the logout. 
+    $scope.visible_trainee_list = TrainerFactory.get('trainee_list');
+  }
+
+  $scope.visible_user_name = TrainerFactory.get('name');
+ 
   $scope.switchTo = function(newPage)
   {
     console.log("Switching to " + newPage);

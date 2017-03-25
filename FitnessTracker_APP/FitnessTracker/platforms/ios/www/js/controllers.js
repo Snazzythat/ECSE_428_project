@@ -65,6 +65,7 @@ function ($scope, $state, LoginService,UserFactory,TrainerFactory)
       TrainerFactory.set('username', parsed_data.username);
       TrainerFactory.set('email', parsed_data.email);
       TrainerFactory.set('d_o_b', parsed_data.d_o_b);
+      TrainerFactory.set('trainee_list', null); //For the purposes of reaccess
 
       console.log("Switching to main menu after successful TRAINER login!");
 
@@ -303,16 +304,63 @@ function ($scope, $state, SignUpService, UserFactory,TrainerFactory) {
 }])
 
 //~~~~~~~~~~~~~~~~~~~~~~~ Trainer Page Controller ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-.controller('TrainerCtrl', ['$scope', '$state','TrainerFactory', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
+.controller('TrainerCtrl', ['$scope', '$state','TrainerFactory','getMyTraineesService', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
 // You can include any angular dependencies as parameters for this function
 // TIP: Access Route Parameters for your page via $stateParams.parameterName
-function ($scope, $state,TrainerFactory)
+function ($scope, $state,TrainerFactory,getMyTraineesService)
 {
 
   console.log("Presently in Trainer controller...");
 
-  $scope.visible_user_name = TrainerFactory.get('name');
 
+  // Getting trainee list dynamically here.
+  // TODO: Service allowing to return the list of traineees belonging to trainer.
+  var traineeGetterCallback = function(traineesObj)
+  {
+    var parsedList=[]
+
+    if (traineesObj != {})
+    {
+      var traineeList=traineesObj['trainees'];
+
+      if (traineeList.length != 0)
+      {
+        for(var i=0; i < traineeList.length; i++)
+        { 
+          parsedList.push(traineeList[i].trainee_username); //Pushes all 
+        }
+      }
+      else
+      {
+        parsedList.push('You did not assign any trainees yet!'); //Pushes all 
+      }
+    }
+    else
+    {
+      console.info('Looks like this trainer does not have any trainees in database..')
+      parsedList.push('You did not assign any trainees yet!'); //Pushes all 
+    }
+
+      TrainerFactory.set('trainee_list', parsedList);
+
+      $scope.visible_trainee_list = parsedList;
+  }
+   
+
+  //This happens only once at login. Once we get the list once after the login and set it in the factory, the list will be accessable directly
+  if (TrainerFactory.get('trainee_list') == null)
+  {
+    console.info("Trainees list is null! Getting trainee list now!");
+    getMyTraineesService.getTrainees(TrainerFactory.get('username'), traineeGetterCallback);
+  }
+  else
+  {
+    // After above has been run once, this list must be always accessable till the logout. 
+    $scope.visible_trainee_list = TrainerFactory.get('trainee_list');
+  }
+
+  $scope.visible_user_name = TrainerFactory.get('name');
+ 
   $scope.switchTo = function(newPage)
   {
     console.log("Switching to " + newPage);
@@ -330,7 +378,7 @@ function ($scope, $state,$ionicSideMenuDelegate,UserFactory)
   console.log("Presently in Trainee controller...");
 
   $scope.visible_user_name = UserFactory.get('name');
-
+  $scope.shouldShowDelete = true;
   $scope.switchTo = function(newPage)
   {
     console.log("Switching to " + newPage);
@@ -342,6 +390,23 @@ function ($scope, $state,$ionicSideMenuDelegate,UserFactory)
     console.log("Toggling");
     $ionicSideMenuDelegate.toggleLeft();
   };
+
+  $scope.onItemDelete = function (item) {
+      $scope.items.splice($scope.items.indexOf(item), 1);
+  };
+
+  $scope.onItemAccept = function (item) {
+      $scope.items.splice($scope.items.indexOf(item), 1);
+  };
+
+  $scope.items = [
+  { id: 0 },
+  { id: 1 },
+  { id: 2 },
+  { id: 3 },
+  { id: 4 },
+  { id: 5 }
+  ];
 }])
 
 
@@ -367,7 +432,6 @@ function ($scope, $state, PasswordRecoveryService)
     {
       navigator.notification.alert('You were not registered. Please register first.', function (){},'Email not found!','OK');
     }
-
     else if(recovery_result == "server_notfound")
     {
       navigator.notification.alert('Server is offline, try again later.', function (){},'Server offline.','Ok');
@@ -500,6 +564,20 @@ function ($scope, $state, NutritionService)
       }
     }
 }])
+//~~~~~~~~~~~~~~~~~~~~~~~ Workout Page Controller ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.controller('WorkoutCtrl', ['$scope', '$state', '$ionicHistory', 'WorkoutFactory', 'WorkoutsService',
+function ($scope, $state, WorkoutFactory)
+{
+  console.log("Presently in Workout controller...");
+
+  // $scope.visible_workout = WorkoutFacotry.get('name');
+
+  $scope.switchTo = function(newPage)
+  {
+    console.log("Switching to " + newPage);
+    $state.go(newPage);
+  };
+}])
 
 //~~~~~~~~~~~~~~~~~~~~~~~ Exercise Lookup Page Controller ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 .controller('ExerciseLookupCtrl', ['$scope', '$state', '$ionicHistory', 'ExerciseFactory', 'ExerciseService', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
@@ -570,16 +648,71 @@ function ($scope, $state, $ionicViewService, ExerciseFactory, ExerciseService)
 
 
 //~~~~~~~~~~~~~~~~~~~~~~~ Workouts Page Controller ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-.controller('WorkoutsController', ['$scope', '$state', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
+.controller('WorkoutsController', ['$scope', '$state','WorkoutsService','WorkoutsFactory', 'UserFactory', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
 // You can include any angular dependencies as parameters for this function
 // TIP: Access Route Parameters for your page via $stateParams.parameterName
-function ($scope, $state)
+function($scope, $state, WorkoutsService, WorkoutsFactory, UserFactory)
 {
     console.log("Presently in Workouts controller...");
+
+    var userName = UserFactory.get('username');
+
+    console.log("Got user" + userName);
 
     $scope.switchTo = function(newPage)
     {
         console.log("Switching to " + newPage);
         $state.go(newPage);
     };
+
+    var addTo = function(item, array){
+      var found = false;
+      for(var i in array){
+        if(array[i].workoutId == item.workoutId){
+          array[i].exercises.push({
+            name: item.exerciseName
+          })
+          found = true;
+          break;
+        }
+      }
+      if(!found){
+      array.push({
+          workoutId: item.workoutId,
+          exercises: [{name: item.exerciseName}]
+        })
+       }
+    };
+
+
+    var workout_callback = function(workout_result, workout_data)
+    {
+      console.log("Server answered. Server workout request outcome is " + workout_result);
+
+      if(workout_result == "workout_get_success")
+      {
+        var workouts = JSON.parse(workout_data);
+        console.log("Server answered. Server workout object received: " + workout_data);
+        var parsed_data = []
+        var indexes = []
+        for(var i in workouts){
+          addTo(workouts[i], parsed_data)
+        }
+        WorkoutsFactory.set('workout_list', parsed_data);
+        $scope.visible_workout = parsed_data;
+      }
+      else if(workout_result == "workout_not_found")
+      {
+        console.log("Could not find workout with username: " + user_name);
+        navigator.notification.alert('No workouts found.', function (){},'Error','Ok');
+      }
+      else if(workout_result == "server_error")
+      {
+        console.log("Could not connect to server.");
+        navigator.notification.alert("Could not conect to server.", function(){}, 'Error','Ok');
+      }
+    };
+
+    WorkoutsService.get_workout(userName, workout_callback);
+
 }]);

@@ -8,6 +8,10 @@ var exercise_URI="/WebServices/exercise/";
 var nutrition_URI="/WebServices/nutrition/";
 var nutrition_create_URI="/WebServices/nutrition/create";
 var password_rec_URI="/WebServices/passwordrecovery/";
+var workout_get_URI ="/WebServices/workout/getAll";
+var trainee_list_get_URI="/WebServices/social/getMyTrainees";
+var trainer_list_get_URI="/WebServices/social/getMyTrainers"; // --> To be user for the trainee to get the trainers
+var workout_create_URI = "";
 var currentUser={};
 
 angular.module('starter.services', ['starter.controllers'])
@@ -252,7 +256,7 @@ angular.module('starter.services', ['starter.controllers'])
   {
       var signupURL = "http://" + virtual_vm_ip + password_rec_URI;
 
-       var recovery_Data = JSON.stringify({email : user_email});
+      var recovery_Data = JSON.stringify({email : user_email});
       // Issue new http POST request to the Server
       var request = new XMLHttpRequest();
       request.open("POST", signupURL);
@@ -297,7 +301,7 @@ angular.module('starter.services', ['starter.controllers'])
       var request = new XMLHttpRequest();
       request.open("GET", workout_get_url);
       request.setRequestHeader("Content-Type", "application/json");
-
+      console.log('Issuing get workout to server...');
       request.onreadystatechange = function() {
           //When request is answered, handle ASYNC here
           if (request.readyState == 4)
@@ -356,6 +360,54 @@ angular.module('starter.services', ['starter.controllers'])
   };
 }])
 
+//~~~~~~~~~~~~~~~~~~~~~~~ getMyTraineesService SERVICE ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.service('getMyTraineesService',['$http', function($http)
+{
+  //Getter service for trainer to get all the trainees associated to that particular trainer
+  //Returns a list of trainees
+  this.getTrainees = function(trainers_username,callback_to_trainer_controller)
+  {
+    var trainee_getter_URL = "http://" + virtual_vm_ip + trainee_list_get_URI + '/' + trainers_username;
+
+    var request = new XMLHttpRequest();
+    request.open("GET", trainee_getter_URL);
+    request.setRequestHeader("Content-Type", "application/json");
+    
+    console.info("Issuing request to get trainees and waiting for server response!");
+
+      request.onreadystatechange = function()
+      {
+          //When request is answered, handle ASYNC here
+          if (request.readyState == 4)
+          {
+              if (request.status == 200)
+              {   
+                  //At successful response arrival, extract trainee list here.
+                  //Do JSON parsing here instead of actual controller to avoid lag at processing
+                  //long lists
+                  var trainees_object = JSON.parse(request.responseText);
+
+                  console.info("Server answered, got the trainee object: " + trainees_object);  
+
+                  callback_to_trainer_controller("trainees_success",trainees_object);
+              }
+              else if (request.status == 404)
+              {
+                  callback_to_trainer_controller("trainees_not_found",{});
+              }
+              else if (request.status == 500 || request.status == 502 || request.status == 503)
+              {
+                   callback_to_trainer_controller("server_error",{});
+              }
+          }
+      };
+      request.send();
+  };
+}])
+
+
+
 //~~~~~~~~~~~~~~~~~~~~~~~ USER FACTORY ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // Represent a user 'object' and all properties associated to user will be recorded here.
 // Will keep a "factory" dict that will define the user
@@ -394,6 +446,24 @@ angular.module('starter.services', ['starter.controllers'])
         get : function(key)
         {
             return exerciseObject[key];
+        }
+    };
+}])
+
+.factory('WorkoutsFactory', [function(){
+
+    // Object belonging to trainer. So far the obejct has keys: name, username, email, d_o_b
+    // Gets filled at login/sign up
+    var workoutsObject = {};
+
+    return{
+        set : function(key, value)
+        {
+            workoutsObject[key] = value;
+        },
+        get : function(key)
+        {
+            return workoutsObject[key];
         }
     };
 }])
