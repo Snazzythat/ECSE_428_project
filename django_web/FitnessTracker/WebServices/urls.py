@@ -22,7 +22,7 @@ urlpatterns = [
     url(r'^exercise/create$', exerciseView.create_exercise),
     url(r'^workout/getAll/(?P<username>[a-z0-9]+)/$', workoutViews.get_all_workouts),
     url(r'^passwordrecovery/$', views.password_recovery),
-    url(r'^social/getMyTrainees/(?P<trainer_username>[a-z0-9]+)/$', views.traineeGetter)
+    url(r'^social/getMyTrainees/(?P<trainer_username>[a-z0-9]+)/$', views.getMyTrainees)
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

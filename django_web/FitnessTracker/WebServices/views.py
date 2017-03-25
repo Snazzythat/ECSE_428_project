@@ -102,7 +102,7 @@ def password_recovery(request):
     return Response(status=status.HTTP_200_OK)
 
 @api_view(['GET'])
-def traineeGetter(request, trainer_username):
+def getMyTrainees(request, trainer_username):
      print 'Request from trainer named ' + str(trainer_username) + ' to get his list of trainees...'
      try:
         traineeMap = traineeGetter.objects.get(trainer_username=trainer_username)
