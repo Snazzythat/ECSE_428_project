@@ -112,9 +112,4 @@ def getMyTrainees(request, trainer_username):
 
      serializer = traineeGetterSerializer(traineeMap)
 
-     if serializer.is_valid():
-         print 'Trainer found, returning his trainees!'
-         return Response(serializer.data, status=status.HTTP_200_OK)
-     else:
-         print 'Trainer client issued bad request!'
-         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+     return Response(serializer.data, status=status.HTTP_200_OK)
