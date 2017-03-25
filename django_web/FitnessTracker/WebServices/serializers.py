@@ -4,6 +4,7 @@ from WebServices.models import Nutrition
 from WebServices.models import Exercise
 from WebServices.models import Workout
 from WebServices.models import WorkoutExercise
+from WebServices.models import traineeGetter
 
 
 class UserSerializer(serializers.ModelSerializer):
