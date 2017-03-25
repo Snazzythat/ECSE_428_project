@@ -30,3 +30,8 @@ class WorkoutExerciseSerializer(serializers.ModelSerializer):
     class Meta:
         model = WorkoutExercise
         fields = ('id', 'workoutId', 'user', 'exerciseName', 'numberReps', 'numberSets', 'durationMins')
+
+class traineeGetterSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = traineeGetter
+        fields = ('trainer_username', 'trainee1_username', 'trainee2_username', 'trainee3_username', 'trainee4_username', 'trainee5_username')

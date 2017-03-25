@@ -5,7 +5,9 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from WebServices.serializers import UserSerializer
+from WebServices.serializers import traineeGetterSerializer
 from WebServices.models import User
+from WebServices.models import traineeGetter
 from django.core.mail import EmailMessage
 
 
@@ -98,3 +100,21 @@ def password_recovery(request):
     print 'Message sent! Responding with 200.'
 
     return Response(status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+def traineeGetter(request, trainer_username):
+     print 'Request from trainer named ' + str(trainer_username) + ' to get his list of trainees...'
+     try:
+        traineeMap = traineeGetter.objects.get(trainer_username=trainer_username)
+     except traineeGetter.DoesNotExist:
+        print 'Trainer named ' + str(trainer_username) + ' does not exist in the database!!!'
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+     serializer = traineeGetterSerializer(traineeMap)
+
+     if serializer.is_valid():
+         print 'Trainer found, returning his trainees!'
+         return Response(serializer.data, status=status.HTTP_200_OK)
+     else:
+         print 'Trainer client issued bad request!'
+         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
