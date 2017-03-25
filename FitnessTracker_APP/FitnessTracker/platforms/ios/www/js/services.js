@@ -383,14 +383,7 @@ angular.module('starter.services', ['starter.controllers'])
           {
               if (request.status == 200)
               {   
-                  //At successful response arrival, extract trainee list here.
-                  //Do JSON parsing here instead of actual controller to avoid lag at processing
-                  //long lists
-                  var trainees_object = JSON.parse(request.responseText);
-
-                  console.info("Server answered, got the trainee object: " + trainees_object);  
-
-                  callback_to_trainer_controller("trainees_success",trainees_object);
+                  callback_to_trainer_controller("trainees_success",request.responseText);
               }
               else if (request.status == 404)
               {

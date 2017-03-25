@@ -112,4 +112,5 @@ def getMyTrainees(request, trainer_username):
 
      serializer = traineeGetterSerializer(traineeMap)
 
+     print 'Trainer list found! Sending the trainer list!'
      return Response(serializer.data, status=status.HTTP_200_OK)

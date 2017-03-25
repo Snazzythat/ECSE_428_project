@@ -315,30 +315,39 @@ function ($scope, $state,TrainerFactory,getMyTraineesService)
 
   // Getting trainee list dynamically here.
   // TODO: Service allowing to return the list of traineees belonging to trainer.
-  var traineeGetterCallback = function(traineesObj)
+  var traineeGetterCallback = function(traineeGetResult, traineesObj)
   {
+    console.log("Server answered. Trainee list getting  outcome is " + traineeGetResult);
+
     var parsedList=[]
-
-    if (traineesObj != {})
+    
+    if (traineeGetResult == "trainees_success")
     {
-      var traineeList=traineesObj['trainees'];
+    
+      console.info("Got the trainee object: " + traineesObj);  
 
-      if (traineeList.length != 0)
+      var trainees_object = JSON.parse(traineesObj);
+
+      if (trainees_object != {})
       {
-        for(var i=0; i < traineeList.length; i++)
-        { 
-          parsedList.push(traineeList[i].trainee_username); //Pushes all 
-        }
+          for(var key in trainees_object)
+          { 
+            if (key != "trainer_username")
+            {
+              parsedList.push(trainees_object[key]); //Pushes all 
+            }
+          }
       }
       else
       {
-        parsedList.push('You did not assign any trainees yet!'); //Pushes all 
+        console.info('Looks like this trainer does not have any trainees in database..');
+        parsedList.push('You did not assign any trainees yet!'); 
       }
     }
-    else
+    else if (traineeGetResult == "trainees_not_found")
     {
-      console.info('Looks like this trainer does not have any trainees in database..')
-      parsedList.push('You did not assign any trainees yet!'); //Pushes all 
+      console.info('Looks like this trainer does not have any trainees in database..');
+      parsedList.push('You did not assign any trainees yet!'); 
     }
 
       TrainerFactory.set('trainee_list', parsedList);
@@ -347,6 +356,7 @@ function ($scope, $state,TrainerFactory,getMyTraineesService)
   }
    
 
+  //***Logic to get trainees
   //This happens only once at login. Once we get the list once after the login and set it in the factory, the list will be accessable directly
   if (TrainerFactory.get('trainee_list') == null)
   {
@@ -356,8 +366,10 @@ function ($scope, $state,TrainerFactory,getMyTraineesService)
   else
   {
     // After above has been run once, this list must be always accessable till the logout. 
+    console.info("Trainee list already exists, all good!");
     $scope.visible_trainee_list = TrainerFactory.get('trainee_list');
   }
+  //***
 
   $scope.visible_user_name = TrainerFactory.get('name');
  
