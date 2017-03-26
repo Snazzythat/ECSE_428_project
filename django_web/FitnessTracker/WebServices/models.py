@@ -85,7 +85,7 @@ class traineeGetter(models.Model):
     
     class Meta:
         managed = False
-        db_table = 'TraineeMappings'
+        db_table = 'TrainerMappings'
 
 class trainerGetter(models.Model):
     trainer_username = models.CharField(primary_key=True,max_length=45)
@@ -97,7 +97,7 @@ class trainerGetter(models.Model):
     
     class Meta:
         managed = False
-        db_table = 'TrainerMappings'
+        db_table = 'TraineeMappings'
 
 
 class AuthGroup(models.Model):
