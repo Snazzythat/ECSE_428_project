@@ -36,3 +36,8 @@ class traineeGetterSerializer(serializers.ModelSerializer):
     class Meta:
         model = traineeGetter
         fields = ('trainer_username', 'trainee1_username', 'trainee2_username', 'trainee3_username', 'trainee4_username', 'trainee5_username')
+
+class trainerGetterSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = traineeGetter
+        fields = ('trainee_username', 'trainer1_username', 'trainer2_username', 'trainer3_username')

@@ -6,8 +6,10 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from WebServices.serializers import UserSerializer
 from WebServices.serializers import traineeGetterSerializer
+from WebServices.serializers import trainerGetterSerializer
 from WebServices.models import User
 from WebServices.models import traineeGetter
+from WebServices.models import trainerGetter
 from django.core.mail import EmailMessage
 
 
@@ -111,6 +113,20 @@ def getMyTrainees(request, trainer_username):
         return Response(status=status.HTTP_404_NOT_FOUND)
 
      serializer = traineeGetterSerializer(traineeMap)
+
+     print 'Trainee list found! Sending the trainee list!'
+     return Response(serializer.data, status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+def getMyTrainers(request, trainee_username):
+     print 'Request from trainee named ' + str(trainee_username) + ' to get his list of trainers...'
+     try:
+        trainerMap = trainerGetter.objects.get(trainee_username=trainee_username)
+     except trainerGetter.DoesNotExist:
+        print 'Trainee named ' + str(trainee_username) + ' does not exist in the database!!!'
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+     serializer = trainerGetterSerializer(trainerMap)
 
      print 'Trainer list found! Sending the trainer list!'
      return Response(serializer.data, status=status.HTTP_200_OK)

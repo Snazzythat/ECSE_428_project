@@ -78,6 +78,16 @@ class WorkoutExercise(models.Model):
 
 
 class traineeGetter(models.Model):
+    trainee_username = models.CharField(primary_key=True,max_length=45)
+    trainer1_username = models.CharField(max_length=45,blank=True, null=True)
+    trainer2_username = models.CharField(max_length=45,blank=True, null=True) 
+    trainer3_username = models.CharField(max_length=45,blank=True, null=True)
+    
+    class Meta:
+        managed = False
+        db_table = 'TraineeMappings'
+
+class trainerGetter(models.Model):
     trainer_username = models.CharField(primary_key=True,max_length=45)
     trainee1_username = models.CharField(max_length=45,blank=True, null=True)
     trainee2_username = models.CharField(max_length=45,blank=True, null=True) 
