@@ -39,5 +39,5 @@ class traineeGetterSerializer(serializers.ModelSerializer):
 
 class trainerGetterSerializer(serializers.ModelSerializer):
     class Meta:
-        model = traineeGetter
+        model = trainerGetter
         fields = ('trainee_username', 'trainer1_username', 'trainer2_username', 'trainer3_username')
