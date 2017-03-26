@@ -8,36 +8,28 @@
         <div class="bar bar-subheader bar-royal">
                 <h2 class="title">Welcome {{visible_user_name}}!</h2>
         </div>
-        <div class="spacer" style="width: 300px; height: 20px;"></div>
 
         <ion-content padding="true" class="has-header" ng-controller=TrainerCtrl>
-            <form id="trainee-form1" class="list">
+            <div class="spacer" style="width: 300px; height: 60px;"></div>
+            
+                      <ion-card>
+                        <ion-card-header>
+                            Your Trainees
+                        </ion-card-header>
+                        </ion-card>
+
+                <!-- Dynamically build list of trainees from the controller -->
                 <ion-list id="trainee-list1">
+                    <ion-item item-type="item-icon-left" ng-repeat="trainee in visible_trainee_list">
+                    <i class="ion-icon ios="ios-tennisball" md="md-tennisball""></i>{{trainee}}
+                    </ion-item>
                 </ion-list>
 
-                <!--<div class="card">
-                    <div class="item item-text-wrap">
-                        Trainee 1
-                    </div>
-                    <div class="item item-text-wrap">
-                        Trainee 2 
-                    </div>
-                    <div class="item item-text-wrap">
-                        Trainee 3
-                    </div>
-                    <div class="item item-text-wrap">
-                        Trainee4
-                    </div>
-                    <div class="item item-text-wrap">
-                        Trainee 5
-                    </div>
-                </div>-->
 
                 <!--<button id="Edit-button" class="button button-stable button-block" ng-click=editTrainee()>Edit Groups</button>-->
                 <button id="Workouts-button" class="button button-stable button-block" ng-click=switchTo('workouts')>My workouts</button>
                 <button id="Nutrition-button" class="button button-stable button-block" ng-click=switchTo('nutritionplan')>My Nutrition</button>
                 <button id="Exercise-button" class="button button-stable button-block" ng-click=switchTo('exerciselookup')>Exercises</button>
-            
-            </form>
+  
         </ion-content>
 </ion-view>

@@ -332,7 +332,7 @@ function ($scope, $state,TrainerFactory,getMyTraineesService)
       {
           for(var key in trainees_object)
           { 
-            if (key != "trainer_username")
+            if (key != "trainer_username" && trainees_object[key] != null)
             {
               parsedList.push(trainees_object[key]); //Pushes all 
             }
