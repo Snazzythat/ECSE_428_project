@@ -29,6 +29,10 @@ angular.module('starter.services', ['starter.controllers'])
 
     // ~~~ASYNC CODE
     var request = new XMLHttpRequest();
+
+    // If after 4s dont answer, server offline
+    request.timeout = 4000;
+
     try
     {
         request.open("GET",loginUrl);
@@ -71,6 +75,12 @@ angular.module('starter.services', ['starter.controllers'])
         }
       }
   };
+
+    request.ontimeout = function ()
+    {
+        callback_to_login("server_error",{});
+    };
+
     request.send();
     // ~~~ASYNC CODE END
   };
@@ -90,6 +100,8 @@ angular.module('starter.services', ['starter.controllers'])
       // Issue new http POST request to the Server
       // TODO: dont forget to put the right server registration link.
       var request = new XMLHttpRequest();
+      // If after 4s dont answer, server offline
+      request.timeout = 4000
       request.open("POST", signupURL);
       request.setRequestHeader("Content-Type", "application/json");
       request.onreadystatechange = function() {
@@ -106,7 +118,7 @@ angular.module('starter.services', ['starter.controllers'])
               }
               else if (request.status == 500 || request.status == 502 || request.status == 503)
               {
-                    callback_to_login("server_error");
+                  callback_to_signup("server_error");
               }
               else if (request.status == 400)
               {
@@ -122,6 +134,12 @@ angular.module('starter.services', ['starter.controllers'])
               }
           }
       };
+
+        request.ontimeout = function ()
+        {
+            callback_to_signup("server_error");
+        };
+
       request.send(signup_Data);
   };
 
@@ -371,6 +389,10 @@ angular.module('starter.services', ['starter.controllers'])
     var trainee_getter_URL = "http://" + virtual_vm_ip + trainee_list_get_URI + '/' + trainers_username;
 
     var request = new XMLHttpRequest();
+
+    // If after 4s dont answer, server offline
+    request.timeout = 4000;
+
     request.open("GET", trainee_getter_URL);
     request.setRequestHeader("Content-Type", "application/json");
     
@@ -395,6 +417,62 @@ angular.module('starter.services', ['starter.controllers'])
               }
           }
       };
+
+      request.ontimeout = function ()
+      {
+         callback_to_trainer_controller("server_error",{});
+      };
+
+      request.send();
+  };
+}])
+
+
+//~~~~~~~~~~~~~~~~~~~~~~~ getMyTrainersService SERVICE ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.service('getMyTrainersService',['$http', function($http)
+{
+  //Getter service for trainer to get all the trainers associated to that particular trainee
+  //Returns a list of trainees
+  this.getTrainees = function(trainee_username,callback_to_trainee_controller)
+  {
+    var trainee_getter_URL = "http://" + virtual_vm_ip + trainer_list_get_URI + '/' + trainee_username;
+
+    var request = new XMLHttpRequest();
+
+    // If after 4s dont answer, server offline
+    request.timeout = 4000;
+
+    request.open("GET", trainee_getter_URL);
+    request.setRequestHeader("Content-Type", "application/json");
+    
+    console.info("Issuing request to get trainers and waiting for server response!");
+
+      request.onreadystatechange = function()
+      {
+          //When request is answered, handle ASYNC here
+          if (request.readyState == 4)
+          {
+              if (request.status == 200)
+              {   
+                  callback_to_trainee_controller("trainees_success",request.responseText);
+              }
+              else if (request.status == 404)
+              {
+                  callback_to_trainee_controller("trainees_not_found",{});
+              }
+              else if (request.status == 500 || request.status == 502 || request.status == 503)
+              {
+                   callback_to_trainee_controller("server_error",{});
+              }
+          }
+      };
+
+      request.ontimeout = function ()
+      {
+         callback_to_trainee_controller("server_error",{});
+      };
+
       request.send();
   };
 }])

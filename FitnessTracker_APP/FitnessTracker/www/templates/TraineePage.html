@@ -15,14 +15,25 @@
 
             <div class="spacer" style="width: 300px; height: 100px;"></div>
 
-            <div class="card">
+            <!--<div class="card">
                 <div class="item item-divider">
                     My Trainer
                 </div>
                 <div class="item item-text-wrap" ng-click=switchTo('trainer-info')>
                     My Trainer
                 </div>
-            </div>
+            </div>-->
+    
+                <ion-card>
+                <ion-card-header>
+                        Your Trainers
+                </ion-card-header>
+                </ion-card>
+
+                <!-- Dynamically build list of trainees from the controller -->
+                <ion-list id="trainee-list1">
+                    <ion-item item-type="item-icon-left" ng-repeat="trainer in visible_trainer_list" ng-click=switchTo('trainer-info')>{{trainer}}</ion-item>
+                </ion-list>
 
             <div class="spacer" style="width: 300px; height: 150px;"></div>
             

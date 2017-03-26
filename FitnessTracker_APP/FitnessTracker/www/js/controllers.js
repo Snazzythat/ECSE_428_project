@@ -46,6 +46,7 @@ function ($scope, $state, LoginService,UserFactory,TrainerFactory)
       UserFactory.set('username', parsed_data.username);
       UserFactory.set('email', parsed_data.email);
       UserFactory.set('d_o_b', parsed_data.d_o_b);
+      UserFactory.set('trainer_list', null); //For the pusposes of reaccess
 
       console.log("Switching to main menu after successful USER login!");
 
@@ -313,7 +314,7 @@ function ($scope, $state,TrainerFactory,getMyTraineesService)
   console.log("Presently in Trainer controller...");
 
 
-  // Getting trainee list dynamically here.
+  // ~~~~~~~~~~~~~~~~~~~~~~~~~ Getting trainee list dynamically here.
   // TODO: Service allowing to return the list of traineees belonging to trainer.
   var traineeGetterCallback = function(traineeGetResult, traineesObj)
   {
@@ -369,7 +370,7 @@ function ($scope, $state,TrainerFactory,getMyTraineesService)
     console.info("Trainee list already exists, all good!");
     $scope.visible_trainee_list = TrainerFactory.get('trainee_list');
   }
-  //***
+  // ~~~~~~~~~~~~~~~~~~~~~~~~~
 
   $scope.visible_user_name = TrainerFactory.get('name');
  
@@ -382,10 +383,10 @@ function ($scope, $state,TrainerFactory,getMyTraineesService)
 
 // //~~~~~~~~~~~~~~~~~~~~~~~ Trainee Page Controller ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.controller('TraineeCtrl', ['$scope', '$state','$ionicSideMenuDelegate','UserFactory', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
+.controller('TraineeCtrl', ['$scope', '$state','$ionicSideMenuDelegate','UserFactory', 'getMyTrainersService', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
 // You can include any angular dependencies as parameters for this function
 // TIP: Access Route Parameters for your page via $stateParams.parameterName
-function ($scope, $state,$ionicSideMenuDelegate,UserFactory)
+function ($scope, $state,$ionicSideMenuDelegate,UserFactory,getMyTrainersService)
 {
   console.log("Presently in Trainee controller...");
 
@@ -396,6 +397,64 @@ function ($scope, $state,$ionicSideMenuDelegate,UserFactory)
     console.log("Switching to " + newPage);
     $state.go(newPage);
   };
+
+  // ~~~~~~~~~~~~~~~~~~~~~~~~~ Getting trainers belonging to currently logged in trainee list dynamically here.
+  // TODO: Service allowing to return the list of trainers linked to this trainee.
+  var trainerGetterCallback = function(trainerGetResult, trainersObj)
+  {
+    console.log("Server answered. Trainer list getting  outcome is " + trainerGetResult);
+
+    var parsedList=[]
+    
+    if (trainerGetResult == "trainers_success")
+    {
+    
+      console.info("Got the trainer object: " + trainersObj);  
+
+      var trainers_object = JSON.parse(trainersObj);
+
+      if (trainers_object != {})
+      {
+          for(var key in trainers_object)
+          { 
+            if (key != "trainee_username" && trainers_object[key] != null)
+            {
+              parsedList.push(trainers_object[key]); //Pushes all 
+            }
+          }
+      }
+      else
+      {
+        console.info('Looks like this trainee does not have any trainers in database..');
+        parsedList.push('You have not been assigned to any trainer yet!'); 
+      }
+    }
+    else if (trainerGetResult == "trainers_not_found")
+    {
+      console.info('Looks like this trainer does not have any trainees in database..');
+      parsedList.push('You did not assign any trainees yet!'); 
+    }
+
+      UserFactory.set('trainer_list', parsedList);
+
+      $scope.visible_trainer_list = parsedList;
+  }
+   
+
+  //***Logic to get trainers from server
+  //This happens only once at login. Once we get the list once after the login and set it in the factory, the list will be accessable directly
+  if (UserFactory.get('trainer_list') == null)
+  {
+    console.info("Trainees list is null! Getting trainee list now!");
+    getMyTrainersService.getTrainees(UserFactory.get('username'), trainerGetterCallback);
+  }
+  else
+  {
+    // After above has been run once, this list must be always accessable till the logout. 
+    console.info("Trainer list already exists, all good!");
+    $scope.visible_trainer_list = UserFactory.get('trainer_list');
+  }
+  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   $scope.toggleSideMenu = function()
   {

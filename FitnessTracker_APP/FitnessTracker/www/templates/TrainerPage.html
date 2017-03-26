@@ -12,17 +12,15 @@
         <ion-content padding="true" class="has-header" ng-controller=TrainerCtrl>
             <div class="spacer" style="width: 300px; height: 60px;"></div>
             
-                      <ion-card>
-                        <ion-card-header>
-                            Your Trainees
-                        </ion-card-header>
-                        </ion-card>
+                <ion-card>
+                <ion-card-header>
+                        Your Trainees
+                </ion-card-header>
+                </ion-card>
 
                 <!-- Dynamically build list of trainees from the controller -->
                 <ion-list id="trainee-list1">
-                    <ion-item item-type="item-icon-left" ng-repeat="trainee in visible_trainee_list">
-                    <i class="ion-icon ios="ios-tennisball" md="md-tennisball""></i>{{trainee}}
-                    </ion-item>
+                    <ion-item item-type="item-icon-left" ng-repeat="trainee in visible_trainee_list">{{trainee}}</ion-item>
                 </ion-list>
 
 
