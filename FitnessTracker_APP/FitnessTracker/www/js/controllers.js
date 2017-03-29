@@ -392,6 +392,7 @@ function ($scope, $state,$ionicSideMenuDelegate,UserFactory,getMyTrainersService
 
   $scope.visible_user_name = UserFactory.get('name');
   $scope.shouldShowDelete = true;
+  $scope.listCanSwipe = true
   $scope.switchTo = function(newPage)
   {
     console.log("Switching to " + newPage);
@@ -478,6 +479,7 @@ function ($scope, $state,$ionicSideMenuDelegate,UserFactory,getMyTrainersService
   { id: 4 },
   { id: 5 }
   ];
+
 }])
 
 
@@ -730,6 +732,8 @@ function($scope, $state, WorkoutsService, WorkoutsFactory, UserFactory)
 
     console.log("Got user" + userName);
 
+    $scope.shouldShowDelete = true;
+    $scope.listCanSwipe = true
     $scope.switchTo = function(newPage)
     {
         console.log("Switching to " + newPage);
@@ -786,4 +790,34 @@ function($scope, $state, WorkoutsService, WorkoutsFactory, UserFactory)
 
     WorkoutsService.get_workout(userName, workout_callback);
 
+    /*
+    $scope.showEditItem = function (item) {
+
+        // Remember edit item to change it later
+        $scope.tmpEditItem = item;
+
+        // Preset form values
+        $scope.form.description.$setViewValue(item.description);
+        $scope.form.useAsDefault.$setViewValue(item.useAsDefault);
+        // Open dialog
+        $scope.showAddChangeDialog('change');
+    };
+
+    $scope.edit= function (workout) {
+        var item = {};
+        item.description = workout.description.$modelValue;
+        item.useAsDefault = workout.useAsDefault.$modelValue;
+        var editIndex = ListFactory.getList().indexOf($scope.tmpEditItem);
+        $scope.list[editIndex] = item;
+        // Set first item to default
+        if ($scope.tmpEditItem.useAsDefault == true && item.useAsDefault == false) {
+            $scope.list[0].useAsDefault = true;
+        }
+        ListFactory.setList($scope.list);
+        if (item.useAsDefault) {
+            $scope.makeDefault(item);
+        }
+        $scope.leaveAddChangeDialog();
+    }
+    */
 }]);
