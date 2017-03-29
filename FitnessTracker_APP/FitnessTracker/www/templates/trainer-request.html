@@ -8,21 +8,20 @@
     <ion-content padding="true" class="has-header" ng-controller=TraineeCtrl>
         <form id="trainee-form2" class="list">
 
-            <ion-list id="trainee-list2">
-                <ion-list show-delete="shouldShowDelete">
+                <ion-list show-delete="list"
+                          can-swipe="listCanSwipe">
+
                     <ion-item ng-repeat="item in items"
+                              class="item-remove-animate"
                               item="item"
-                              href="#/item/{{item.id}}" class="item-remove-animate">
+                              href="#/item/{{item.id}}">
                         Trainee {{ item.id }}
-                        <!--
+
                         <button class="icon ion-checkmark-circled button button-balanced button-small" ng-click="onItemAccept(item)">Accept</button>
                         <button class="icon ion-close-circled button button-assertive button-small" ng-click="onItemDelete(item)">Remove</button>
-                        -->
+
                     </ion-item>
                 </ion-list>
-                <button class="icon ion-checkmark-circled button button-balanced" ng-click="onItemAccept(item)">Accept</button>
-                <button class="icon ion-close-circled button button-assertive" ng-click="onItemDelete(item)">Remove</button> 
-            </ion-list>
 
         </form>
     </ion-content>
