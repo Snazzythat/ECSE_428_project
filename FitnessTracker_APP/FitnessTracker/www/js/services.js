@@ -347,7 +347,7 @@ angular.module('starter.services', ['starter.controllers'])
       var workout_create_url = "http://" + virtual_vm_ip + workout_create_URI + '/' + username;
       // Issue new http POST request to the Server
       var request = new XMLHttpRequest();
-      request.open("GET", workout_create_url);
+      request.open("POST", workout_create_url);
       request.setRequestHeader("Content-Type", "application/json");
 
       var workout_object_to_send = JSON.stringify(workout_object);
