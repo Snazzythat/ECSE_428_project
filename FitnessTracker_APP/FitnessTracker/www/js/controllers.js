@@ -305,10 +305,10 @@ function ($scope, $state, SignUpService, UserFactory,TrainerFactory) {
 }])
 
 //~~~~~~~~~~~~~~~~~~~~~~~ Trainer Page Controller ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-.controller('TrainerCtrl', ['$scope', '$state','TrainerFactory','getMyTraineesService', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
+.controller('TrainerCtrl', ['$scope', '$state','TrainerFactory','getMyTraineesService', 'WorkoutsService', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
 // You can include any angular dependencies as parameters for this function
 // TIP: Access Route Parameters for your page via $stateParams.parameterName
-function ($scope, $state,TrainerFactory,getMyTraineesService)
+function ($scope, $state,TrainerFactory,getMyTraineesService, WorkoutsService)
 {
 
   console.log("Presently in Trainer controller...");
@@ -321,41 +321,41 @@ function ($scope, $state,TrainerFactory,getMyTraineesService)
     console.log("Server answered. Trainee list getting  outcome is " + traineeGetResult);
 
     var parsedList=[]
-    
+
     if (traineeGetResult == "trainees_success")
     {
-    
-      console.info("Got the trainee object: " + traineesObj);  
+
+      console.info("Got the trainee object: " + traineesObj);
 
       var trainees_object = JSON.parse(traineesObj);
 
       if (trainees_object != {})
       {
           for(var key in trainees_object)
-          { 
+          {
             if (key != "trainer_username" && trainees_object[key] != null)
             {
-              parsedList.push(trainees_object[key]); //Pushes all 
+              parsedList.push(trainees_object[key]); //Pushes all
             }
           }
       }
       else
       {
         console.info('Looks like this trainer does not have any trainees in database..');
-        parsedList.push('You did not assign any trainees yet!'); 
+        parsedList.push('You did not assign any trainees yet!');
       }
     }
     else if (traineeGetResult == "trainees_not_found")
     {
       console.info('Looks like this trainer does not have any trainees in database..');
-      parsedList.push('You did not assign any trainees yet!'); 
+      parsedList.push('You did not assign any trainees yet!');
     }
 
       TrainerFactory.set('trainee_list', parsedList);
 
       $scope.visible_trainee_list = parsedList;
   }
-   
+
 
   //***Logic to get trainees
   //This happens only once at login. Once we get the list once after the login and set it in the factory, the list will be accessable directly
@@ -366,14 +366,40 @@ function ($scope, $state,TrainerFactory,getMyTraineesService)
   }
   else
   {
-    // After above has been run once, this list must be always accessable till the logout. 
+    // After above has been run once, this list must be always accessable till the logout.
     console.info("Trainee list already exists, all good!");
     $scope.visible_trainee_list = TrainerFactory.get('trainee_list');
   }
+
+  var workoutAssignCallback = function(result){
+    if(result == "workout_assign_success")
+    {
+      navigator.notification.alert('Workout successfully assigned.', function (){},'Success!','Ok');
+    }
+    else if(result == "workout_already_exists")
+    {
+      navigator.notification.alert('Workout already assigned to trainee.', function (){},'Error!','Ok');
+    }
+    else if(result == "server_error")
+    {
+      navigator.notification.alert('Server error, try again later.', function (){},'Error!','Ok');
+    }
+  }
+
+  var getWorkoutsCallback = function(result, data){
+    $scope.workoutList = JSON.parse(data);
+  }
+
+  WorkoutsService.get_workout(TrainerFactory.get('username'), getWorkoutsCallback);
+
+  $scope.assign = function(trainee, workoutId){
+    WorkoutsService.assign_workout(TrainerFactory.get('username'), trainee, workoutId, workoutAssignCallback);
+  }
+
   // ~~~~~~~~~~~~~~~~~~~~~~~~~
 
   $scope.visible_user_name = TrainerFactory.get('name');
- 
+
   $scope.switchTo = function(newPage)
   {
     console.log("Switching to " + newPage);
@@ -392,6 +418,7 @@ function ($scope, $state,$ionicSideMenuDelegate,UserFactory,getMyTrainersService
 
   $scope.visible_user_name = UserFactory.get('name');
   $scope.shouldShowDelete = true;
+  $scope.listCanSwipe = true
   $scope.switchTo = function(newPage)
   {
     console.log("Switching to " + newPage);
@@ -405,41 +432,41 @@ function ($scope, $state,$ionicSideMenuDelegate,UserFactory,getMyTrainersService
     console.log("Server answered. Trainer list getting  outcome is " + trainerGetResult);
 
     var parsedList=[]
-    
+
     if (trainerGetResult == "trainers_success")
     {
-    
-      console.info("Got the trainer object: " + trainersObj);  
+
+      console.info("Got the trainer object: " + trainersObj);
 
       var trainers_object = JSON.parse(trainersObj);
 
       if (trainers_object != {})
       {
           for(var key in trainers_object)
-          { 
+          {
             if (key != "trainee_username" && trainers_object[key] != null)
             {
-              parsedList.push(trainers_object[key]); //Pushes all 
+              parsedList.push(trainers_object[key]); //Pushes all
             }
           }
       }
       else
       {
         console.info('Looks like this trainee does not have any trainers in database..');
-        parsedList.push('You have not been assigned to any trainer yet!'); 
+        parsedList.push('You have not been assigned to any trainer yet!');
       }
     }
     else if (trainerGetResult == "trainers_not_found")
     {
       console.info('Looks like this trainer does not have any trainees in database..');
-      parsedList.push('You did not assign any trainees yet!'); 
+      parsedList.push('You did not assign any trainees yet!');
     }
 
       UserFactory.set('trainer_list', parsedList);
 
       $scope.visible_trainer_list = parsedList;
   }
-   
+
 
   //***Logic to get trainers from server
   //This happens only once at login. Once we get the list once after the login and set it in the factory, the list will be accessable directly
@@ -450,7 +477,7 @@ function ($scope, $state,$ionicSideMenuDelegate,UserFactory,getMyTrainersService
   }
   else
   {
-    // After above has been run once, this list must be always accessable till the logout. 
+    // After above has been run once, this list must be always accessable till the logout.
     console.info("Trainer list already exists, all good!");
     $scope.visible_trainer_list = UserFactory.get('trainer_list');
   }
@@ -478,6 +505,7 @@ function ($scope, $state,$ionicSideMenuDelegate,UserFactory,getMyTrainersService
   { id: 4 },
   { id: 5 }
   ];
+
 }])
 
 
@@ -730,6 +758,8 @@ function($scope, $state, WorkoutsService, WorkoutsFactory, UserFactory)
 
     console.log("Got user" + userName);
 
+    $scope.shouldShowDelete = true;
+    $scope.listCanSwipe = true
     $scope.switchTo = function(newPage)
     {
         console.log("Switching to " + newPage);
@@ -786,4 +816,34 @@ function($scope, $state, WorkoutsService, WorkoutsFactory, UserFactory)
 
     WorkoutsService.get_workout(userName, workout_callback);
 
+    /*
+    $scope.showEditItem = function (item) {
+
+        // Remember edit item to change it later
+        $scope.tmpEditItem = item;
+
+        // Preset form values
+        $scope.form.description.$setViewValue(item.description);
+        $scope.form.useAsDefault.$setViewValue(item.useAsDefault);
+        // Open dialog
+        $scope.showAddChangeDialog('change');
+    };
+
+    $scope.edit= function (workout) {
+        var item = {};
+        item.description = workout.description.$modelValue;
+        item.useAsDefault = workout.useAsDefault.$modelValue;
+        var editIndex = ListFactory.getList().indexOf($scope.tmpEditItem);
+        $scope.list[editIndex] = item;
+        // Set first item to default
+        if ($scope.tmpEditItem.useAsDefault == true && item.useAsDefault == false) {
+            $scope.list[0].useAsDefault = true;
+        }
+        ListFactory.setList($scope.list);
+        if (item.useAsDefault) {
+            $scope.makeDefault(item);
+        }
+        $scope.leaveAddChangeDialog();
+    }
+    */
 }]);

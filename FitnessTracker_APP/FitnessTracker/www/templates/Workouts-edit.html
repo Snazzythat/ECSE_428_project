@@ -1,0 +1,29 @@
+﻿<ion-view view-title="Editiing Workouts" id="workouts-edit" hide-nav-bar="true">
+
+    <div class="bar bar-header bar-positive">
+        <button id="Back-Button" class="button button-outline button-energized" ng-click="$ionicGoBack()">Back</button>
+        <h1 class="title">Editing Workouts</h1>
+    </div>
+
+    <ion-content padding="true" class="has-header" ng-controller=WorkoutsController>
+        <form id="workout-form1" class="list">
+
+            Slide the workout you wish to edit to the left.
+            <div class="spacer" style="width: 300px; height: 50px;"></div>
+            
+            <ion-list id="workout-list"
+                      can-swipe="listCanSwipe">
+                <ion-item ng-repeat="workout in visible_workout">
+                    <h2> {{workout.workoutId}}: </h2>
+                    <ion-item ng-repeat="exercise in workout.exercises">
+                        <p> {{exercise.name}} </p>
+                    </ion-item>
+
+                    <ion-option-button class="button-info" ng-click="edit(workout)"> Edit </ion-option-button>
+
+                </ion-item>
+            </ion-list>
+       
+         </form>
+    </ion-content>
+</ion-view>

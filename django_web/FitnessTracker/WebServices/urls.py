@@ -21,6 +21,7 @@ urlpatterns = [
     url(r'^exercise/get$', exerciseView.get_exercise),
     url(r'^exercise/create$', exerciseView.create_exercise),
     url(r'^workout/getAll/(?P<username>[a-z0-9]+)/$', workoutViews.get_all_workouts),
+    url(r'^workout/assign/(?P<trainer>[a-z0-9]+)/(?P<trainee>[a-z0-9]+)/(?P<workoutId>[a-z0-9]+)/$', workoutViews.assign_workout),
     url(r'^passwordrecovery/$', views.password_recovery),
     url(r'^social/getMyTrainees/(?P<trainer_username>[a-z0-9]+)/$', views.getMyTrainees),
     url(r'^social/getMyTrainers/(?P<trainee_username>[a-z0-9]+)/$', views.getMyTrainers)
