@@ -52,12 +52,6 @@ angular.module('starter.routes', [])
       controller: 'PasswordRecCtrl'
   })
 
-  // .state('exerciseplan', { //Not yet implemented (Should be "Workout")
-  //     url: '/exerciseplan',
-  //     templateUrl: 'templates/ExercisePlan.html',
-  //     controller: 'ExercisePlanCtrl'
-  // })
-
   .state('nutritionplan', {
       url: '/nutritionplan',
       templateUrl: 'templates/nutritionplan.html',
@@ -82,11 +76,11 @@ angular.module('starter.routes', [])
       controller: 'WorkoutsController'
   })
 
-  // .state('nutritionlookup', { //Not yet implemented
-  //     url: '/nutritionlookup',
-  //     templateUrl: 'templates/NutritionLookup.html',
-  //     controller: 'NutritionLookupCtrl'
-  // })
+ .state('workouts-edit', {
+     url: '/workouts/edit',
+     templateUrl: 'templates/Workouts-edit.html',
+     controller: 'WorkoutsController'
+ })
 
-$urlRouterProvider.otherwise('/login');
+  $urlRouterProvider.otherwise('/login');
 });

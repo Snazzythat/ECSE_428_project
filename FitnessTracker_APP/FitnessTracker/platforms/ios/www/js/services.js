@@ -1,7 +1,7 @@
 // Don't forget to change the VM ip and port here!
 // var virtual_vm_ip="104.236.220.130:9090/kevinnam.me/public_html/";
-//var virtual_vm_ip="localhost:8001";
-var virtual_vm_ip="104.236.220.130:8001";
+var virtual_vm_ip="localhost:8001";
+//var virtual_vm_ip="104.236.220.130:8001";
 var login_URI="/WebServices/login/";
 var signup_URI="/WebServices/signup/";
 var exercise_URI="/WebServices/exercise/";
@@ -9,6 +9,7 @@ var nutrition_URI="/WebServices/nutrition/";
 var nutrition_create_URI="/WebServices/nutrition/create";
 var password_rec_URI="/WebServices/passwordrecovery/";
 var workout_get_URI ="/WebServices/workout/getAll";
+var workout_assign_URI ="/WebServices/workout/assign";
 var trainee_list_get_URI="/WebServices/social/getMyTrainees";
 var trainer_list_get_URI="/WebServices/social/getMyTrainers"; // --> To be user for the trainee to get the trainers
 var workout_create_URI = "";
@@ -347,7 +348,7 @@ angular.module('starter.services', ['starter.controllers'])
       var workout_create_url = "http://" + virtual_vm_ip + workout_create_URI + '/' + username;
       // Issue new http POST request to the Server
       var request = new XMLHttpRequest();
-      request.open("GET", workout_create_url);
+      request.open("POST", workout_create_url);
       request.setRequestHeader("Content-Type", "application/json");
 
       var workout_object_to_send = JSON.stringify(workout_object);
@@ -376,6 +377,39 @@ angular.module('starter.services', ['starter.controllers'])
       };
       request.send(workout_object_to_send);
   };
+
+  //Assign workout to trainee
+  this.assign_workout = function(trainer,trainee,workoutId, callback)
+  {
+      var full_url = "http://" + virtual_vm_ip + workout_assign_URI +
+        '/' + trainer +
+        '/' + trainee +
+        '/' + workoutId +'/';
+      // Issue new http POST request to the Server
+      var request = new XMLHttpRequest();
+      request.open("POST", full_url);
+      request.setRequestHeader("Content-Type", "application/json");
+
+      request.onreadystatechange = function() {
+          //When request is answered, handle ASYNC here
+          if (request.readyState == 4)
+          {
+              if (request.status == 200)
+              {
+                  callback("workout_assign_success",{});
+              }
+              if (request.status == 409)
+              {
+                  callback("workout_already_exists",{});
+              }
+              else if (request.status == 400)
+              {
+                  callback("server_error",{});
+              }
+          }
+      };
+      request.send();
+  };
 }])
 
 //~~~~~~~~~~~~~~~~~~~~~~~ getMyTraineesService SERVICE ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -395,7 +429,7 @@ angular.module('starter.services', ['starter.controllers'])
 
     request.open("GET", trainee_getter_URL);
     request.setRequestHeader("Content-Type", "application/json");
-    
+
     console.info("Issuing request to get trainees and waiting for server response!");
 
       request.onreadystatechange = function()
@@ -404,7 +438,7 @@ angular.module('starter.services', ['starter.controllers'])
           if (request.readyState == 4)
           {
               if (request.status == 200)
-              {   
+              {
                   callback_to_trainer_controller("trainees_success",request.responseText);
               }
               else if (request.status == 404)
@@ -445,7 +479,7 @@ angular.module('starter.services', ['starter.controllers'])
 
     request.open("GET", trainee_getter_URL);
     request.setRequestHeader("Content-Type", "application/json");
-    
+
     console.info("Issuing request to get trainers and waiting for server response!");
 
       request.onreadystatechange = function()
@@ -454,7 +488,7 @@ angular.module('starter.services', ['starter.controllers'])
           if (request.readyState == 4)
           {
               if (request.status == 200)
-              {   
+              {
                   callback_to_trainee_controller("trainers_success",request.responseText);
               }
               else if (request.status == 404)
