@@ -354,6 +354,7 @@ function ($scope, $state,TrainerFactory,getMyTraineesService, WorkoutsService)
       TrainerFactory.set('trainee_list', parsedList);
 
       $scope.visible_trainee_list = parsedList;
+      $scope.$apply()
   }
 
 
@@ -465,6 +466,7 @@ function ($scope, $state,$ionicSideMenuDelegate,UserFactory,getMyTrainersService
       UserFactory.set('trainer_list', parsedList);
 
       $scope.visible_trainer_list = parsedList;
+      $scope.$apply()
   }
 
 
@@ -801,6 +803,7 @@ function($scope, $state, WorkoutsService, WorkoutsFactory, UserFactory)
         }
         WorkoutsFactory.set('workout_list', parsed_data);
         $scope.visible_workout = parsed_data;
+        $scope.$apply()
       }
       else if(workout_result == "workout_not_found")
       {

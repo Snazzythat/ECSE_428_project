@@ -465,6 +465,7 @@ function ($scope, $state,$ionicSideMenuDelegate,UserFactory,getMyTrainersService
       UserFactory.set('trainer_list', parsedList);
 
       $scope.visible_trainer_list = parsedList;
+      $scope.$apply()
   }
 
 
