@@ -455,11 +455,11 @@ angular.module('starter.services', ['starter.controllers'])
           {
               if (request.status == 200)
               {   
-                  callback_to_trainee_controller("trainees_success",request.responseText);
+                  callback_to_trainee_controller("trainers_success",request.responseText);
               }
               else if (request.status == 404)
               {
-                  callback_to_trainee_controller("trainees_not_found",{});
+                  callback_to_trainee_controller("trainers_not_found",{});
               }
               else if (request.status == 500 || request.status == 502 || request.status == 503)
               {
