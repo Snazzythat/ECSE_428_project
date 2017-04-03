@@ -276,7 +276,21 @@ angular.module('starter.services', ['starter.controllers'])
       var requestURL = "http://" + virtual_vm_ip + request_create_URI;
       var request = new XMLHttpRequest();
       console.log(trainer_request);
-      request.open("POST", request_create_URI);
+      request.open("POST", requestURL);
+      request.setRequestHeader("Content-Type", "application/json");
+      request.send(JSON.stringify(trainer_request));
+      callback();
+    };
+
+    // Statuses:
+    // ACCEPTED
+    // REJECTED
+    // Callback should add the trainee to the trainer list
+    this.update_status_request = function(trainer_request, callback) {
+      var requestURL = "http://" + virtual_vm_ip + request_update_URI;
+      var request = new XMLHttpRequest();
+      console.log(trainer_request);
+      request.open("POST", requestURL);
       request.setRequestHeader("Content-Type", "application/json");
       request.send(JSON.stringify(trainer_request));
       callback();
