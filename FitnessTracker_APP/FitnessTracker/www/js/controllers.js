@@ -389,6 +389,15 @@ function ($scope, $state,TrainerFactory,getMyTraineesService, WorkoutsService)
 
   var getWorkoutsCallback = function(result, data){
     $scope.workoutList = JSON.parse(data);
+    for(var i = $scope.workoutList.length-1; i >= 0; i--){
+      var id = $scope.workoutList[i].workoutId;
+      for(var j = 0; j < $scope.workoutList.length; j++){
+        if($scope.workoutList[i].workoutId == $scope.workoutList[j].workoutId && i != j){
+          $scope.workoutList.splice(i, 1);
+          break;
+        }
+      }
+    }
   }
 
   WorkoutsService.get_workout(TrainerFactory.get('username'), getWorkoutsCallback);
@@ -671,7 +680,7 @@ function ($scope, $state, WorkoutFactory)
 {
   console.log("Presently in Workout controller...");
 
-  // $scope.visible_workout = WorkoutFacotry.get('name');
+  $scope.visible_workout = WorkoutFacotry.get('name');
 
   $scope.switchTo = function(newPage)
   {
@@ -749,14 +758,19 @@ function ($scope, $state, $ionicViewService, ExerciseFactory, ExerciseService)
 
 
 //~~~~~~~~~~~~~~~~~~~~~~~ Workouts Page Controller ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-.controller('WorkoutsController', ['$scope', '$state','WorkoutsService','WorkoutsFactory', 'UserFactory', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
+.controller('WorkoutsController', ['$scope', '$state','WorkoutsService','WorkoutsFactory', 'UserFactory', 'TrainerFactory', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
 // You can include any angular dependencies as parameters for this function
 // TIP: Access Route Parameters for your page via $stateParams.parameterName
-function($scope, $state, WorkoutsService, WorkoutsFactory, UserFactory)
+function($scope, $state, WorkoutsService, WorkoutsFactory, UserFactory, TrainerFactory)
 {
     console.log("Presently in Workouts controller...");
 
+    $scope.userType = 'trainee';
     var userName = UserFactory.get('username');
+    if(!userName){
+      $scope.userType = 'trainer';
+      userName = TrainerFactory.get('username');
+    }
 
     console.log("Got user" + userName);
 
@@ -818,6 +832,29 @@ function($scope, $state, WorkoutsService, WorkoutsFactory, UserFactory)
     };
 
     WorkoutsService.get_workout(userName, workout_callback);
+
+    var workoutAssignCallback = function(result){
+    if(result == "workout_assign_success")
+    {
+      navigator.notification.alert('Workout successfully assigned.', function (){},'Success!','Ok');
+    }
+    else if(result == "workout_already_exists")
+    {
+      navigator.notification.alert('Workout already assigned to trainee.', function (){},'Error!','Ok');
+    }
+    else if(result == "server_error")
+    {
+      navigator.notification.alert('Server error, try again later.', function (){},'Error!','Ok');
+    }
+  }
+
+  if($scope.userType == 'trainer'){
+    $scope.traineeList = TrainerFactory.get('trainee_list');
+  }
+
+  $scope.assign = function(trainee, workoutId){
+    WorkoutsService.assign_workout(TrainerFactory.get('username'), trainee, workoutId, workoutAssignCallback);
+  }
 
     /*
     $scope.showEditItem = function (item) {

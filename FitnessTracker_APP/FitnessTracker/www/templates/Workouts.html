@@ -13,6 +13,16 @@
                     <ion-item ng-repeat = "exercise in workout.exercises">
                         <p> {{exercise.name}} </p>
                     </ion-item>
+                    <ion-item item-type="item-icon-left" ng-if="userType == 'trainer'">
+                      <label class="item item-input item-select">
+                           <div class="input-label">Tainees: </div>
+                        <select ng-model="thisTrainee" ng-options="t as t for t in $parent.traineeList">
+                        </select>
+                      </label>
+                      <button class="button button-stable button-block"
+                              ng-click="assign(thisTrainee, workout.workoutId)"
+                              ng-disabled="!thisTrainee">Assign</button>
+                    </ion-item>
                 </ion-item>
             </ion-list>
 
