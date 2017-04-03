@@ -82,5 +82,11 @@ angular.module('starter.routes', [])
      controller: 'WorkoutsController'
  })
 
+ .state('request-create', {
+     url: '/request/create',
+     templateUrl: 'templates/trainer-request-create.html',
+     controller: 'RequestCtrl'
+ })
+
   $urlRouterProvider.otherwise('/login');
 });

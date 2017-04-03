@@ -278,8 +278,20 @@ angular.module('starter.services', ['starter.controllers'])
       console.log(trainer_request);
       request.open("POST", requestURL);
       request.setRequestHeader("Content-Type", "application/json");
+      request.onreadystatechange = function() {
+        if (request.readyState == 4)
+            {
+                if (request.status == 200 || request.status == 201)
+                {
+                    callback('request_success');
+                }
+                else if (request.status == 400)
+                {
+                    callback('request_already_made');
+                }
+            }
+      };
       request.send(JSON.stringify(trainer_request));
-      callback();
     };
 
     // Statuses:

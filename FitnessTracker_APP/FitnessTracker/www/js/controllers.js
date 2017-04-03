@@ -721,22 +721,23 @@ function ($scope, $state, RequestService, UserFactory)
         valid_parameters = false;
       }
 
-      if (trainer_username != "demotrainer" && trainer_username != "demotrainer88") {
-        console.error("Input error!");
-        //navigator objects WILL NOT work in the ionic testing webserver, native device ONLY
-        navigator.notification.alert('Trainer does not exist', function (){},'Error','Retry');
-        navigator.notification.vibrate(1000);
-        valid_parameters = false;
-      }
-
       // Proceed building login request only at when all parameters are valid
       if(valid_parameters)
       {
         console.log("Sending async create request...");
-        RequestService.create_request(trainer_request, function() {
-          navigator.notification.alert('Successfully sent a request to ' + trainer_username + '.', function (){
-          },'Success!','Ok');
-          $state.go('trainee');
+        RequestService.create_request(trainer_request, function(response) {
+
+          if (response == 'request_success')
+          {
+            navigator.notification.alert('Successfully sent a request to ' + trainer_username + '.', function (){
+            },'Success!','Ok');
+            $state.go('trainee');
+          }
+          else if (response == 'request_already_made')
+          {
+            navigator.notification.alert('You already sent a request to ' + trainer_username + '.', function (){
+            },'Error!','Ok');
+          }
         });
       }
     }

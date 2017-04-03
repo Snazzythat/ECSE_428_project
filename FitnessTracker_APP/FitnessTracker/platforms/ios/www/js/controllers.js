@@ -354,6 +354,7 @@ function ($scope, $state,TrainerFactory,getMyTraineesService, WorkoutsService)
       TrainerFactory.set('trainee_list', parsedList);
 
       $scope.visible_trainee_list = parsedList;
+      $scope.$apply()
   }
 
 
@@ -388,6 +389,15 @@ function ($scope, $state,TrainerFactory,getMyTraineesService, WorkoutsService)
 
   var getWorkoutsCallback = function(result, data){
     $scope.workoutList = JSON.parse(data);
+    for(var i = $scope.workoutList.length-1; i >= 0; i--){
+      var id = $scope.workoutList[i].workoutId;
+      for(var j = 0; j < $scope.workoutList.length; j++){
+        if($scope.workoutList[i].workoutId == $scope.workoutList[j].workoutId && i != j){
+          $scope.workoutList.splice(i, 1);
+          break;
+        }
+      }
+    }
   }
 
   WorkoutsService.get_workout(TrainerFactory.get('username'), getWorkoutsCallback);
@@ -664,13 +674,81 @@ function ($scope, $state, NutritionService)
       }
     }
 }])
+//~~~~~~~~~~~~~~~~~~~~~~~ Make A Request Page Controller ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.controller('RequestCtrl', ['$scope', '$state', 'RequestService', 'UserFactory',// The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
+// You can include any angular dependencies as parameters for this function
+// TIP: Access Route Parameters for your page via $stateParams.parameterName
+function ($scope, $state, RequestService, UserFactory)
+{
+    console.log("Presently in Request controller...");
+
+    // TODO: how do we get the username of the current user?
+    var userName = UserFactory.get('username');
+    console.log("Got user" + userName);
+
+    $scope.switchTo = function(newPage)
+    {
+      console.log("Switching to " + newPage);
+      $state.go(newPage);
+    };
+
+    /*var requestCallback = function(result, data) {
+      var request_data = JSON.parse(data);
+      $scope.request_list_for_a_trainer = request_data
+      console.log(request_data);
+    }
+    */
+    //RequestService.get_request_for_a_trainer(userName, requestCallback);
+
+    $scope.make_a_request_to_a_trainer = function()
+    {
+      var valid_parameters = true;
+
+      var trainer_username = String($scope.request.trainer_username);
+
+      var trainer_request = {trainer_username : trainer_username, trainee_username : userName, status : 'PENDING'};
+
+      // Verify first if no fields are empty
+      // Name must not be empty
+      // Email must not be empty and must consist of a certain format
+      // Password cant be empty
+      if (!trainer_username)
+      {
+        console.error("Input error!");
+        //navigator objects WILL NOT work in the ionic testing webserver, native device ONLY
+        navigator.notification.alert('Trainer username cannot be empty', function (){},'Error','Retry');
+        navigator.notification.vibrate(1000);
+        valid_parameters = false;
+      }
+
+      // Proceed building login request only at when all parameters are valid
+      if(valid_parameters)
+      {
+        console.log("Sending async create request...");
+        RequestService.create_request(trainer_request, function(response) {
+
+          if (response == 'request_success')
+          {
+            navigator.notification.alert('Successfully sent a request to ' + trainer_username + '.', function (){
+            },'Success!','Ok');
+            $state.go('trainee');
+          }
+          else if (response == 'request_already_made')
+          {
+            navigator.notification.alert('You already sent a request' + trainer_username + '.', function (){
+            },'Error!','Ok');
+          }
+        });
+      }
+    }
+}])
 //~~~~~~~~~~~~~~~~~~~~~~~ Workout Page Controller ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 .controller('WorkoutCtrl', ['$scope', '$state', '$ionicHistory', 'WorkoutFactory', 'WorkoutsService',
 function ($scope, $state, WorkoutFactory)
 {
   console.log("Presently in Workout controller...");
 
-  // $scope.visible_workout = WorkoutFacotry.get('name');
+  $scope.visible_workout = WorkoutFacotry.get('name');
 
   $scope.switchTo = function(newPage)
   {
@@ -748,14 +826,19 @@ function ($scope, $state, $ionicViewService, ExerciseFactory, ExerciseService)
 
 
 //~~~~~~~~~~~~~~~~~~~~~~~ Workouts Page Controller ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-.controller('WorkoutsController', ['$scope', '$state','WorkoutsService','WorkoutsFactory', 'UserFactory', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
+.controller('WorkoutsController', ['$scope', '$state','WorkoutsService','WorkoutsFactory', 'UserFactory', 'TrainerFactory', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
 // You can include any angular dependencies as parameters for this function
 // TIP: Access Route Parameters for your page via $stateParams.parameterName
-function($scope, $state, WorkoutsService, WorkoutsFactory, UserFactory)
+function($scope, $state, WorkoutsService, WorkoutsFactory, UserFactory, TrainerFactory)
 {
     console.log("Presently in Workouts controller...");
 
+    $scope.userType = 'trainee';
     var userName = UserFactory.get('username');
+    if(!userName){
+      $scope.userType = 'trainer';
+      userName = TrainerFactory.get('username');
+    }
 
     console.log("Got user" + userName);
 
@@ -802,6 +885,7 @@ function($scope, $state, WorkoutsService, WorkoutsFactory, UserFactory)
         }
         WorkoutsFactory.set('workout_list', parsed_data);
         $scope.visible_workout = parsed_data;
+        $scope.$apply()
       }
       else if(workout_result == "workout_not_found")
       {
@@ -816,6 +900,29 @@ function($scope, $state, WorkoutsService, WorkoutsFactory, UserFactory)
     };
 
     WorkoutsService.get_workout(userName, workout_callback);
+
+    var workoutAssignCallback = function(result){
+    if(result == "workout_assign_success")
+    {
+      navigator.notification.alert('Workout successfully assigned.', function (){},'Success!','Ok');
+    }
+    else if(result == "workout_already_exists")
+    {
+      navigator.notification.alert('Workout already assigned to trainee.', function (){},'Error!','Ok');
+    }
+    else if(result == "server_error")
+    {
+      navigator.notification.alert('Server error, try again later.', function (){},'Error!','Ok');
+    }
+  }
+
+  if($scope.userType == 'trainer'){
+    $scope.traineeList = TrainerFactory.get('trainee_list');
+  }
+
+  $scope.assign = function(trainee, workoutId){
+    WorkoutsService.assign_workout(TrainerFactory.get('username'), trainee, workoutId, workoutAssignCallback);
+  }
 
     /*
     $scope.showEditItem = function (item) {

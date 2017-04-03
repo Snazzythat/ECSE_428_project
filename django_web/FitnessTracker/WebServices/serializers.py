@@ -27,7 +27,7 @@ class ExerciseSerializer(serializers.ModelSerializer):
 class TrainerTraineeRequestSerializer(serializers.ModelSerializer):
     class Meta:
         model = TrainerTraineeRequest
-        fields = ('trainer_username', 'trainee_username', 'status')
+        fields = ('status', 'trainee_username', 'trainer_username')
 
     def update(self, instance, validated_data):
         instance.trainer_username = validated_data.get('trainer_username', instance.trainer_username)
