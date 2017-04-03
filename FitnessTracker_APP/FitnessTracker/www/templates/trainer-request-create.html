@@ -1,0 +1,25 @@
+﻿<ion-view view-title="Make a trainer request" id="make-a-trainer-request" hide-nav-bar="true">
+
+    <div class="bar bar-header bar-positive">
+        <button id="Back-button" class="button button-outline button-energized" ng-click="$ionicGoBack()">Back</button>
+        <h1 class="title">Make a trainer request</h1>
+    </div>
+
+    <ion-content padding="true" class="has-header" ng-controller=RequestCtrl>
+        <form id="request-form" class="list">
+          <ion-list id="request-form">
+              <label class="item item-input" id="name">
+                <span class="input-label">Trainer Username</span>
+                <input type="text" placeholder="demotrainer" ng-model=request.trainer_username>
+              </label>
+            </ion-list>
+
+
+            <button id="addButton" class="button button-positive button-block" ng-click="make_a_request_to_a_trainer()">Make a request<button>
+          </form>
+
+
+
+        </form>
+    </ion-content>
+</ion-view>

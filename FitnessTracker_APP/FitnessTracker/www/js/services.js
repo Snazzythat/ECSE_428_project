@@ -7,6 +7,9 @@ var signup_URI="/WebServices/signup/";
 var exercise_URI="/WebServices/exercise/";
 var nutrition_URI="/WebServices/nutrition/";
 var nutrition_create_URI="/WebServices/nutrition/create";
+var request_create_URI="/WebServices/request/create";
+var request_get_URI="/WebServices/request/get";
+var request_update_URI="/WebServices/request/update";
 var password_rec_URI="/WebServices/passwordrecovery/";
 var workout_get_URI ="/WebServices/workout/getAll";
 var workout_assign_URI ="/WebServices/workout/assign";
@@ -239,6 +242,54 @@ angular.module('starter.services', ['starter.controllers'])
           var request = new XMLHttpRequest();
           request.open("GET", nutritionURL);
           request.setRequestHeader("Content-Type", "application/");
+          request.onreadystatechange = function() {
+              //When request is answered, handle ASYNC here
+              if (request.readyState == 4)
+              {
+                  if (request.status == 200)
+                  {
+                      callback("retrieved", request.responseText);
+                  }
+                  else if (request.status == 404)
+                  {
+                      callback("server_notfound", {});
+                  }
+                  else if (request.status == 500 || request.status == 502 || request.status == 503)
+                  {
+                        callback("server_error", {});
+                  }
+                  else if (request.status == 400)
+                  {
+                      callback("bad_request", {});
+                  }
+              }
+          };
+          request.send();
+    };
+}])
+
+//~~~~~~~~~~~~~~~~~~~~~~~REQUEST SERVICE ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// Request service contains all functions related to requests
+.service('RequestService',['$http', function($http)
+{
+    this.create_request = function(trainer_request, callback) {
+      var requestURL = "http://" + virtual_vm_ip + request_create_URI;
+      var request = new XMLHttpRequest();
+      console.log(trainer_request);
+      request.open("POST", request_create_URI);
+      request.setRequestHeader("Content-Type", "application/json");
+      request.send(JSON.stringify(trainer_request));
+      callback();
+    };
+
+    this.get_request_for_a_trainer = function(trainer_username, callback)
+    {
+        var requestURL = "http://" + virtual_vm_ip + request_get_URI + "?trainer_username=" + trainer_user;
+
+          // Issue new http GET request to the Server
+          var request = new XMLHttpRequest();
+          request.open("GET", requestURL);
+          request.setRequestHeader("Content-Type", "application/json");
           request.onreadystatechange = function() {
               //When request is answered, handle ASYNC here
               if (request.readyState == 4)

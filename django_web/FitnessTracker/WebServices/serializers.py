@@ -2,6 +2,7 @@ from rest_framework import serializers
 from WebServices.models import User
 from WebServices.models import Nutrition
 from WebServices.models import Exercise
+from WebServices.models import TrainerTraineeRequest
 from WebServices.models import Workout
 from WebServices.models import WorkoutExercise
 from WebServices.models import traineeGetter
@@ -22,6 +23,18 @@ class ExerciseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Exercise
         fields = ('name', 'type', 'description', 'targeted_muscle')
+
+class TrainerTraineeRequestSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TrainerTraineeRequest
+        fields = ('trainer_username', 'trainee_username', 'status')
+
+    def update(self, instance, validated_data):
+        instance.trainer_username = validated_data.get('trainer_username', instance.trainer_username)
+        instance.trainee_username = validated_data.get('trainee_username', instance.trainee_username)
+        instance.status = validated_data.get('status', instance.status)
+        instance.save()
+        return instance
 
 class WorkoutSerializer(serializers.ModelSerializer):
     class Meta:
