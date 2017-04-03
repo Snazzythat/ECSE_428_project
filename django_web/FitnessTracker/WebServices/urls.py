@@ -7,6 +7,7 @@ from . import views
 from . import nutritionViews
 from . import exerciseView
 from . import workoutViews
+from . import requestView
 
 #This is just a test, ignore it
 urlpatterns = [
@@ -24,7 +25,11 @@ urlpatterns = [
     url(r'^workout/assign/(?P<trainer>[a-z0-9]+)/(?P<trainee>[a-z0-9]+)/(?P<workoutId>[a-z0-9]+)/$', workoutViews.assign_workout),
     url(r'^passwordrecovery/$', views.password_recovery),
     url(r'^social/getMyTrainees/(?P<trainer_username>[a-z0-9]+)/$', views.getMyTrainees),
-    url(r'^social/getMyTrainers/(?P<trainee_username>[a-z0-9]+)/$', views.getMyTrainers)
+    url(r'^social/getMyTrainers/(?P<trainee_username>[a-z0-9]+)/$', views.getMyTrainers),
+    url(r'^request/$', requestView.index),
+    url(r'^request/get$', requestView.get_request_for_a_trainer),
+    url(r'^request/create$', requestView.create_request),
+    url(r'^request/update$', requestView.update_status_request)
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

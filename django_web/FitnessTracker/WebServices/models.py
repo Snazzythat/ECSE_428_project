@@ -20,6 +20,14 @@ class Exercise(models.Model):
         managed = False
         db_table = 'Exercise'
 
+class TrainerTraineeRequest(models.Model):
+    trainer_username = models.CharField(unique=False, primary_key=True, max_length=45)
+    trainee_username = models.CharField(max_length=45, blank=False, null=False)
+    status = models.CharField(max_length=45, blank=False, null=False)
+    class Meta:
+        managed = False
+        db_table = 'TrainerTraineeRequest'
+
 
 class Nutrition(models.Model):
     name = models.CharField(max_length=45, blank=True, null=True)
@@ -80,9 +88,9 @@ class WorkoutExercise(models.Model):
 class trainerGetter(models.Model):
     trainee_username = models.CharField(primary_key=True,max_length=45)
     trainer1_username = models.CharField(max_length=45,blank=True, null=True)
-    trainer2_username = models.CharField(max_length=45,blank=True, null=True) 
+    trainer2_username = models.CharField(max_length=45,blank=True, null=True)
     trainer3_username = models.CharField(max_length=45,blank=True, null=True)
-    
+
     class Meta:
         managed = False
         db_table = 'TraineeMappings'
@@ -90,11 +98,11 @@ class trainerGetter(models.Model):
 class traineeGetter(models.Model):
     trainer_username = models.CharField(primary_key=True,max_length=45)
     trainee1_username = models.CharField(max_length=45,blank=True, null=True)
-    trainee2_username = models.CharField(max_length=45,blank=True, null=True) 
+    trainee2_username = models.CharField(max_length=45,blank=True, null=True)
     trainee3_username = models.CharField(max_length=45,blank=True, null=True)
     trainee4_username = models.CharField(max_length=45,blank=True, null=True)
     trainee5_username = models.CharField(max_length=45,blank=True, null=True)
-    
+
     class Meta:
         managed = False
         db_table = 'TrainerMappings'

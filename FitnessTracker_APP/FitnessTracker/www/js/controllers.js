@@ -674,6 +674,73 @@ function ($scope, $state, NutritionService)
       }
     }
 }])
+//~~~~~~~~~~~~~~~~~~~~~~~ Make A Request Page Controller ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.controller('RequestCtrl', ['$scope', '$state', 'RequestService', 'UserFactory',// The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
+// You can include any angular dependencies as parameters for this function
+// TIP: Access Route Parameters for your page via $stateParams.parameterName
+function ($scope, $state, RequestService, UserFactory)
+{
+    console.log("Presently in Request controller...");
+
+    // TODO: how do we get the username of the current user?
+    var userName = UserFactory.get('username');
+    console.log("Got user" + userName);
+
+    $scope.switchTo = function(newPage)
+    {
+      console.log("Switching to " + newPage);
+      $state.go(newPage);
+    };
+
+    /*var requestCallback = function(result, data) {
+      var request_data = JSON.parse(data);
+      $scope.request_list_for_a_trainer = request_data
+      console.log(request_data);
+    }
+    */
+    //RequestService.get_request_for_a_trainer(userName, requestCallback);
+
+    $scope.make_a_request_to_a_trainer = function()
+    {
+      var valid_parameters = true;
+
+      var trainer_username = String($scope.request.trainer_username);
+
+      var trainer_request = {trainer_username : trainer_username, trainee_username : userName, status : 'PENDING'};
+
+      // Verify first if no fields are empty
+      // Name must not be empty
+      // Email must not be empty and must consist of a certain format
+      // Password cant be empty
+      if (!trainer_username)
+      {
+        console.error("Input error!");
+        //navigator objects WILL NOT work in the ionic testing webserver, native device ONLY
+        navigator.notification.alert('Trainer username cannot be empty', function (){},'Error','Retry');
+        navigator.notification.vibrate(1000);
+        valid_parameters = false;
+      }
+
+      if (trainer_username != "demotrainer" && trainer_username != "demotrainer88") {
+        console.error("Input error!");
+        //navigator objects WILL NOT work in the ionic testing webserver, native device ONLY
+        navigator.notification.alert('Trainer does not exist', function (){},'Error','Retry');
+        navigator.notification.vibrate(1000);
+        valid_parameters = false;
+      }
+
+      // Proceed building login request only at when all parameters are valid
+      if(valid_parameters)
+      {
+        console.log("Sending async create request...");
+        RequestService.create_request(trainer_request, function() {
+          navigator.notification.alert('Successfully sent a request to ' + trainer_username + '.', function (){
+          },'Success!','Ok');
+          $state.go('trainee');
+        });
+      }
+    }
+}])
 //~~~~~~~~~~~~~~~~~~~~~~~ Workout Page Controller ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 .controller('WorkoutCtrl', ['$scope', '$state', '$ionicHistory', 'WorkoutFactory', 'WorkoutsService',
 function ($scope, $state, WorkoutFactory)
