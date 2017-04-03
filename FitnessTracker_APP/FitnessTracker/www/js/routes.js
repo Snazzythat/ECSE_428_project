@@ -34,10 +34,10 @@ angular.module('starter.routes', [])
       controller: 'TraineeCtrl'
  })
 
- .state('trainer-request', {
-     url: '/trainer-request',
-     templateUrl: 'templates/trainer-request.html',
-     controller: 'TraineeCtrl'
+ .state('trainee-requests', {
+     url: '/trainee-requests',
+     templateUrl: 'templates/trainee-requests.html',
+     controller: 'RequestGetCtrl'
  })
 
   .state('trainer', {

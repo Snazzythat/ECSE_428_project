@@ -500,23 +500,6 @@ function ($scope, $state,$ionicSideMenuDelegate,UserFactory,getMyTrainersService
     $ionicSideMenuDelegate.toggleLeft();
   };
 
-  $scope.onItemDelete = function (item) {
-      $scope.items.splice($scope.items.indexOf(item), 1);
-  };
-
-  $scope.onItemAccept = function (item) {
-      $scope.items.splice($scope.items.indexOf(item), 1);
-  };
-
-  $scope.items = [
-  { id: 0 },
-  { id: 1 },
-  { id: 2 },
-  { id: 3 },
-  { id: 4 },
-  { id: 5 }
-  ];
-
 }])
 
 
@@ -742,6 +725,88 @@ function ($scope, $state, RequestService, UserFactory)
       }
     }
 }])
+
+
+//~~~~~~~~~~~~~~~~~~~~~~~ Get A Request Page Controller ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.controller('RequestGetCtrl', ['$scope', '$state', 'RequestService', 'TrainerFactory',// The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
+// You can include any angular dependencies as parameters for this function
+// TIP: Access Route Parameters for your page via $stateParams.parameterName
+function ($scope, $state, RequestService, TrainerFactory)
+{
+    console.log("Presently in Request controller...");
+
+    // TODO: how do we get the username of the current user?
+    var userName = TrainerFactory.get('username');
+    console.log("Got trainer" + userName);
+    
+    trainees_that_requested = []
+    
+    $scope.switchTo = function(newPage)
+    {
+      console.log("Switching to " + newPage);
+      $state.go(newPage);
+    };
+
+    var callbackToRequestGetter = function(trainerGetResult, requestsObj)
+    {
+      if (trainerGetResult == "retrieved")
+      {
+        console.info("Got the requests from trainees object: " + requestsObj);
+        var requests_obj = JSON.parse(requestsObj)[0];
+        console.info("Parsed object: " + requests_obj);
+
+        if (requests_obj != {})
+        {
+            for(var key in requests_obj)
+            {
+              if (key != "trainer_username" && requests_obj[key] != null && key!= "status")
+              {
+                trainees_that_requested.push(requests_obj[key]); //Pushes all
+                $scope.visible_requests=trainees_that_requested;
+                $scope.$apply();
+              }
+            }
+        }
+        else
+        {
+          trainees_that_requested.push('You dont have any trainee requests yet!');
+          $scope.visible_requests=trainees_that_requested;
+          $scope.$apply();
+        }
+
+      }
+      else if (trainerGetResult ==  "server_notfound")   
+      {
+        trainees_that_requested.push('You dont have any trainee requests yet!');
+        scope.visible_requests=trainees_that_requested;
+        $scope.$apply();
+      }
+      else if (trainerGetResult ==  "server_error")   
+      {
+        trainees_that_requested.push('You dont have any trainee requests yet!');
+        $scope.visible_requests=trainees_that_requested;
+        $scope.$apply();
+      }
+       else if (trainerGetResult ==  "bad_request")   
+      {
+        trainees_that_requested.push('You dont have any trainee requests yet!');
+        $scope.visible_requests=trainees_that_requested;
+        $scope.$apply();
+      }
+    }
+
+    RequestService.get_request_for_a_trainer(userName,callbackToRequestGetter);
+
+  $scope.onItemDelete = function (item) {
+  $scope.items.splice($scope.items.indexOf(item), 1);
+  };
+
+  $scope.onItemAccept = function (item) {
+      $scope.items.splice($scope.items.indexOf(item), 1);
+  };
+  
+}])
+
 //~~~~~~~~~~~~~~~~~~~~~~~ Workout Page Controller ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 .controller('WorkoutCtrl', ['$scope', '$state', '$ionicHistory', 'WorkoutFactory', 'WorkoutsService',
 function ($scope, $state, WorkoutFactory)

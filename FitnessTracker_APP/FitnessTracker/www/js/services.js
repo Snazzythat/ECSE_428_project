@@ -308,9 +308,9 @@ angular.module('starter.services', ['starter.controllers'])
       callback();
     };
 
-    this.get_request_for_a_trainer = function(trainer_username, callback)
+    this.get_request_for_a_trainer = function(trainer_username, callbackToRequestGetter)
     {
-        var requestURL = "http://" + virtual_vm_ip + request_get_URI + "?trainer_username=" + trainer_user;
+        var requestURL = "http://" + virtual_vm_ip + request_get_URI + "?trainer_username=" + trainer_username;
 
           // Issue new http GET request to the Server
           var request = new XMLHttpRequest();
@@ -322,19 +322,19 @@ angular.module('starter.services', ['starter.controllers'])
               {
                   if (request.status == 200)
                   {
-                      callback("retrieved", request.responseText);
+                      callbackToRequestGetter("retrieved", request.responseText);
                   }
                   else if (request.status == 404)
                   {
-                      callback("server_notfound", {});
+                      callbackToRequestGetter("server_notfound", {});
                   }
                   else if (request.status == 500 || request.status == 502 || request.status == 503)
                   {
-                        callback("server_error", {});
+                        callbackToRequestGetter("server_error", {});
                   }
                   else if (request.status == 400)
                   {
-                      callback("bad_request", {});
+                      callbackToRequestGetter("bad_request", {});
                   }
               }
           };
