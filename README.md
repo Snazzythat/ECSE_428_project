@@ -5,7 +5,7 @@ A social netwrok application allowing trainers and trainee communicate and share
 
 Overall Flow:
 
-<blockquote class="imgur-embed-pub" lang="en" data-id="a/7I6Fc"><a href="//imgur.com/7I6Fc"></a></blockquote><script async src="//s.imgur.com/min/embed.js" charset="utf-8"></script>
+http://imgur.com/a/7I6Fc
 
 Login menu: 
 
